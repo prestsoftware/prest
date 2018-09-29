@@ -1,7 +1,8 @@
 extern crate prest;
 extern crate rand;
 
-use rand::{SeedableRng,XorShiftRng};
+use rand::SeedableRng;
+use rand::prng::XorShiftRng;
 use prest::{rpc,precomputed,estimation,args,consistency,simulation};
 use prest::{experiment_stats,budgetary};
 use precomputed::Precomputed;
@@ -10,7 +11,7 @@ fn rpc_loop(args : &args::Args) {
     use rpc::*;
 
     // core state
-    let mut rng = XorShiftRng::new_unseeded();
+    let mut rng : XorShiftRng = SeedableRng::from_seed([0;16]);
     let mut rpc = IO::from_stdio();
     let mut precomp = Precomputed::new(
         args.fname_precomputed_preorders.as_ref().map(String::as_str)
@@ -53,17 +54,17 @@ fn rpc_loop(args : &args::Args) {
             }
 
             ActionRequest::SetRngSeed(seed) => {
-                if seed.len() == 4 {
-                    let mut xs = [0,0,0,0];
+                if seed.len() == 16 {
+                    let mut xs = [0u8;16];
                     for (i, &x) in seed.iter().enumerate() {
                         xs[i] = x;
                     }
-                    rng.reseed(xs);
+                    rng = SeedableRng::from_seed(xs);
 
                     rpc.write_result(Ok::<String, bool>(String::from("OK"))).unwrap();
                 } else {
                     rpc.write_result(Err::<bool, String>(
-                        String::from("rng seed must contain exactly 4 numbers")
+                        String::from("rng seed must contain exactly 16 numbers")
                     )).unwrap();
                 }
             }

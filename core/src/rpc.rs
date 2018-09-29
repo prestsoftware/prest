@@ -14,7 +14,7 @@ use budgetary;
 pub enum ActionRequest {
     BudgetaryConsistency(budgetary::consistency::Request),
     Summary(experiment_stats::Request),
-    SetRngSeed(Vec<u32>),
+    SetRngSeed(Vec<u8>),
     Simulation(simulation::Request),
     Consistency(consistency::Request),
     TupleIntransMenus(consistency::Request),

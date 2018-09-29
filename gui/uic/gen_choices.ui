@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GenChoices</class>
+ <widget class="QWidget" name="GenChoices">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>363</width>
+    <height>177</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Choice distribution</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="gbNoDefault">
+     <property name="title">
+      <string>Observations without default alternatives</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QRadioButton" name="rbFC">
+        <property name="text">
+         <string>Forced choice</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rbNFC">
+        <property name="text">
+         <string>Non-forced choice</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gbDefault">
+     <property name="title">
+      <string>Observations with default alternatives</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QRadioButton" name="rbUnbiased">
+        <property name="text">
+         <string>Unbiased</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rbDefaultBiased">
+        <property name="text">
+         <string>Default-biased</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="cbMultipleChoice">
+     <property name="text">
+      <string>Multi-valued choice</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>rbFC</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>rbUnbiased</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>99</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>99</x>
+     <y>118</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rbNFC</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>rbDefaultBiased</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>263</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>263</x>
+     <y>118</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rbUnbiased</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>rbFC</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>99</x>
+     <y>118</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>99</x>
+     <y>49</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rbDefaultBiased</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>rbNFC</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>263</x>
+     <y>118</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>263</x>
+     <y>49</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

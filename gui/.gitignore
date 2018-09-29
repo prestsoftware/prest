@@ -1,0 +1,15 @@
+__pycache__/
+build/
+dist/
+main.spec
+prest-*-gui/
+prest-*-gui.zip
+.mypy_cache/
+*.pwf
+.cache/
+*.xlsx
+.hypothesis/
+.typecheck-ts
+version.txt
+.pytest_cache/
+/*.csv

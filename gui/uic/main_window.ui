@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>775</width>
+    <height>579</height>
+   </rect>
+  </property>
+  <property name="documentMode">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="title">
+       <string>Datasets</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QTableWidget" name="tblDataSets">
+         <property name="contextMenuPolicy">
+          <enum>Qt::CustomContextMenu</enum>
+         </property>
+         <property name="statusTip">
+          <string>Datasets in workspace. Double click to view, right click for further actions.</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <property name="sortingEnabled">
+          <bool>false</bool>
+         </property>
+         <property name="cornerButtonEnabled">
+          <bool>true</bool>
+         </property>
+         <attribute name="horizontalHeaderVisible">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <column>
+          <property name="text">
+           <string>Name</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Alternatives/Goods</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Size</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>775</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuWorkspace">
+    <property name="title">
+     <string>&amp;Workspace</string>
+    </property>
+    <addaction name="actionWorkspaceClear"/>
+    <addaction name="actionWorkspaceLoad"/>
+    <addaction name="actionWorkspaceSave"/>
+    <addaction name="actionWorkspaceSaveAs"/>
+    <addaction name="separator"/>
+    <addaction name="actionDatasetImport"/>
+    <addaction name="actionImport_budgetary_dataset"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <widget class="QMenu" name="menuDebugging_tools">
+     <property name="title">
+      <string>&amp;Debugging tools</string>
+     </property>
+     <addaction name="actionShow_console_window"/>
+     <addaction name="actionCrash_core"/>
+     <addaction name="actionSoft_core_failure"/>
+     <addaction name="actionHidden_features"/>
+    </widget>
+    <addaction name="actionHelp"/>
+    <addaction name="menuDebugging_tools"/>
+    <addaction name="actionAbout_Prest"/>
+   </widget>
+   <widget class="QMenu" name="menuSimulation">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>&amp;Simulation</string>
+    </property>
+    <addaction name="actionGenerate_random_subjects"/>
+   </widget>
+   <addaction name="menuWorkspace"/>
+   <addaction name="menuSimulation"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionNew">
+   <property name="text">
+    <string>&amp;New</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionAbout_Prest">
+   <property name="text">
+    <string>&amp;About Prest...</string>
+   </property>
+  </action>
+  <action name="actionWorkspaceLoad">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Restore from file...</string>
+   </property>
+  </action>
+  <action name="actionWorkspaceSave">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+   <property name="statusTip">
+    <string>Save under the previously used file name</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionForced_choice_without_default">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Forced choice without default...</string>
+   </property>
+  </action>
+  <action name="actionNon_forced_choice_without_default">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Non-forced choice without default...</string>
+   </property>
+  </action>
+  <action name="actionGenerate_random_subjects">
+   <property name="text">
+    <string>&amp;Generate random subjects...</string>
+   </property>
+   <property name="statusTip">
+    <string>Simulate an experiment with the chosen parameters</string>
+   </property>
+  </action>
+  <action name="actionLoad_data_set">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Load dataset...</string>
+   </property>
+  </action>
+  <action name="actionSave_data_set">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Save dataset...</string>
+   </property>
+  </action>
+  <action name="actionDatasetImport">
+   <property name="text">
+    <string>Import &amp;general dataset...</string>
+   </property>
+  </action>
+  <action name="actionXLSX">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;XLSX...</string>
+   </property>
+  </action>
+  <action name="actionXLS">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>X&amp;LS...</string>
+   </property>
+  </action>
+  <action name="actionExportCsv">
+   <property name="text">
+    <string>&amp;CSV...</string>
+   </property>
+  </action>
+  <action name="actionXLSX_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;XLSX</string>
+   </property>
+  </action>
+  <action name="actionXLS_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>X&amp;LS</string>
+   </property>
+  </action>
+  <action name="actionHTML">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;HTML</string>
+   </property>
+  </action>
+  <action name="actionFind_outliers">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Find &amp;outliers...</string>
+   </property>
+  </action>
+  <action name="actionEstimation">
+   <property name="text">
+    <string>&amp;Model estimation...</string>
+   </property>
+   <property name="toolTip">
+    <string>Model estimation</string>
+   </property>
+   <property name="statusTip">
+    <string>Find the best-fitting decision model for each subject</string>
+   </property>
+  </action>
+  <action name="actionShow_console_window">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Show console window</string>
+   </property>
+  </action>
+  <action name="actionCrash_core">
+   <property name="text">
+    <string>&amp;Crash core</string>
+   </property>
+  </action>
+  <action name="actionSoft_core_failure">
+   <property name="text">
+    <string>Soft core &amp;failure</string>
+   </property>
+  </action>
+  <action name="actionConsistency_analysis">
+   <property name="text">
+    <string>&amp;Consistency analysis</string>
+   </property>
+   <property name="toolTip">
+    <string>Consistency analysis</string>
+   </property>
+   <property name="statusTip">
+    <string>Count cycles in preferences of each subject</string>
+   </property>
+  </action>
+  <action name="actionDetailed_consistency_analysis">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Detailed consistency analysis</string>
+   </property>
+   <property name="toolTip">
+    <string>Detailed consistency analysis</string>
+   </property>
+   <property name="statusTip">
+    <string>Break down cycles in preferences by cycle length</string>
+   </property>
+  </action>
+  <action name="actionViewDataset">
+   <property name="text">
+    <string>&amp;View...</string>
+   </property>
+   <property name="statusTip">
+    <string>Display the contents of the dataset</string>
+   </property>
+  </action>
+  <action name="actionWorkspaceClear">
+   <property name="text">
+    <string>&amp;Clear</string>
+   </property>
+  </action>
+  <action name="actionWorkspaceSaveAs">
+   <property name="icon">
+    <iconset theme="saveAs">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>Save &amp;as...</string>
+   </property>
+   <property name="statusTip">
+    <string>Save under a new file name</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Prest &amp;manual...</string>
+   </property>
+  </action>
+  <action name="actionHidden_features">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Enable &amp;experimental features</string>
+   </property>
+  </action>
+  <action name="actionImport_budgetary_dataset">
+   <property name="text">
+    <string>Import &amp;budgetary dataset...</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

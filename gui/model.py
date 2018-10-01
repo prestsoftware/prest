@@ -75,31 +75,31 @@ ModelC = enumC('Model', {
 # dicts are ordered from python 3.5 onwards
 SPECIAL_NAMES = {
     PreorderMaximization(PreorderParams(total=True, strict=True)):
-        'Utility Maximization (strict)',
+        'Utility Maximization (Strict)',
     PreorderMaximization(PreorderParams(total=True, strict=False)):
-        'Utility Maximization (non-strict)',
+        'Utility Maximization (Non-strict)',
     Unattractiveness(PreorderParams(total=True, strict=True)):
-        'Utility Maximization with an Outside Option (strict)',
+        'Utility Maximization with an Outside Option (Strict)',
     Unattractiveness(PreorderParams(total=True, strict=False)):
-        'Utility Maximization with an Outside Option (non-strict)',
+        'Utility Maximization with an Outside Option (Non-strict)',
     PreorderMaximization(PreorderParams(total=False, strict=True)):
-        'Incomplete-Preorder Maximization (strict)',
+        'Maximally Dominant Choice (Strict)',
     PreorderMaximization(PreorderParams(total=False, strict=False)):
-        'Incomplete-Preorder Maximization (non-strict)',
+        'Maximally Dominant Choice (Non-strict)',
     UndominatedChoice(strict=True):
-        'Undominated Choice (strict)',
+        'Undominated Choice (Strict)',
     UndominatedChoice(strict=False):
-        'Undominated Choice (non-strict)',
+        'Undominated Choice (Non-strict)',
     PartiallyDominantChoice(fc=True):
-        'Partially Dominant Choice (forced)',
+        'Partially Dominant Choice (Forced)',
     PartiallyDominantChoice(fc=False):
-        'Partially Dominant Choice (non-forced)',
+        'Partially Dominant Choice (Non-forced)',
     StatusQuoUndominatedChoice():
         'Status-Quo-Biased Undominated Choice',
     Overload(PreorderParams(strict=True, total=True)):
-        'Overload-Constrained Utility Maximization (strict)',
+        'Overload-Constrained Utility Maximization (Strict)',
     Overload(PreorderParams(strict=False, total=True)):
-        'Overload-Constrained Utility Maximization (non-strict)',
+        'Overload-Constrained Utility Maximization (Non-strict)',
     TopTwo():
         'Top-Two Choice',
     SequentiallyRationalizableChoice():

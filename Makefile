@@ -2,7 +2,7 @@ CORE = core/target/release/prest-core
 DOCS = docs/build/html/index.html
 GUI  = gui/.typecheck-ts
 
-.PHONY: check test build all clean $(CORE) $(DOCS) $(GUI)
+.PHONY: check test build all clean $(CORE) $(DOCS) $(GUI) version.txt
 
 all: build
 

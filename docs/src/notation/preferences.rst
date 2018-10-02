@@ -25,7 +25,7 @@ The relation of **indifference** that is derived from `\succsim` is defined by
 	x\sim y\;\; \text{if}\;\; x\succsim y\;\; \text{and}\;\; y\succsim x
 
 	
-Additional properties that a weak preference relation may have are the following:
+Additional properties that a weak preference relation may have are:
 
 Completeness
 ............
@@ -70,7 +70,7 @@ Asymmetry
 
 *For all* `x,y\in X`, `x\succ y` *implies* `y\not\succ x`.
 
-Additional properties that a strict preference relation `\succ` may have are the following:
+Additional properties that a strict preference relation `\succ` may have are:
 
 Totality
 ........

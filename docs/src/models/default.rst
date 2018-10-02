@@ -4,7 +4,7 @@ Choice Models with a Default/Status-Quo Alternative
 Status-Quo-Biased Undominated Choice (Bewley model)
 ---------------------------------------------------
 
-A general dataset with default/status quo alternatives `\mathcal{D}` is explained by **status-quo-biased undominated choice (Bewley)** if 
+A general dataset with default/status quo alternatives `\mathcal{D}` is explained by **status-quo-biased undominated choice (Bewley model)** if 
 there exists a strict partial order `\succ` on `X` such that for every decision problem `(A,s)` in `\mathcal{D}`
 
 .. math::

@@ -32,7 +32,7 @@ the user can choose from the following options:
 
 The possible options under *"Choice mode"*, and their implications for the probability distribution used in the simulations, depend on what the user selected under *"Default alternative"*, as follows:
 
-  * **Default alternative -> None**:
+  * Under **Default alternative -> None**, the *"Observations without default alternatives"* menu is activated, featuring the following options:
 
          * **Forced choice**
 
@@ -64,7 +64,7 @@ The possible options under *"Choice mode"*, and their implications for the proba
            +------------------------------------------+-----------------------+-----------------------------------------------+
 
 
-  * **Default alternative -> Uniformly random**:
+  * Under **Default alternative -> Uniformly random**, the *"Observations with default alternatives"* menu is activated, featuring the following options:
      
          * **Unbiased**
 
@@ -97,7 +97,7 @@ The possible options under *"Choice mode"*, and their implications for the proba
            | submenu being chosen                            |                       |                                                                                               |
            +-------------------------------------------------+-----------------------+-----------------------------------------------------------------------------------------------+	 	 
 
-     `*`   *"Single-valued choice" here refers to the case where "Multi-valued choice" is* not *selected, and results in up to one alternative being chosen from each menu.*    
+     `*`   *"Single-valued choice" here refers to the case where "Multi-valued choice" at the bottom of the dialog box is* not *selected, and results in up to one alternative being chosen from each menu.*    
 	
      `**`   *The probability of an alternative being chosen under the "Multi-valued choice" mode is interpreted here as the probability that the given alternative belongs to the chosen submenu of the given menu. Assuming "Forced-choice" and considering an arbitrary menu* `A` *with* `k` *alternatives, every nonempty weak submenu of* `A` *is chosen with probability* `\frac{1}{2^k-1}`. *Since each of the* `k` *alternatives belongs to exactly* `\frac{2^k}{2}` *of these submenus, it follows that each of them is chosen with probability* `\frac{2^k}{2(2^k-1)}`. *If "Non-forced choice" is selected instead, then since some nonempty submenu of* `A` *is chosen with probability* `\frac{k}{k+1}` (*because the deferral/outside option is chosen with probability* `\frac{1}{k+1}`), *the corresponding choice probability for each of the* `k` *alternatives is adjusted accordingly.*
 	
@@ -113,7 +113,7 @@ are named *"Random1, Random2, ..."*.
 Choice Simulations Based on an *Existing* Dataset
 -------------------------------------------------
 
-This allows users to generate choices of random-behaving subjects who faced exactly the same menus that subjects in an already existing
+This allows users to generate choices of random-behaving subjects who faced *exactly* the same menus that subjects in an already existing
 dataset were presented with. In this case, Prest reproduces subject-per-subject the menu structure of the original dataset.
 
 This feature can be used by right-clicking on the dataset of interest in the workspace and 
@@ -121,7 +121,8 @@ select *"Analysis -> Generate similar random dataset"*. In the pop-up window, th
 subjects will be generated in the way described above for each subject in the original dataset. The *"Subjects"* and *"Observations"* entries below that option
 inform the user about the corresponding size dimensions of the simulated dataset that will be produced.
 
-The rules specified above apply for the probability distributions under the different possible combinations. 
+The options that were specified above are also available here under *"Choice mode"*. In addition, if the existing dataset contains some observations
+with default alternatives and others without, then the user can select the simulation mode for each mode of analysis.
 
 The resulting random dataset will again appear in the workspace and the user can apply on it the consistency analysis and/or
 model estimation operations that were described in the previous sections. The simulated subjects here

@@ -19,14 +19,14 @@ For any two distinct alternatives `x,y` in `X`
 
 	
 .. note::
-     Prest reports two WARP counts for general datasets: **WARP (pairs)** and **WARP (all)**.
+     **Prest reports two WARP counts for general datasets:** *WARP (pairs)* and *WARP (all)*.
 	 
      **WARP (pairs)** is the number of *pairs of menus* that are implicated in a WARP violation.
      
      **WARP (all)** is the total number of WARP violations.
 	 
      For example, the data `C(\{x,y,z\})=\{x,y\}` and `C(\{x,z\})=\{z\}` 
-     is associated with a WARP (pairs) score of 1 and a WARP (all) score of 2, 
+     is associated with a WARP (pairs) count of 1 and a WARP (all) count of 2, 
      the latter involving alternatives `x,z` and `y,z`, respectively.
 
 
@@ -123,9 +123,9 @@ Following the same steps as above, this output can be viewed within Prest or exp
      for consistency analysis or model estimation after the potential "noisiness" of choice data has been accounted for in this way through multi-valued choice.
      	 
      **Remark:** *If the merging operation is applied on a non-forced-choice dataset where a subject has chosen an alternative from menu* `A` *in one or more instances and has deferred choice/opted for the outside option
-     in at least another, then the merged dataset will feature menu* `A` *appearing twice: one where* `C(A)` *comprises all alternatives in `A` that were chosen at least once; and one where* `C(A)=\emptyset`.
+     in at least another, then the merged dataset will feature menu* `A` *appearing twice: one where* `C(A)` *comprises all alternatives in* `A` *that were chosen at least once; and one where* `C(A)=\emptyset`.
      
-     **An example of a dataset that can be processed in this way to illustrate these merging features is available** `here <https://www.prestsoftware.com/files/examples/general-merging.csv>`_. 
+     **An example of a dataset that may help as an illustration for these merging features is available** `here <https://www.prestsoftware.com/files/examples/general-merging.csv>`_. 
 	 
 .. note::
 

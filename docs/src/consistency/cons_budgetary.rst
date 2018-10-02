@@ -1,8 +1,8 @@
 Consistency Criteria for Budgetary Datasets
 ===========================================
 
-For every subject whose choices are in the dataset, Prest can compute, view and export the 
-total number of violations or score for each of the axioms/criteria or index of choice consistency that are listed below.
+For every subject whose choices are in the dataset, Prest can find and count the 
+total number of violations (resp. score) for each of the axioms/criteria (resp. choice consistency index) listed below.
 
 **Note:** *much of the terminology and notation that follows is introduced and explained in the* 
 :ref:`Datasets <general-datasets>` *and* :ref:`Revealed Preference Relations <revealed>` *sections*.
@@ -62,4 +62,4 @@ the range `m\leq HM \leq n` of possible values.
      **To export the consistency-analysis output (in .xslx or .csv format):** right-click on the Prest-generated dataset [e.g. "DatasetX.csv (consistency)"] 
      in the workspace, click on "Export", and then select one of the following options:
      
-     An example of a budgetary dataset that can be analysed in this way can be found `here <https://www.prestsoftware.com/files/examples/budgetary.csv>`_. 
+     **An example of a budgetary dataset that can be analysed in this way can be found** `here <https://www.prestsoftware.com/files/examples/budgetary.csv>`_. 

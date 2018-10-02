@@ -20,7 +20,7 @@ Right-clicking on a dataset in the workspace area leads to the following options
  
    * **View**: Displays the contents of the dataset in a separate window.
    
-   * **Analysis**: The available options here depend on whether the selected dataset is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`.
+   * **Analysis**: The available options here depend on whether the selected dataset is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`:
       
      * **General datasets**
 
@@ -28,7 +28,7 @@ Right-clicking on a dataset in the workspace area leads to the following options
 
                      1) *Observations*.
 
-                     2) *Active choices* (number of times where the outside option *was not* chosen).
+                     2) *Active choices* (number of times where the outside option -if feasible-  was *not* chosen).
 
                      3) *Deferrals* (number of times where the outside option *was* chosen).
 

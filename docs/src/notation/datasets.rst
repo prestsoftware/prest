@@ -15,17 +15,16 @@ A **general dataset**
 .. math::
 	\mathcal{D}=\left\{\big(A_i,C(A_i)\bigr)\right\}_{i=1}^k
 
-is a collection of `k` observations, with each of them a pair of a menu and the alternative(s) chosen from that menu (if any). 
+is a collection of `k` observations, with each of them a pair of a menu and the alternative(s) chosen from it (if any). 
 In particular, if `C(A)` contains more than one alternative for some menu `A` in `\mathcal{D}`, 
 it is understood that the decision maker has chosen (or may be thought of as having chosen)
-any or all these alternatives at that menu, possibly over different instances where menu `A` was presented in `\mathcal{D}`. 
-If `C(A)=\emptyset` for some menu `A` in `\mathcal{D}`, then  
-it is understood that the decision maker has chosen the **no-choice/outside option** or, equivalently, that 
-(s)he opted to **avoid** or **defer** choice at that menu.
+any or all these alternatives at `A`, possibly over different instances where `A` was presented in `\mathcal{D}`. 
+If `C(A)=\emptyset`, then it is understood that the decision maker has chosen the **no-choice/outside option** or, equivalently, that 
+(s)he opted to **avoid** or **defer** choice at menu `A`.
 
 
 It is also possible that the data available to the analyst features a **default/status quo option**, reflecting situations where the decision 
-maker was initially endowed with some alternative `s\in X` before a choice from some menu was made.
+maker was initially endowed with some alternative `s\in A` before asked to choose from menu `A`.
 
 A **general dataset with default/status quo alternatives** 
 
@@ -33,16 +32,16 @@ A **general dataset with default/status quo alternatives**
 	\mathcal{D}=\left\{\big((A_i,s_i),C(A_i,s_i)\bigr)\right\}_{i=1}^k
 
 is a collection of `k` observations, with each of them a pair comprising a **decision problem** and the alternative(s) that was/were observed to be chosen at this decision problem. 
-In each decision problem `(A_i,s_i)`, `A_i` is a menu and `s_i\in A_i` is the default/status quo alternative at that menu, 
+In each decision problem `(A_i,s_i)`, `A_i` is a menu and `s_i\in A_i` the default/status quo alternative at that menu, 
 while `\emptyset\neq C(A_i,s_i)\subseteq A_i` is required to hold for all `i\leq k` in such datasets.
 
 
 .. tip::
      To be analyzable by Prest, a general dataset must be a .csv file.
 
-     An example of a Prest general dataset can be found `here <http://www.prestsoftware.com/files/examples/consistency-general-no-defaults.csv/>`_.
+     **An example of a Prest general dataset can be found** `here <http://www.prestsoftware.com/files/examples/general-no-defaults.csv>`_.
 
-     An example of a Prest general dataset with default/status quo alternatives can be found `here <http://www.prestsoftware.com/files/examples/consistency-general-defaults.csv/>`_.
+     **An example of a Prest general dataset with default/status quo alternatives can be found** `here <http://www.prestsoftware.com/files/examples/general-defaults.csv>`_.
     
      To import such a dataset into Prest, select *"Workspace -> Import general dataset"* and select the target file from the relevant directory.
      
@@ -73,7 +72,7 @@ is a collection of `k` observations, with each of them a pair `(p^i,x^i)` compri
 .. tip::
      To be analyzable by Prest, a budgetary dataset must be a .csv file.
 
-     An example of a Prest budgetary dataset can be found `here <http://www.prestsoftware.com/files/examples/budgetary.csv/>`_
+     **An example of a Prest budgetary dataset can be found** `here <http://www.prestsoftware.com/files/examples/budgetary.csv>`_
      
      To import such a dataset into Prest, select *"Workspace -> Import budgetary dataset"* and select the target file from the relevant directory.
      
@@ -85,5 +84,4 @@ is a collection of `k` observations, with each of them a pair `(p^i,x^i)` compri
      * Column `n+2`: demand of good 1
      * Column  `2n+1`: demand of good `n`
 
-     To view the imported dataset in Prest, double-click on it in the workspace area.
-     Prest adds an extra column with the total expenditure associated with each observation.
+     To view the imported dataset in Prest, double-click on it in the workspace area. *Prest adds an extra column with the total expenditure associated with each observation.*

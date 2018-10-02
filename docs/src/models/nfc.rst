@@ -8,7 +8,7 @@ Strict
 ......
 
 A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained by
-**utility maximization with an outside option (strict)** if
+**(strict) utility maximization with an outside option** if
 there is a strict linear order `\succ` on `X` and an alternative `x^*\in X` such
 that for every menu `A` in `\mathcal{D}`
 
@@ -34,7 +34,7 @@ Non-strict
 ..........
 
 A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained by
-**utility maximization with an outside option (non-strict)** if
+**(non-strict) utility maximization with an outside option** if
 there is a weak order `\succsim` on `X` and an alternative `x^*\in X` such
 that for every menu `A` in `\mathcal{D}`
 
@@ -68,7 +68,7 @@ Strict
 ......
 
 A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained by
-**overload-constrained utility maximization (strict)** if there is a strict linear order
+**(strict) overload-constrained utility maximization** if there is a strict linear order
 `\succ` on `X` and an integer `n` such that for every menu `A` in `\mathcal{D}`
 
 .. math:: 
@@ -92,7 +92,7 @@ Non-strict
 ..........
 
 A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained by
-**overload-constrained utility maximization (non-strict)** if there is a weak order
+**(non-strict) overload-constrained utility maximization** if there is a weak order
 `\succsim` on `X` and an integer `n` such that for every menu `A` in `\mathcal{D}`
 
 .. math:: 

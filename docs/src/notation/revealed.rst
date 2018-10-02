@@ -44,9 +44,9 @@ and consumption bundles `x^i,x^j` in `\mathbb{R}^n_+` such that `i,j\leq k`.
 The following definitions and notation will be used for the 
 different ways in which `x^i` may be **revealed preferred** to `x^j` in `\mathcal{D}`:
 
-`x^i\succsim^R x^j` if `p^ix^j\leq p^ix^i`.
+`x^i\succsim^R x^j` if `p^ix^i\geq p^ix^j`.
 
-`x^i\succ^R x^j` if `p^ix^j<p^ix^i`.
+`x^i\succ^R x^j` if `p^ix^i>p^ix^j`.
 
 `x^i\succsim^{\widehat{R}} x^j` if there exist observations `(p^l,x^l),\ldots,(p^{l+n},x^{l+n})` in `\mathcal{D}` such that
 `x^i=x^l`, `x^j=x^{l+n}` and `p^lx^l\geq p^lx^{l+1}`, `\ldots`, `p^{l+n-1}x^{l+n-1}\geq p^{l+n-1}x^{l+n}`.

@@ -5,7 +5,7 @@ Non-Parametric Preference Estimation
 
 
 For **general/non-budgetary datasets**, Prest can estimate non-parametrically which model (or models) in its 
-current toolkit is the best match for a given subject in the dataset by identifying *"how far"* each model is from fully explaining 
+current toolkit is the best match for a given subject in the dataset by identifying "how far" each model is from fully explaining 
 that person's choices. 
 
 Generalizing the Houtman-Maks [houtman-maks85]_ method in the *model-based* way suggested in [CCGT16]_,  Prest computes the **distance score** 

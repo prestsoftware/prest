@@ -93,7 +93,11 @@ class Core:
         except platform_specific.FileNotFound:
             fname_precomputed_preorders = None
 
-        cmdline = [platform_specific.get_embedded_file_path('prest-core.exe', 'prest-core')]
+        cmdline = [platform_specific.get_embedded_file_path(
+            'prest-core.exe',  # deployment Windows
+            'prest-core',      # deployment elsewhere (?)
+            'core/target/release/prest-core',
+        )]
         if fname_precomputed_preorders:
             cmdline += ['--precomputed-preorders', fname_precomputed_preorders]
 

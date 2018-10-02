@@ -7,3 +7,4 @@ dist/
 .typecheck-ts
 version.txt
 .pytest_cache/
+.hypothesis/

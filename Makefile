@@ -30,10 +30,10 @@ run: build
 	python3 gui/main.py
 
 test: build
-	python3 -m pytest -v -m "not long"
+	python3 -m pytest -v -m "not long" gui
 
 bench: build
-	python3 -m pytest -v -m benchmark
+	python3 -m pytest -v -m benchmark gui
 
 longtest: fulltest
 

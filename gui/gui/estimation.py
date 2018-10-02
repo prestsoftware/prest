@@ -37,7 +37,10 @@ class Estimation(QDialog, uic.estimation.Ui_Estimation, gui.ExceptionDialog):
 
     def fill_table(self):
         self.checkboxes = []
-        help_icon = QIcon(platform_specific.get_embedded_file_path('images/qm-16.png'))
+        help_icon = QIcon(platform_specific.get_embedded_file_path(
+            'images/qm-16.png',      # deploy
+            'gui/images/qm-16.png',  # devel
+        ))
         self.twModels.clear()
 
         def add_item(parent, item):

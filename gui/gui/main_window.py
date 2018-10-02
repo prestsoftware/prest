@@ -125,7 +125,8 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
 
         menu = QMenu(self)
         icon_hidden = QIcon(platform_specific.get_embedded_file_path(
-            'images/experimental.png'
+            'images/experimental.png',      # deployment
+            'gui/images/experimental.png',  # development
         ))
 
         a_view = QAction("View...", menu)

@@ -101,7 +101,10 @@ class BudgetaryConsistency(Dataset):
             QDialog.__init__(self)
             self.setupUi(self)
 
-            help_icon = QIcon(platform_specific.get_embedded_file_path('images/qm-16.png'))
+            help_icon = QIcon(platform_specific.get_embedded_file_path(
+                'images/qm-16.png',      # deploy
+                'gui/images/qm-16.png',  # devel
+            ))
             F = util.tree_model.Field
 
             self.ds = ds

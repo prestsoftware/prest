@@ -21,7 +21,8 @@ class About(QDialog, uic.about.Ui_About, gui.ExceptionDialog):
         self.lblPrest.setPixmap(
             QPixmap(
                 platform_specific.get_embedded_file_path(
-                    'images/prest-logo.png'
+                    'images/prest-logo.png',      # deployment
+                    'gui/images/prest-logo.png',  # development
                 )
             )
         )

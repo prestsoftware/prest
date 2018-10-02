@@ -82,7 +82,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
             doc.start_daemon(
                 platform_specific.get_embedded_file_path(
                     'html',  # deployment
-                    '../docs/build/html',  # development
+                    'docs/build/html',  # development
                 )
             )
         except OSError as e:

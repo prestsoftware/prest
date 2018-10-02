@@ -9,7 +9,5 @@ prest-*-gui.zip
 .cache/
 *.xlsx
 .hypothesis/
-.typecheck-ts
-version.txt
 .pytest_cache/
 /*.csv

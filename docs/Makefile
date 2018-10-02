@@ -14,9 +14,12 @@ help:
 
 .PHONY: help Makefile
 
-build/html/index.html: $(shell find docs/src)
+build/html/index.html: $(shell find src -type f)
 	make clean
 	make html
+
+src/%:
+	: # prevent Sphinx from using the default rule below
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

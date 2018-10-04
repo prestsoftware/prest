@@ -8,7 +8,7 @@ be distinguished from random behavior for a given level of statistical significa
 This procedure can therefore provide a *power test* for the user's model-estimation and consistency-analysis computations on general datasets, 
 as first suggested in [bronars87]_ for the case of budgetary datasets.
 
-Simulations on budgetaty datasets are not supported by Prest |version|. 
+Simulations on budgetary datasets are not supported by Prest |version|. 
 
 .. _direct-simulations:
 

@@ -1,3 +1,7 @@
 numpy
 openpyxl
 PyQt5
+sphinx
+sphinx-rtd-theme
+sphinxcontrib-bibtex
+sphinxcontrib-websupport

@@ -62,4 +62,4 @@ the range `m\leq HM \leq n` of possible values.
      **To export the consistency-analysis output (in .xslx or .csv format):** right-click on the Prest-generated dataset [e.g. "DatasetX.csv (consistency)"] 
      in the workspace, click on "Export", and then select one of the following options:
      
-     **An example of a budgetary dataset that can be analysed in this way can be found** `here <https://prestsoftware.com/files/examples/budgetary.csv>`_. 
+     **An example of a budgetary dataset that can be analysed in this way can be found** `here </_static/examples/budgetary.csv>`_. 

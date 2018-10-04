@@ -39,9 +39,11 @@ while `\emptyset\neq C(A_i,s_i)\subseteq A_i` is required to hold for all `i\leq
 .. tip::
      To be analyzable by Prest, a general dataset must be a .csv file.
 
-     **An example of a Prest general dataset can be found** `here <http://www.prestsoftware.com/files/examples/general-no-defaults.csv>`_.
+     **An example of a general dataset can be found** `here <https://prestsoftware.com/files/examples/general-no-defaults.csv>`_.
 
-     **An example of a Prest general dataset with default/status quo alternatives can be found** `here <http://www.prestsoftware.com/files/examples/general-defaults.csv>`_.
+     **An example of a general dataset with default/status quo alternatives can be found** `here <https://prestsoftware.com/files/examples/general-defaults.csv>`_.
+	 
+     **An example of a hybrid general dataset containing both types of observations can be found** `here <https://prestsoftware.com/files/examples/general-hybrid.csv>`_.
     
      To import such a dataset into Prest, select *"Workspace -> Import general dataset"* and select the target file from the relevant directory.
      
@@ -72,7 +74,7 @@ is a collection of `k` observations, with each of them a pair `(p^i,x^i)` compri
 .. tip::
      To be analyzable by Prest, a budgetary dataset must be a .csv file.
 
-     **An example of a Prest budgetary dataset can be found** `here <http://www.prestsoftware.com/files/examples/budgetary.csv>`_
+     **An example of a Prest budgetary dataset can be found** `here <https://prestsoftware.com/files/examples/budgetary.csv>`_
      
      To import such a dataset into Prest, select *"Workspace -> Import budgetary dataset"* and select the target file from the relevant directory.
      

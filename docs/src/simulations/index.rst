@@ -1,12 +1,14 @@
 Simulations & Estimation Power
 ==============================
 
-Prest offers two ways in which the user can obtain information about the distribution of various variables of interest (axiom violations; model distance scores)
+Prest |version| offers two ways in which the user can obtain information about the distribution of various variables of interest (axiom violations; model distance scores)
 when a large number of artificial subjects are assumed to make **uniform-random choices** from menus that are derived
-from a finite set of general alternatives. These distributions can then be used to determine
-whose *actual subjects'* choice behavior is indistinguishable from random behavior for a given level of statistical significance. 
+from a finite set of general alternatives. From these distributions one can then identify human subjects whose choice behavior cannot 
+be distinguished from random behavior for a given level of statistical significance.
 This procedure can therefore provide a *power test* for the user's model-estimation and consistency-analysis computations on general datasets, 
 as first suggested in [bronars87]_ for the case of budgetary datasets.
+
+Simulations on budgetaty datasets are not supported by Prest |version|. 
 
 .. _direct-simulations:
 
@@ -122,7 +124,7 @@ subjects will be generated in the way described above for each subject in the or
 inform the user about the corresponding size dimensions of the simulated dataset that will be produced.
 
 The options that were specified above are also available here under *"Choice mode"*. In addition, if the existing dataset contains some observations
-with default alternatives and others without, then the user can select the simulation mode for each mode of analysis.
+with default alternatives and others without, then the user can configure the simulation for each mode of analysis.
 
 The resulting random dataset will again appear in the workspace and the user can apply on it the consistency analysis and/or
 model estimation operations that were described in the previous sections. The simulated subjects here

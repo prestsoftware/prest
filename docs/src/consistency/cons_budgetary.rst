@@ -1,7 +1,7 @@
 Consistency Criteria for Budgetary Datasets
 ===========================================
 
-For every subject whose choices are in the dataset, Prest can find and count the 
+For every subject whose choices are in the dataset, Prest |version| can find and count the 
 total number of violations (resp. score) for each of the axioms/criteria (resp. choice consistency index) listed below.
 
 **Note:** *much of the terminology and notation that follows is introduced and explained in the* 
@@ -45,10 +45,10 @@ Houtman-Maks index - HM
 This corresponds to the smallest number of observations that need to be removed from a given subject's data
 in order for the remaining choices to satisfy GARP, SARP, WARP (strict) or WARP (non-strict). 
 
-Prest computes each of these four HM indices for budgetary data by finding both 
+Prest |version| computes each of these four HM indices for budgetary data by finding both 
 their **upper and lower bounds**. 
 
-If the two bounds coincide, Prest reports the exact HM index for the axiom in question. If they differ, Prest reports
+If the two bounds coincide, Prest reports the exact HM index for the axiom in question. If they differ, Prest |version| reports
 the range `m\leq HM \leq n` of possible values.
 
 
@@ -62,4 +62,4 @@ the range `m\leq HM \leq n` of possible values.
      **To export the consistency-analysis output (in .xslx or .csv format):** right-click on the Prest-generated dataset [e.g. "DatasetX.csv (consistency)"] 
      in the workspace, click on "Export", and then select one of the following options:
      
-     **An example of a budgetary dataset that can be analysed in this way can be found** `here <https://www.prestsoftware.com/files/examples/budgetary.csv>`_. 
+     **An example of a budgetary dataset that can be analysed in this way can be found** `here <https://prestsoftware.com/files/examples/budgetary.csv>`_. 

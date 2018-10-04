@@ -18,7 +18,7 @@ The three columns in the workspace area provide the following information about 
 Right-clicking on a dataset in the workspace area leads to the following options:
  
  
-   * **View**: Displays the contents of the dataset in a separate window.
+   * **View**: Displays the contents of the dataset in a separate window (this is also done by double-clicking on the dataset).
    
    * **Analysis**: The available options here depend on whether the selected dataset is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`:
       
@@ -103,6 +103,6 @@ Drop-down menu options
   
   * **Help**:
 
-      * **Prest manual**: opens the documentation page `www.prestsoftware.com <https://www.prestsoftware.com>`_  on the user's web browser.
+      * **Prest manual**: opens the embedded documentation page on the user's web browser.
 
       * **About**: opens a dialog with information about Prest's version, copyright and license. 	  

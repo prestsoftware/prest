@@ -2,22 +2,22 @@
 
 |
 
-**Introduction**
-----------------
+Introduction
+------------
 
 Prest is a free and user-friendly deskop application for computational revealed preference analysis.
 It allows for processing choice datasets that economists, psychologists and consumer/marketing researchers 
 often generate through experiments, market studies or surveys.
 
-**Downloads**
--------------
+Downloads
+---------
 	* Prest |version| for Windows
 	* Prest |version| for Linux
 	* The Prest source code is written in `Rust <https://www.rust-lang.org/>`_ (core) and `Python <https://www.python.org/>`_ (GUI), and can be downloaded from https://github.com/prestsoftware
 
 
-**Documentation**
------------------
+Documentation
+-------------
 
 The pages linked below (and also in the navigation menu on the left) contain information about Prest's features, 
 define the terms used in the graphical user interface, and explain relevant background concepts.
@@ -41,13 +41,13 @@ define the terms used in the graphical user interface, and explain relevant back
    copyright/index
 
 
-**Declarations**
-----------------
+Declarations
+------------
 
-**Prest |version| is open-source under the** `MIT license <https://opensource.org/licenses/MIT/>`_ (see :ref:`statement <license>`).
+Prest |version| is open-source under the `3-Clause BSD license <https://opensource.org/licenses/BSD-3-Clause>`_ (see :ref:`statement <license>`).
 
-**Prest |version| does not collect any data entered by its users.**
+Prest |version| does not collect any data entered by its users.
 
-**The latest version of Prest will always be available online for free.**
+The latest version of Prest will always be available online for free.
 
 

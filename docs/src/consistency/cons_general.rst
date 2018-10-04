@@ -2,7 +2,7 @@ Consistency Criteria for General Datasets
 =========================================
 
 
-For every subject whose choices are in the dataset, Prest can compute, view and export the 
+For every subject whose choices are in the dataset, Prest |version| can compute, view and export the 
 total number of violations for each of the axioms/criteria of choice consistency that are listed below.
 
 **Note:** *much of the terminology and notation that follows is introduced and explained in the* 
@@ -19,7 +19,7 @@ For any two distinct alternatives `x,y` in `X`
 
 	
 .. note::
-     **Prest reports two WARP counts for general datasets:** *WARP (pairs)* and *WARP (all)*.
+     **Prest |version| reports two WARP counts for general datasets:** *WARP (pairs)* and *WARP (all)*.
 	 
      **WARP (pairs)** is the number of *pairs of menus* that are implicated in a WARP violation.
      
@@ -38,6 +38,8 @@ For any two distinct alternatives `x,y` in `X`
 .. math::
 	x\succ^R y\;\; \Longrightarrow\;\; y\not\succsim^{\widehat{R}} x
 
+.. note::
+     In Prest, Congruence violations of length 2 coincide with the **WARP (all)** count.
 	
 	
 Strict Choice Consistency
@@ -95,6 +97,9 @@ Inconsistent tuples of menus
 By right-clicking on the dataset and then selecting *"Analysis -> Inconsistent tuples of menus"*, Prest computes and enumerates 
 all distinct pairs, triples, quadruples, ..., `n`-tuples of menus that have led to a Congruence violation, and groups them according to the size of `n`.
 
+.. note::
+     The number of inconsistent *pairs* of menus coincides with the **WARP (pairs)** count.
+
 Following the same steps as above, this output can be viewed within Prest or exported to a .csv or .xslx file.
 
 
@@ -125,9 +130,9 @@ Following the same steps as above, this output can be viewed within Prest or exp
      **Remark:** *If the merging operation is applied on a non-forced-choice dataset where a subject has chosen an alternative from menu* `A` *in one or more instances and has deferred choice/opted for the outside option
      in at least another, then the merged dataset will feature menu* `A` *appearing twice: one where* `C(A)` *comprises all alternatives in* `A` *that were chosen at least once; and one where* `C(A)=\emptyset`.
      
-     **An example of a dataset that may help as an illustration for these merging features is available** `here <https://www.prestsoftware.com/files/examples/general-merging.csv>`_. 
+     **An example of a dataset that may help as an illustration for these merging features is available** `here <https://prestsoftware.com/files/examples/general-merging.csv>`_. 
 	 
 .. note::
 
      **Examples of general datasets with and without default alternatives that can be analysed for consistency as above are available** 
-     `here <https://www.prestsoftware.com/files/examples/general-defaults.csv>`_  **and** `here <https://www.prestsoftware.com/files/examples/general-no-defaults.csv>`_, **respectively**.
+     `here <https://prestsoftware.com/files/examples/general-defaults.csv>`_  **and** `here <https://prestsoftware.com/files/examples/general-no-defaults.csv>`_, **respectively**.

@@ -33,7 +33,7 @@ A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained
 
 .. tip::  
      When estimating other models that generalize utility maximization/rational choice, 
-     Prest only considers instances of the more general models that do not overlap with those covered by the above two variants of utility maximization.
+     Prest |version| only considers instances of the more general models that do not overlap with those covered by the above two variants of utility maximization.
      It is therefore recommended that both of them always be included in all model-estimation tasks.
      	
 
@@ -89,7 +89,7 @@ where, for any `A\subseteq X`,
 
    
 .. tip::   
-     Due to this model's high computational demands, Prest currently provides only a **Pass/Fail** test for it, with the corresponding output being "0" and ">0", respectively.
+     Prest |version| supports only a **Pass/Fail** test for this model, with the corresponding output being "0" and ">0", respectively.
 	
 |
 

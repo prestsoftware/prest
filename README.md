@@ -1,19 +1,40 @@
-# prest
+# Prest
 
-Preference estimation from choice sets
+Preference estimation from choice data
 
-## What it is
+https://prestsoftware.com
 
-TBD
+## Introduction
 
-## How to install
+Prest is a free and user-friendly desktop application for computational revealed
+preference analysis. It allows for processing choice datasets that economists,
+psychologists and consumer/marketing researchers often generate through
+experiments, market studies or surveys.
 
-TBD
+## Documentation and downloads
 
-## Screenshots
+Pre-built Prest binaries can be downloaded from the landing page of the
+documentation at https://prestsoftware.com.
 
-TBD
+## Building
 
-## Download
+Dependencies:
+* Rust + Cargo
+* Python 3 (we use 3.6 and 3.7) + pip
 
-TBD
+```bash
+$ pip install --user -r gui/requirements.txt
+$ make run
+```
+
+We build stand-alone binaries using PyInstaller. These build scripts are not
+published at the moment.
+
+## Declarations
+
+Prest is open-source under the [3-Clause BSD
+license](https://opensource.org/licenses/BSD-3-Clause).
+
+Prest does not collect any data entered by its users.
+
+The latest version of Prest will always be available online for free.

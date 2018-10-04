@@ -1,8 +1,6 @@
 # Prest
 
-Preference estimation from choice data
-
-https://prestsoftware.com
+Preference estimation from choice data: https://prestsoftware.com
 
 ## Introduction
 

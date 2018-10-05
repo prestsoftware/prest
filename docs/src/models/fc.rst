@@ -32,7 +32,7 @@ A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained
 
 
 .. tip::  
-     When estimating other models that generalize utility maximization/rational choice, 
+     When analysing other models that generalize utility maximization/rational choice, 
      Prest |version| only considers instances of the more general models that do not overlap with those covered by the above two variants of utility maximization.
      It is therefore recommended that both of them always be included in all model-estimation tasks.
      	

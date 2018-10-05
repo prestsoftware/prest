@@ -19,7 +19,7 @@ For any two distinct alternatives `x,y` in `X`
 
 	
 .. note::
-     **Prest |version| reports two WARP counts for general datasets:** *WARP (pairs)* and *WARP (all)*.
+     Prest |version| reports two WARP counts for general datasets: **WARP (pairs)** and **WARP (all)**.
 	 
      **WARP (pairs)** is the number of *pairs of menus* that are implicated in a WARP violation.
      
@@ -39,7 +39,7 @@ For any two distinct alternatives `x,y` in `X`
 	x\succ^R y\;\; \Longrightarrow\;\; y\not\succsim^{\widehat{R}} x
 
 .. note::
-     In Prest, Congruence violations of length 2 coincide with the **WARP (all)** count.
+     In Prest |version|, Congruence violations of length 2 coincide with the **WARP (all)** count.
 	
 	
 Strict Choice Consistency

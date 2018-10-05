@@ -18,9 +18,9 @@ A **general dataset**
 is a collection of `k` observations, with each of them a pair of a menu and the alternative(s) chosen from it (if any). 
 In particular, if `C(A)` contains more than one alternative for some menu `A` in `\mathcal{D}`, 
 it is understood that the decision maker has chosen (or may be thought of as having chosen)
-any or all these alternatives at `A`, possibly over different instances where `A` was presented in `\mathcal{D}`. 
-If `C(A)=\emptyset`, then it is understood that the decision maker has chosen the **no-choice/outside option** or, equivalently, that 
-(s)he opted to **avoid** or **defer** choice at menu `A`.
+any or all these alternatives at `A`, possibly over different instances where `A` was presented in `\mathcal{D}` (see also :ref:`merging <merging-tip>`). 
+If `C(A)=\emptyset`, then it is understood that the decision maker has chosen the **no-choice/outside option**, hence
+to **avoid** or **defer** choice at menu `A`.
 
 
 It is also possible that the data available to the analyst features a **default/status quo option**, reflecting situations where the decision 
@@ -35,9 +35,10 @@ is a collection of `k` observations, with each of them a pair comprising a **dec
 In each decision problem `(A_i,s_i)`, `A_i` is a menu and `s_i\in A_i` the default/status quo alternative at that menu, 
 while `\emptyset\neq C(A_i,s_i)\subseteq A_i` is required to hold for all `i\leq k` in such datasets.
 
+.. _dataset-examples:
 
 .. tip::
-     To be analyzable by Prest, a general dataset must be a .csv file.
+     To be analyzable by Prest |version|, a general dataset must be a .csv file.
 
      **An example of a general dataset can be found** `here </_static/examples/general-no-defaults.csv>`_.
 
@@ -72,11 +73,11 @@ is a collection of `k` observations, with each of them a pair `(p^i,x^i)` compri
 
 
 .. tip::
-     To be analyzable by Prest, a budgetary dataset must be a .csv file.
+     To be analyzable by Prest |version|, a budgetary dataset must be a .csv file.
 
-     **An example of a Prest budgetary dataset can be found** `here </_static/examples/budgetary.csv>`_
+     **An example of a budgetary dataset can be found** `here </_static/examples/budgetary.csv>`_
      
-     To import such a dataset into Prest, select *"Workspace -> Import budgetary dataset"* and select the target file from the relevant directory.
+     To import such a dataset, go to *"Workspace -> Import budgetary dataset"* and select the target file from the relevant directory.
      
      **Budgetary datasets with** `n` **goods must have the following structure:** 
 	 
@@ -86,4 +87,4 @@ is a collection of `k` observations, with each of them a pair `(p^i,x^i)` compri
      * Column `n+2`: demand of good 1
      * Column  `2n+1`: demand of good `n`
 
-     To view the imported dataset in Prest, double-click on it in the workspace area. *Prest adds an extra column with the total expenditure associated with each observation.*
+     To view the imported dataset, double-click on it in the workspace area. **An extra column with the total expenditure associated with each observation is automatically added.**

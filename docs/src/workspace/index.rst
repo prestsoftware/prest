@@ -9,18 +9,18 @@ are available for analysis and/or export.
 
 The three columns in the workspace area provide the following information about the datasets listed there:
 
-   * **Name**: The name of the dataset, as imported from file or specified by the user through a Prest operation.
+   * **Name**: the name of the dataset, as imported from file or specified by the user through a Prest operation.
    
-   * **Alternatives/Goods**: Depending on whether the dataset in question is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`, the total number of alternatives or goods in that dataset is shown, respectively.
+   * **Alternatives/Goods**: depending on whether the dataset in question is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`, the total number of alternatives or goods in that dataset is shown, respectively.
    
-   * **Size**: The total number of subjects and observations in the dataset.
+   * **Size**: the total number of subjects and observations in the dataset.
    
 Right-clicking on a dataset in the workspace area leads to the following options:
  
  
-   * **View**: Displays the contents of the dataset in a separate window (this is also done by double-clicking on the dataset).
+   * **View**: displays the contents of the dataset in a separate window (this is also done by double-clicking on the dataset).
    
-   * **Analysis**: The available options here depend on whether the selected dataset is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`:
+   * **Analysis**: the available options here depend on whether the selected dataset is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`:
       
      * **General datasets**
 
@@ -52,7 +52,7 @@ Right-clicking on a dataset in the workspace area leads to the following options
               * **Consistency analysis**: details :ref:`here <budgetary-consistency-tip>`.
 
    
-   * **Export**: This allows for exporting the selected dataset in .xlsx or .csv format. 
+   * **Export**: this allows for exporting the selected dataset in .xlsx or .csv format. 
 
      Special remarks for this option:
 
@@ -77,7 +77,7 @@ Right-clicking on a dataset in the workspace area leads to the following options
 		   
          * **Binary cycles (wide)**
 		   
-   * **Delete**: Removes the selected dataset from the workspace area.
+   * **Delete**: removes the selected dataset from the workspace area.
 
 
 Drop-down menu options

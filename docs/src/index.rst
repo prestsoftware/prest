@@ -5,7 +5,7 @@
 Introduction
 ------------
 
-Prest is a free and user-friendly deskop application for computational revealed preference analysis.
+Prest is a free and user-friendly desktop application for computational revealed preference analysis.
 It allows for processing choice datasets that economists, psychologists and consumer/marketing researchers 
 often generate through experiments, market studies or surveys.
 

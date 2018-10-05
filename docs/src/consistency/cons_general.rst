@@ -134,5 +134,5 @@ Following the same steps as above, this output can be viewed within Prest or exp
 	 
 .. note::
 
-     **Examples of general datasets with and without default alternatives that can be analysed for consistency as above are available** 
+     **Examples of general datasets with and without default alternatives that can be analysed for consistency as described above are available** 
      `here </_static/examples/general-defaults.csv>`_  **and** `here </_static/examples/general-no-defaults.csv>`_, **respectively**.

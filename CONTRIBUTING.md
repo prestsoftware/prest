@@ -36,7 +36,7 @@ fastest way to have features included in Prest is submitting pull requests.
 
 ## Contributing to Prest source
 
-Before contributing, please get in touch via e-mail at <contact@prestsoftware.com>.
+Before contributing, please get in touch via e-mail at contact AT prestsoftware DOT com.
 We do not want you to waste your time or duplicate somebody's work;
 also, Prest is relatively new and we still need to document its coding style, internals, etc.
 

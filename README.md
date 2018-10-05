@@ -2,6 +2,8 @@
 
 Preference estimation from choice data: https://prestsoftware.com
 
+Reach us at <contact@prestsoftware.com>.
+
 ## Introduction
 
 Prest is a free and user-friendly desktop application for computational revealed

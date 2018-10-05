@@ -42,7 +42,7 @@ while `\emptyset\neq C(A_i,s_i)\subseteq A_i` is required to hold for all `i\leq
 
      **An example of a general dataset can be found** `here </_static/examples/general-no-defaults.csv>`_.
 
-     **An example of a general dataset with default/status quo alternatives can be found** `here </_static/examples/examples/general-defaults.csv>`_.
+     **An example of a general dataset with default/status quo alternatives can be found** `here </_static/examples/general-defaults.csv>`_.
 	 
      **An example of a hybrid general dataset containing both types of observations can be found** `here </_static/examples/general-hybrid.csv>`_.
     

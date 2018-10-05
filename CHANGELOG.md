@@ -1,3 +1,8 @@
+## 0.9.4
+
+- Update documentation.
+- Make the icon show in the top-left corner of the main window.
+
 ## 0.9.3
 
 - Update documentation.

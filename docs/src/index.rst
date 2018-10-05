@@ -51,3 +51,7 @@ Prest |version| does not collect any data entered by its users.
 The latest version of Prest will always be available online for free.
 
 
+Contact
+-------
+
+Email address: **contact AT prestsoftware DOT com** 

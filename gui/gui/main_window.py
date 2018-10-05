@@ -40,6 +40,12 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
         QMainWindow.__init__(self)
         self.setupUi(self)
 
+        # icon
+        self.setWindowIcon(QIcon(platform_specific.get_embedded_file_path(
+            'images/prest.ico',  # deployment
+            'gui/images/prest.ico',  # development
+        )))
+
         # instance attributes
         self.workspace = workspace.Workspace()
 

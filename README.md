@@ -2,7 +2,7 @@
 
 Preference estimation from choice data: https://prestsoftware.com
 
-Reach us at <contact@prestsoftware.com>.
+Reach us at contact@prest<span style="display:none">some</span>software.com.
 
 ## Introduction
 

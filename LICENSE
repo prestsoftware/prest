@@ -1,4 +1,4 @@
-Prest consists of two components: GUI (GNU GPL) and core (BSD-3-Clause).
+Prest consists of two separate programs: GUI (GNU GPL) and core (BSD-3-Clause).
 The full license texts can be found in the corresponding subdirectories.
 
 ------------------------------------------------------------------------------

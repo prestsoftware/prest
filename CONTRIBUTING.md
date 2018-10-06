@@ -60,6 +60,7 @@ the tests.  We'll do our best to help you out.
 
 ## License
 
+Prest consists of two separate programs: the GUI and the core.
 While the core is licensed under the BSD 3-Clause license, the GUI has to be
 licensed under the GPL, due to the PyQt5 license.
 

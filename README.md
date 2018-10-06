@@ -30,10 +30,15 @@ $ make run
 We build stand-alone binaries using PyInstaller. These build scripts are not
 published at the moment.
 
-## Declarations
+## License
 
-Prest is open-source under the [3-Clause BSD
-license](https://opensource.org/licenses/BSD-3-Clause).
+Prest core is open-source under the [3-Clause BSD
+license](https://github.com/prestsoftware/prest/blob/master/core/LICENSE).
+
+Prest GUI is open-source under the [GNU GPL](https://github.com/prestsoftware/prest/blob/master/gui/LICENSE),
+due to the [license of PyQt5](https://www.riverbankcomputing.com/commercial/license-faq).
+
+## Declarations
 
 Prest does not collect any data entered by its users.
 

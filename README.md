@@ -32,11 +32,8 @@ published at the moment.
 
 ## License
 
-Prest core is open-source under the [3-Clause BSD
-license](https://github.com/prestsoftware/prest/blob/master/core/LICENSE).
-
-Prest GUI is open-source under the [GNU GPL](https://github.com/prestsoftware/prest/blob/master/gui/LICENSE),
-due to the [license of PyQt5](https://www.riverbankcomputing.com/commercial/license-faq).
+Prest consists of two separate programs: GUI (GNU GPL) and core (BSD-3-Clause).
+The full license texts can be found in the corresponding subdirectories of the source code.
 
 ## Declarations
 

@@ -11,3 +11,4 @@ prest-*-gui.zip
 .hypothesis/
 .pytest_cache/
 /*.csv
+*.spec

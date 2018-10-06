@@ -68,7 +68,7 @@ author = 'Georgios Gerasimou, Matúš Tejiščák'
 #
 # The short X.Y version.
 try:
-    with open('../../version.txt') as f:
+    with open('../doc-version.txt') as f:
         version = f.read().strip()
 except OSError:
     version = '(no version)'

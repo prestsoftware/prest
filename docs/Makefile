@@ -25,7 +25,8 @@ src/%:
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 html: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-	sed -i build/html/index.html -e "s/VERSION/$(shell cat ../version.txt)/"
+	git describe --abbrev=0 > doc-version.txt
+	sed -i build/html/index.html -e "s/VERSION/$(git describe --abbrev=0)/g"
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

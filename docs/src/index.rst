@@ -42,11 +42,9 @@ define the terms used in the graphical user interface, and explain relevant back
 Declarations
 ------------
 
-Prest |version| is open-source under the `3-Clause BSD license <https://opensource.org/licenses/BSD-3-Clause>`_ (see :ref:`statement <license>`).
+Prest does not collect any data entered by its users.
 
-Prest |version| does not collect any data entered by its users.
-
-The latest version of Prest will always be available online for free.
+Prest is open-source software and its latest version will always be available online for free.
 
 
 Contact

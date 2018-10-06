@@ -63,7 +63,7 @@ the tests.  We'll do our best to help you out.
 While the core is licensed under the BSD 3-Clause license, the GUI has to be
 licensed under the GPL, due to the PyQt5 license.
 
-You should be comfortable contributing your code under these terms.
+You should be comfortable to contribute your code under these terms.
 
 ## Credits
 

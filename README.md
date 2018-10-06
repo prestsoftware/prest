@@ -16,16 +16,27 @@ experiments, market studies or surveys.
 Pre-built Prest binaries can be downloaded from the landing page of the
 documentation at https://prestsoftware.com.
 
-## Building
+## Building and running Prest
 
 Dependencies:
-* Rust + Cargo
+* Rust 1.26 stable + Cargo
 * Python 3 (we use 3.6 and 3.7) + pip
+
+Optionally, work in a virtual environment:
+
+```bash
+$ python3 -m venv prest.env
+$ source prest.env/bin/activate
+```
+
+Install the dependencies, compile everything and run:
 
 ```bash
 $ pip install --user -r gui/requirements.txt
 $ make run
 ```
+
+### Packaging
 
 We build stand-alone binaries using PyInstaller. These build scripts are not
 published at the moment.

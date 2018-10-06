@@ -10,7 +10,6 @@ documentation = "https://prestsoftware.com"
 homepage = "https://prestsoftware.com"
 repository = "https://github.com/prestsoftware/prest"
 license = "BSD-3-Clause"
-license-file = "LICENSE"
 
 [dependencies]
 argparse = "*"

@@ -10,7 +10,7 @@ often generate through experiments, market studies or surveys.
 Downloads
 ---------
 
-* `Prest v0.9.4 for Windows <_static/prest-VERSION.exe>`_
+* `Prest VERSION for Windows <_static/prest-VERSION.exe>`_
 
 * The `Prest source code <https://github.com/prestsoftware/prest>`_, written
   in `Rust <https://www.rust-lang.org/>`_ (core) and `Python

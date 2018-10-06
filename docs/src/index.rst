@@ -10,9 +10,9 @@ often generate through experiments, market studies or surveys.
 Downloads
 ---------
 	* `Prest v0.9.4 for Windows <_static/prest-VERSION.exe>`_
-	* `Prest v0.9.4 for Linux <_static/prest-VERSION>`_
 	* The Prest source code is written in `Rust <https://www.rust-lang.org/>`_ (core) and `Python <https://www.python.org/>`_ (GUI), and can be downloaded from https://github.com/prestsoftware
 
+On Linux, use `the provided instructions <https://github.com/prestsoftware/prest#building-and-running-prest>`_ to run Prest.
 
 Documentation
 -------------

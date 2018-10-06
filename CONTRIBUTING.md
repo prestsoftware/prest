@@ -58,6 +58,13 @@ To help increase the chance of your pull request being accepted:
 Feel free to submit pull requests for review if you're unsure how to e.g. fix
 the tests.  We'll do our best to help you out.
 
+## License
+
+While the core is licensed under the BSD 3-Clause license, the GUI has to be
+licensed under the GPL, due to the PyQt5 license.
+
+You should be comfortable contributing your code under these terms.
+
 ## Credits
 
 Adapted from [the contribution guidelines for Idris](https://github.com/idris-lang/Idris-dev/).

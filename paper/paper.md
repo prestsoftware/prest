@@ -45,13 +45,13 @@ application in empirical studies have been facilitated by the
 development of relevant computer algorithms. Such algorithms have been
 coded, for example, in:
 
-1.  Mathematica [@varian96];
+1.  Mathematica [@varian96; @beatty-crawford11];
 
 2.  Fortran [@cherchye-crawford-derock-vermeulen09];
 
 3.  R [@boelaert14];
 
-4.  MATLAB.[^1]
+4.  MATLAB [@heufer-hjertstrand15].[^1]
 
 The resulting computer programs allow the user to test if a given
 budgetary dataset complies with certain axioms of choice consistency, or

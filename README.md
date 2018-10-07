@@ -39,7 +39,8 @@ $ make run
 ### Testing
 
 ```bash
-$ make longtest
+$ make test      # quick test during development
+$ make fulltest  # includes long-running tests
 ```
 
 ### Packaging

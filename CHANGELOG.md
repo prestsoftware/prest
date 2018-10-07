@@ -1,3 +1,10 @@
+## 0.9.7
+
+- Add more tests.
+- Add the JOSS paper.
+- Add a target for preorders-7.bin.
+- Update documentation.
+
 ## 0.9.6
 
 - Update documentation.

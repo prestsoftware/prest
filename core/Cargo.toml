@@ -1,6 +1,6 @@
 [package]
 name = "prest"
-version = "0.9.6"
+version = "0.9.7"
 authors = [
 	"Georgios Gerasimou <giorgosgerasimou@hotmail.com>",
 	"Matus Tejiscak <ziman@functor.sk>"

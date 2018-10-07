@@ -9,7 +9,7 @@ authors:
   - name: Georgios Gerasimou
     orcid: 0000-0003-3712-3154
   - affiliation: 1
-  - Matúš Tejiščák
+  - name: Matúš Tejiščák
     orcid: 0000-0000-0000-0000
   - affiliation: 2
 affiliations:

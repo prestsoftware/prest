@@ -1,3 +1,8 @@
+## 0.9.6
+
+- Update documentation.
+- Update license information.
+
 ## 0.9.5
 
 - Update documentation.

@@ -36,6 +36,12 @@ $ pip install --user -r gui/requirements.txt
 $ make run
 ```
 
+### Testing
+
+```bash
+$ make longtest
+```
+
 ### Packaging
 
 We build stand-alone binaries using PyInstaller. These build scripts are not

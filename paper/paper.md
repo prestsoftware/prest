@@ -8,15 +8,15 @@ tags:
 authors:
   - name: Georgios Gerasimou
     orcid: 0000-0003-3712-3154
-  - affiliation: 1
+    affiliation: 1
   - name: Matúš Tejiščák
     orcid: 0000-0000-0000-0000
-  - affiliation: 2
+    affiliation: 2
 affiliations:
   - name: School of Economics & Finance, University of St Andrews
-  - index: 1
+    index: 1
   - name: School of Computer Science, University of St Andrews
-  - index: 2
+    index: 2
 date: 7 October 2018
 bibliography: paper.bib
 ---

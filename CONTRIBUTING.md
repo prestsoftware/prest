@@ -36,23 +36,18 @@ fastest way to have features included in Prest is submitting pull requests.
 
 ## Contributing to Prest source
 
-Before contributing, please get in touch via e-mail at contact AT prestsoftware DOT com.
-We do not want you to waste your time or duplicate somebody's work;
-also, Prest is relatively new and we still need to document its coding style, internals, etc.
+To make contribution easier for everyone involved, please:
 
-We try to adhere to something similar to the [successful git branching
-model](http://nvie.com/posts/a-successful-git-branching-model/).
+1. Discuss your change and the overall approach with us before starting
+   substantial work via e-mail at contact AT prestsoftware DOT com.  We do not
+   want you to waste your time or duplicate somebody's work.  We will be happy
+   to answer questions about Prest's internals.
 
-We have a test suite (still somewhat in flux); you can run everything available
-using `make longtest`.
+1. Run all tests using `make longtest` in the root directory.
 
-## Increasing chances of acceptance.
+1. Update the documentation, the surrounding code, examples elsewhere, whatever
+   is affected by your contribution
 
-To help increase the chance of your pull request being accepted:
-
-1. Discuss your change and the overall approach with us before starting substantial work.
-1. Run the tests.
-1. Update the documentation, the surrounding code, examples elsewhere, guides, whatever is affected by your contribution
 1. Use appropriate code formatting for both Rust and/or Python.
 
 Feel free to submit pull requests for review if you're unsure how to e.g. fix

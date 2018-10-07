@@ -16,7 +16,11 @@ $(GUI):
 	make -C gui .typecheck-ts
 
 # build everything there is to build/generate
-build: version.txt $(CORE) $(DOCS) $(GUI)
+build: version.txt preorders-7.bin $(CORE) $(DOCS) $(GUI)
+
+preorders-7.bin:
+	(cd core; cargo run --release --bin list-preorders)
+	mv core/preorders-7.bin ./
 
 version.txt:
 	bash update-version.sh

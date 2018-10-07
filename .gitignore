@@ -8,3 +8,4 @@ dist/
 version.txt
 .pytest_cache/
 .hypothesis/
+preorders-7.bin

@@ -43,7 +43,8 @@ To make contribution easier for everyone involved, please:
    want you to waste your time or duplicate somebody's work.  We will be happy
    to answer questions about Prest's internals.
 
-1. Run all tests using `make longtest` in the root directory.
+1. Run all tests using `make longtest` in the root directory. During
+   development, you can use `make test` to run just the quick subset.
 
 1. Update the documentation, the surrounding code, examples elsewhere, whatever
    is affected by your contribution

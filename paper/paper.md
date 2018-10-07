@@ -19,7 +19,7 @@ date: 7 October 2018
 bibliography: paper.bib
 ---
 
-[^1]
+# Summary
 
 Revealed preference analysis revolves around the theoretical
 identification and empirical testing of falsifiable restrictions (or
@@ -50,7 +50,7 @@ coded, for example, in:
 
 3.  R [@boelaert14];
 
-4.  MATLAB.[^2]
+4.  MATLAB.[^1]
 
 The resulting computer programs allow the user to test if a given
 budgetary dataset complies with certain axioms of choice consistency, or
@@ -61,7 +61,7 @@ maximization.
 Yet, despite the plethora of choice-theoretic models that are
 operational on discrete finite sets of general alternatives in
 non-budgetary environments and predict rational as well as
-*bounded-*rational behavior[^3], no computational revealed preference
+*bounded-*rational behavior[^2], no computational revealed preference
 tools are currently available for this important class of choice
 environments and models.
 
@@ -71,7 +71,7 @@ revealed-preference analysis on budgetary datasets with novel
 axiom-consistency and model-based goodness-of-fit analysis on general
 choice datasets.
 
-In summary, *Prest*[^4]:
+In summary, *Prest*[^3]:
 
 1.  *Has a user-friendly graphical interface, through which all tasks
     can be performed.*
@@ -83,13 +83,13 @@ In summary, *Prest*[^4]:
     :   implements the user-facing graphical interface. It executes the
         core component (described below) as a subprocess and uses it to
         compute tasks as requested by the user. It is written in
-        Python[^5] and uses PyQt5. This program is released under the GNU GPL license.
+        Python[^4] and uses PyQt5. This program is released under the GNU GPL license.
 
     core
 
     :   implements the computations and communicates with the GUI using
         synchronous binary messages sent over its standard input/output.
-        It is written in Rust[^6] for speed, reliability, and ease of
+        It is written in Rust[^5] for speed, reliability, and ease of
         parallelisation. This program is released under the 3-Clause BSD license.
 
     The components of the GUI wrapper (or the binary protocol itself)
@@ -241,7 +241,7 @@ In summary, *Prest*[^4]:
 
     Importantly, as with consistency analysis on general-choice data, models assuming
     the presence of default/status quo market alternatives and models of
-    non-forced choice are also supported.[^7]
+    non-forced choice are also supported.[^6]
 
 6.  *Features Monte-Carlo simulations of random behavior.*
 
@@ -257,29 +257,32 @@ In summary, *Prest*[^4]:
      and non-forced choice general datasets, and also for ones with default/status quo
      market alternatives.
 
+# Acknowledgements
+
+The authors (listed alphabetically) thank Miguel Costa-Gomes,
+Carlos Cueva and the University of St Andrews for an Impact Fund
+grant that was awarded in October 2017 and made the development of
+*Prest* possible.
+
 # References
 
-[^1]: The authors (listed alphabetically) thank Miguel Costa-Gomes,
-    Carlos Cueva and the University of St Andrews for an Impact Fund
-    grant that was awarded in October 2017 and made the development of
-    *Prest* possible.
 
-[^2]: MATLAB code files for standard revealed-preference tests on
+[^1]: MATLAB code files for standard revealed-preference tests on
     budgetary data have been created by the Group for the Advancement of
     Revealed Preference and are currently available for download in
     <http://www.revealedpreferences.org/assets/CodeAndData/revpref.zip>.
 
-[^3]: An example of such bounded rationality is when choices are guided
+[^2]: An example of such bounded rationality is when choices are guided
     by maximization of an *incomplete* preference relation. Allowing the
     preference relation to be incomplete is a natural way to model the
     decision maker's *indecisiveness* between some choice alternatives,
     which is ruled out by the model of rational choice.
 
-[^4]: For the definitions of the axioms and indices mentioned below see
+[^3]: For the definitions of the axioms and indices mentioned below see
     @chambers-echenique16 or [https://prestsoftware.com](https://prestsoftware.com).
 
-[^5]: <https://www.python.org>.
+[^4]: <https://www.python.org>.
 
-[^6]: <https://www.rust-lang.org>.
+[^5]: <https://www.rust-lang.org>.
 
-[^7]: See @bewley02 and Gerasimou [-@gerasimou16a;@gerasimou18], respectively.
+[^6]: See @bewley02 and Gerasimou [-@gerasimou16a;@gerasimou18], respectively.

@@ -51,7 +51,7 @@ coded, for example, in:
 
 3.  R [@boelaert14];
 
-4.  MATLAB [@heufer-hjertstrand15].[^1]
+4.  MATLAB [@heufer-hjertstrand15; @dean-martin16].[^1]
 
 The resulting computer programs allow the user to test if a given
 budgetary dataset complies with certain axioms of choice consistency, or

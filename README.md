@@ -39,6 +39,10 @@ $ pip install -r gui/requirements.txt
 $ make run
 ```
 
+The build invoked by the commands above will, among other things, build the
+HTML documentation, which is required for the help features of Prest.  It will
+also typecheck the code using `mypy`.
+
 ### Testing
 
 ```bash

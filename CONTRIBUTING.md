@@ -78,9 +78,11 @@ Pythonic way of doing things.
   named tuples).
 
 * We make sure that once a codec is constructed, it is as fast as possible.
-  That's why we save sub-codecs in locals, which will in turn be stored
-  directly in the closure of the codec being constructed. (We absolutely avoid
-  attribute lookups every time `encode()` and `decode()` are called.)
+  That's why we save sub-codecs' `encode` and `decode` functions in locals,
+  which will in turn be stored directly in the closure of the codec being
+  constructed. (We absolutely avoid re-constructing codecs for a given type,
+  such as calling `listC(x)` or even attribute lookups every time `encode()`
+  and `decode()` are called.)
 
 * We put a lot of emphasis on typechecking -- if you use the `Makefile`, you
   can't run a program that hasn't been typechecked. Although MyPy types are not

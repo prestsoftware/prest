@@ -86,7 +86,7 @@ In summary, *Prest*[^3]:
         compute tasks as requested by the user. It is written in
         Python[^4] and uses PyQt5. This program is released under the GNU GPL license.
 
-    core
+    Core
 
     :   implements the computations and communicates with the GUI using
         synchronous binary messages sent over its standard input/output.
@@ -182,12 +182,12 @@ In summary, *Prest*[^3]:
 
     Congruence violations:
 
-    :   elementary cycles of non-strict edges where at least one edge is
+    :   Elementary cycles of non-strict edges where at least one edge is
         strict.
 
     Strict Choice Consistency violations:
 
-    :   elementary cycles of strict edges.
+    :   Elementary cycles of strict edges.
 
     WARP violations:
 

@@ -43,6 +43,8 @@ To make contribution easier for everyone involved, please:
    want you to waste your time or duplicate somebody's work.  We will be happy
    to answer questions about Prest's internals.
 
+1. Include type annotations in all code.
+
 1. Run all tests using `make longtest` in the root directory. During
    development, you can use `make test` to run just the quick subset.
 

@@ -56,6 +56,8 @@ the tests.  We'll do our best to help you out.
 
 ## Design
 
+We hope that the following will help you hack on the code.
+
 ### Functional approach to the GUI code
 
 Some aspects of the code lean towards the functional way rather than the

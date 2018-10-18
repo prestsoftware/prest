@@ -54,6 +54,37 @@ To make contribution easier for everyone involved, please:
 Feel free to submit pull requests for review if you're unsure how to e.g. fix
 the tests.  We'll do our best to help you out.
 
+## Design
+
+### Functional approach to the GUI code
+
+Some aspects of the code lean towards the functional way rather than the
+Pythonic way of doing things.
+
+* Classes (especially datasets) are used as data containers with attached
+  functionality rather than encapsulated entities. We access (and modify) their
+  properties directly, instead of doing it the OOP way.
+
+* We simulate ADTs using MyPy unions and named tuples. While we could use
+  inheritance to achieve the same goal, lightweight tuples perform better and
+  use much less memory.
+
+* Codecs for various data types are modelled after Haskell typeclass instances
+  / Rust traits; they are defined compositionally for each new type (mostly
+  named tuples).
+
+* We make sure that once a codec is constructed, it is as fast as possible.
+  That's why we save sub-codecs in locals, which will in turn be stored
+  directly in the closure of the codec being constructed. (We absolutely avoid
+  attribute lookups every time `encode()` and `decode()` are called.)
+
+* We put a lot of emphasis on typechecking -- if you use the `Makefile`, you
+  can't run a program that hasn't been typechecked. Although MyPy types are not
+  very precise, they are still a huge boost in reliability.
+
+* We include mainly only integration tests; local sanity is ensured by
+  typechecking with MyPy.
+
 ## License
 
 Prest consists of two separate programs: the GUI and the core.

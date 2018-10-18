@@ -45,6 +45,10 @@ To make contribution easier for everyone involved, please:
 
 1. Include type annotations in Python code.
 
+1. If your code does something clever, test it with a few cases. We expect this
+   is mostly relevant to the Rust/core component but feel free to add Python
+   tests, too.
+
 1. Run all tests using `make longtest` in the root directory. During
    development, you can use `make test` to run just the quick subset.
 

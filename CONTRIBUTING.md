@@ -43,7 +43,7 @@ To make contribution easier for everyone involved, please:
    want you to waste your time or duplicate somebody's work.  We will be happy
    to answer questions about Prest's internals.
 
-1. Include type annotations in all code.
+1. Include type annotations in Python code.
 
 1. Run all tests using `make longtest` in the root directory. During
    development, you can use `make test` to run just the quick subset.
@@ -58,7 +58,7 @@ the tests.  We'll do our best to help you out.
 
 ## Design
 
-We hope that the following will help you hack on the code.
+We hope that the following notes will help you hack on the code.
 
 ### Functional approach to the GUI code
 
@@ -87,7 +87,8 @@ Pythonic way of doing things.
   very precise, they are still a huge boost in reliability.
 
 * We include mainly only integration tests; local sanity is ensured by
-  typechecking with MyPy.
+  typechecking with MyPy. There are unit tests in the Rust core, which actually
+  does clever computations -- but the GUI code is mostly glue.
 
 ## License
 

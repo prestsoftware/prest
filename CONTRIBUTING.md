@@ -51,8 +51,6 @@ To make contribution easier for everyone involved, please:
 1. Update the documentation, the surrounding code, examples elsewhere, whatever
    is affected by your contribution
 
-1. Use appropriate code formatting for both Rust and/or Python.
-
 Feel free to submit pull requests for review if you're unsure how to e.g. fix
 the tests.  We'll do our best to help you out.
 

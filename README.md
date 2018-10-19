@@ -50,6 +50,13 @@ $ make test      # quick test during development
 $ make fulltest  # includes long-running tests
 ```
 
+The most comprehensive test is the [integration
+test](https://github.com/prestsoftware/prest/blob/master/gui/test/integration_test.py),
+which runs the whole pipeline including the Rust core on the [example
+datasets](https://github.com/prestsoftware/prest/tree/master/docs/src/_static/examples).
+It is invoked in the course of the above commands; `make test` uses only the small
+example datasets, while `make fulltest` uses all of them.
+
 ### Packaging
 
 We build stand-alone binaries using PyInstaller. These build scripts are not

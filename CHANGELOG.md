@@ -1,3 +1,15 @@
+## 0.9.9
+
+- Update version numbers and perform a standard release.
+
+## 0.9.8
+
+JOSS review:
+- update the paper + bibliography + references
+- improve installation instructions
+- add mypy to requirements.txt
+- improve contribution instructions
+
 ## 0.9.7
 
 - Add more tests.

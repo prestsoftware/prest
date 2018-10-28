@@ -51,7 +51,7 @@ Prest does not collect any data entered by its users.
 Prest is open-source software and its latest version will always be available online for free.
 
 To provide the service and monitor abuse, the web hosting provider of https://prestsoftware.com
-keeps standard access logs. This information is deleted after no longer than 24 hours.
+keeps standard webserver access logs. This information is deleted after no longer than 24 hours.
 
 Contact
 -------

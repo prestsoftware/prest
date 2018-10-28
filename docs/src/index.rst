@@ -18,19 +18,6 @@ Downloads
 
 On Linux, use `the provided instructions <https://github.com/prestsoftware/prest#building-and-running-prest>`_ to run Prest.
 
-Privacy
--------
-
-For impact-monitoring purposes, the following information is recorded whenever Prest |version| is downloaded from this website: 
-the date and time, user's country, city, domain name (such as st-andrews.ac.uk), and a hash code derived from the browser used. 
-The IP address and any other potentially identifying information is *not* stored in the download log. 
-
-In order to provide the service and monitor abuse, the web server keeps
-standard access logs, which include IP addresses. This information is retained
-for 24 hours and then deleted.
-
-
-
 Documentation
 -------------
 
@@ -63,6 +50,8 @@ Prest does not collect any data entered by its users.
 
 Prest is open-source software and its latest version will always be available online for free.
 
+To provide the service and monitor abuse, the web hosting provider of https://prestsoftware.com
+keeps standard access logs. This information is deleted after no longer than 24 hours.
 
 Contact
 -------

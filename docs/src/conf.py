@@ -39,6 +39,9 @@ extensions = [
     'sphinx.ext.autosectionlabel'
 ]
 
+#mathjax_path = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'
+mathjax_path = 'https://prestsoftware.com/_static/mathjax/MathJax.js?config=TeX-MML-AM_CHTML'
+
 # For DOI external links
 
 extlinks = {

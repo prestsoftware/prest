@@ -67,6 +67,12 @@ published at the moment.
 Prest consists of two separate programs: GUI (GNU GPL) and core (BSD-3-Clause).
 The full license texts can be found in the corresponding subdirectories of the source code.
 
+## Citation
+
+If you would like to cite Prest in your academic work, you can use the following reference:
+
+Georgios Gerasimou and Matúš Tejiščák (2018) Prest: Open-Source Software for Computational Revealed Preference Analysis, _Journal of Open Source Software_, 3(30), 1015, [doi:10.21105.joss.01015](https://doi.org/10.21105/joss.01015).
+
 ## Declarations
 
 Prest does not collect any data entered by its users.

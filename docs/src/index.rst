@@ -7,6 +7,15 @@ Prest is a free and user-friendly desktop application for computational revealed
 It allows for processing choice datasets that economists, psychologists and consumer/marketing researchers 
 often generate through experiments, market studies or surveys.
 
+Declarations
+------------
+
+Prest is open-source software and its latest version will always be available online for free.
+
+
+Prest does not collect any data entered by its users.
+
+
 Downloads
 ---------
 
@@ -18,8 +27,9 @@ Downloads
 
 On Linux, use `the provided instructions <https://github.com/prestsoftware/prest#building-and-running-prest>`_ to run Prest.
 
-Documentation
--------------
+
+Prest Documentation
+-------------------
 
 The pages linked below (and also in the navigation menu on the left) contain information about Prest's features, 
 define the terms used in the graphical user interface, and explain relevant background concepts.
@@ -43,12 +53,14 @@ define the terms used in the graphical user interface, and explain relevant back
    copyright/index
 
 
-Declarations
-------------
+Citation
+--------
 
-Prest does not collect any data entered by its users.
+If you would like to cite Prest in your academic work, you can use the following reference:
 
-Prest is open-source software and its latest version will always be available online for free.
+Georgios Gerasimou and Matúš Tejiščák (2018) Prest: Open-Source Software for Computational Revealed Preference Analysis, *Journal of Open Source Software*, 3(30), 1015, `doi:10.21105.joss.01015 <https://doi.org/10.21105/joss.01015>`_.
+
+
 
 Contact
 -------

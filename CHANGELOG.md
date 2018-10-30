@@ -1,3 +1,7 @@
+## 0.9.11
+
+- Update documentation.
+
 ## 0.9.10
 
 - Host MathJax locally.

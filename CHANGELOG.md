@@ -1,3 +1,8 @@
+## 0.9.10
+
+- Host MathJax locally.
+- Remove obsolete privacy notice.
+
 ## 0.9.9
 
 - Update version numbers and perform a standard release.

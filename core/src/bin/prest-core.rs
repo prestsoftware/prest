@@ -2,7 +2,7 @@ extern crate prest;
 extern crate rand;
 
 use rand::SeedableRng;
-use rand::prng::XorShiftRng;
+use rand::rngs::SmallRng;
 use prest::{rpc,precomputed,estimation,args,consistency,simulation};
 use prest::{experiment_stats,budgetary};
 use precomputed::Precomputed;
@@ -11,7 +11,7 @@ fn rpc_loop(args : &args::Args) {
     use rpc::*;
 
     // core state
-    let mut rng : XorShiftRng = SeedableRng::from_seed([0;16]);
+    let mut rng : SmallRng = SeedableRng::from_seed([0;16]);
     let mut rpc = IO::from_stdio();
     let mut precomp = Precomputed::new(
         args.fname_precomputed_preorders.as_ref().map(String::as_str)

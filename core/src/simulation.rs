@@ -3,6 +3,7 @@ use std::fmt;
 use std::io::{Read,Write};
 use std::iter::FromIterator;
 use rand::Rng;
+use rand::seq::SliceRandom;
 
 use model;
 use rpc_common::{ChoiceRow,Subject};
@@ -79,7 +80,7 @@ impl GenMenus {
             menus.into_iter().map(
                 |(m, _)| {
                     let alts = Vec::from_iter(m.view().into_iter());
-                    let default = rng.choose(&alts).unwrap().clone();
+                    let default = alts.choose(rng).expect("empty menu").clone();
                     (m, Some(default))
                 }
             ).collect()
@@ -141,7 +142,7 @@ impl GenChoices {
                     feasible
                 };
 
-                let choice = *rng.choose(&feasible).unwrap();
+                let choice = feasible.choose(rng).unwrap().clone(); // contains at least deferral
 
                 if choice == defer {
                     if let Some(alt) = default {

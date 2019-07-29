@@ -15,6 +15,7 @@ from gui.progress import Worker, Cancelled
 log = logging.getLogger(__name__)
 
 class Options(NamedTuple):
+    name : str
     multiplicity : int
     gen_choices : 'simulation.GenChoices'
 
@@ -30,6 +31,7 @@ class CopycatSimulation(QDialog, uic.copycat_simulation.Ui_CopycatSimulation, gu
 
         self.update_counts(self.sbMultiplicity.value())
         self.sbMultiplicity.valueChanged.connect(self.catch_exc(self.update_counts))
+        self.leName.setText(ds.name + ' (random choices)')
 
         class MyWorker(Worker):
             def work(self):
@@ -71,6 +73,7 @@ class CopycatSimulation(QDialog, uic.copycat_simulation.Ui_CopycatSimulation, gu
 
     def value(self) -> Options:
         return Options(
+            name=self.leName.text(),
             multiplicity=self.sbMultiplicity.value(),
             gen_choices=self.genChoices.value(),
         )

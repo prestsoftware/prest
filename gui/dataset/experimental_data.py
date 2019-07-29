@@ -201,7 +201,7 @@ class ExperimentalData(Dataset):
                     if position % 1024 == 0:
                         worker.set_progress(position)
 
-        ds = ExperimentalData(name=self.name + ' (random choices)', alternatives=self.alternatives)
+        ds = ExperimentalData(name=options.name, alternatives=self.alternatives)
         ds.subjects = subjects
         ds.observ_count = options.multiplicity * self.observ_count
         return ds

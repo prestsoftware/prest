@@ -145,7 +145,7 @@ class Core:
         try:
             while True:
                 msg = MessageC.decode(self.stdout)
-                log.debug('message received: %s' % str(msg))
+                #log.debug('message received: %s' % str(msg))
 
                 if isinstance(msg, Progress):
                     log.debug('progress: %d' % msg.position)

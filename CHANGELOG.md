@@ -1,3 +1,8 @@
+## 0.9.12
+
+- Rename and reorder models.
+- Let users choose names for simulated datasets based on existing datasets.
+
 ## 0.9.11
 
 - Update documentation.

@@ -134,7 +134,6 @@ class TupleIntransMenus(Dataset):
                 size=len(self.subjects),
             ),
         )
-        return []
 
     def export_detailed(self) -> Iterator[Optional[Tuple[str,Optional[int],str]]]:
         for subject in self.subjects:

@@ -1,3 +1,6 @@
+# mypy can't see that exceptions may be set from other threads
+# mypy: no-warn-unreachable
+
 import logging
 import collections
 from typing import Any, List, Callable, Optional

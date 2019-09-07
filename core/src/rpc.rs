@@ -9,9 +9,11 @@ use consistency;
 use simulation;
 use experiment_stats;
 use budgetary;
+use integrity;
 
 #[derive(Debug)]
 pub enum ActionRequest {
+    IntegrityCheck(integrity::Request),
     BudgetaryConsistency(budgetary::consistency::Request),
     Summary(experiment_stats::Request),
     SetRngSeed(Vec<u8>),

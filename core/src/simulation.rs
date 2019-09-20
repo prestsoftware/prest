@@ -2,6 +2,7 @@ use std::result;
 use std::fmt;
 use std::io::{Read,Write};
 use std::iter::FromIterator;
+use std::collections::HashSet;
 use rand::Rng;
 use rand::seq::SliceRandom;
 
@@ -175,6 +176,7 @@ pub struct Request {
     alternatives : Vec<String>,
     gen_menus : GenMenus,
     gen_choices : GenChoices,
+    preserve_deferrals : bool,
 }
 
 impl Decode for Request {
@@ -184,6 +186,7 @@ impl Decode for Request {
             alternatives: Decode::decode(f)?,
             gen_menus: Decode::decode(f)?,
             gen_choices: Decode::decode(f)?,
+            preserve_deferrals: Decode::decode(f)?,
         })
     }
 }
@@ -217,13 +220,30 @@ impl fmt::Display for Error {
 pub type Result<T> = result::Result<T, Error>;
 
 pub fn run<R : Rng>(rng : &mut R, request : Request) -> Result<Response> {
+    let deferrals = match request.gen_menus.generator {
+        MenuGenerator::Copycat(Packed(ref subj)) if request.preserve_deferrals =>
+            subj.choices.iter().filter_map(
+                |c| if c.choice.view().is_empty() {
+                    Some(c.menu.clone())
+                } else {
+                    None
+                }
+            ).collect(),
+
+        _ => HashSet::new(),
+    };
+
     let alt_count = request.alternatives.len() as u32;
     let choices : Vec<ChoiceRow> = request.gen_menus.gen(rng, alt_count).into_iter().map(
         // we use this order of ChoiceRow fields
         // because we first need to generate the choice
         // and only then pass the ownership of the menu
         |(menu, default)| ChoiceRow {
-            choice: request.gen_choices.gen(rng, alt_count, menu.view(), default),
+            choice: if deferrals.contains(&menu) {
+                    AltSet::empty()
+                } else {
+                    request.gen_choices.gen(rng, alt_count, menu.view(), default)
+                },
             menu,
             default,
         }

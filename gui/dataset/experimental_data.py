@@ -193,6 +193,7 @@ class ExperimentalData(Dataset):
                                 defaults=False,  # this will be ignored, anyway
                             ),
                             gen_choices=options.gen_choices,
+                            preserve_deferrals=options.preserve_deferrals,
                     ))
 
                     subjects.append(response.subject_packed)

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>318</width>
-    <height>195</height>
+    <width>286</width>
+    <height>222</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -103,6 +103,13 @@
        <widget class="GenChoices" name="genChoices" native="true"/>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="cbPreserveDeferrals">
+     <property name="text">
+      <string>Preserve deferrals</string>
+     </property>
     </widget>
    </item>
    <item>

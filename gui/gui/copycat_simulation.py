@@ -18,6 +18,7 @@ class Options(NamedTuple):
     name : str
     multiplicity : int
     gen_choices : 'simulation.GenChoices'
+    preserve_deferrals : bool
 
 class CopycatSimulation(QDialog, uic.copycat_simulation.Ui_CopycatSimulation, gui.ExceptionDialog):
     def __init__(self, ds) -> None:
@@ -42,22 +43,26 @@ class CopycatSimulation(QDialog, uic.copycat_simulation.Ui_CopycatSimulation, gu
                 for i, subject in enumerate(map(SubjectC.decode_from_memory, ds.subjects)):
                     has_defaults |= any(cr.default is not None for cr in subject.choices)
                     has_nondefaults |= any(cr.default is None for cr in subject.choices)
+                    has_deferrals |= any(not(cr.choice) for cr in subject.choices)
                     self.set_progress(i)
 
-                    if has_defaults and has_nondefaults:
+                    if has_defaults and has_nondefaults and has_deferrals:
                         break
 
-                return has_defaults, has_nondefaults
+                return has_defaults, has_nondefaults, has_deferrals
 
         try:
-            has_defaults, has_nondefaults = MyWorker().run_with_progress(
+            has_defaults, has_nondefaults, has_deferrals = MyWorker().run_with_progress(
                 None,  # parent widget
-                'Checking presence of default alternatives...',
+                'Analysing dataset...',
             )
             self.genChoices.setDefault(has_defaults, has_nondefaults)
         except Cancelled:
             self.genChoices.setDefault(True, True)
             log.debug('copycat simulation check cancelled')
+
+        self.cbPreserveDeferrals.setChecked(False)
+        self.cbPreserveDeferrals.setEnabled(has_deferrals)
 
     def update_counts(self, multiplicity : int) -> None:
         self.labSubjects.setText('{0} × {1} = {2}'.format(
@@ -76,4 +81,5 @@ class CopycatSimulation(QDialog, uic.copycat_simulation.Ui_CopycatSimulation, gu
             name=self.leName.text(),
             multiplicity=self.sbMultiplicity.value(),
             gen_choices=self.genChoices.value(),
+            preserve_deferrals=self.cbPreserveDeferrals.isChecked(),
         )

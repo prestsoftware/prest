@@ -63,8 +63,9 @@ class Request(NamedTuple):
     alternatives : List[str]
     gen_menus : GenMenus
     gen_choices : GenChoices
+    preserve_deferrals : bool
 
-RequestC = namedtupleC(Request, strC, listC(strC), GenMenusC, GenChoicesC)
+RequestC = namedtupleC(Request, strC, listC(strC), GenMenusC, GenChoicesC, boolC)
 
 class Response(NamedTuple):
     subject_packed : PackedSubject

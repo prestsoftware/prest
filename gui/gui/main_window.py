@@ -390,6 +390,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
                             alternatives=options.alternatives,
                             gen_menus=options.gen_menus,
                             gen_choices=options.gen_choices,
+                            preserve_deferrals=False,
                         ))
 
                         ds.subjects.append(response.subject_packed)

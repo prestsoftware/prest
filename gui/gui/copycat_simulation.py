@@ -38,6 +38,7 @@ class CopycatSimulation(QDialog, uic.copycat_simulation.Ui_CopycatSimulation, gu
             def work(self):
                 has_defaults = False
                 has_nondefaults = False
+                has_deferrals = False
 
                 self.set_work_size(len(ds.subjects))
                 for i, subject in enumerate(map(SubjectC.decode_from_memory, ds.subjects)):

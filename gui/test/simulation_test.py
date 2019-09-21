@@ -18,6 +18,7 @@ def test_simulation(nsubjects=256, f_mock=None):
                 forced_choice=True,
                 multiple_choice=False,
             ),
+            preserve_deferrals=False,
         ))
 
     assert len(response.subject_packed) == 223
@@ -38,6 +39,7 @@ def _simulation_gen():
                 forced_choice=True,
                 multiple_choice=False,
             ),
+            preserve_deferrals=False,
         ))
 
     with open('in.bin', 'wb') as f:

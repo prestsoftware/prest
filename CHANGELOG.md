@@ -1,3 +1,7 @@
+## 0.9.13
+
+- Add deferral preservation to simulations based on existing datasets.
+
 ## 0.9.12
 
 - Rename and reorder models.

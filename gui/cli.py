@@ -36,6 +36,13 @@ def budgetary_consistency(args):
     variant = dsc._get_export_variant(args.export_variant)
     dsc.export(args.fname_out, '*.csv', variant, ProgressWorker())
 
+def consistency(args):
+    rows = load_raw_csv(args.fname_in)
+    ds = ExperimentalData.from_csv('dataset', rows[1:], (0, 1, None, 2))
+    dsm = ds.analysis_consistency(ProgressWorker(), None)
+    variant = dsm._get_export_variant(args.export_variant)
+    dsm.export(args.fname_out, '*.csv', variant, MockWorker())
+
 def estimate(args):
     rows = load_raw_csv(args.fname_in)
     ds = ExperimentalData.from_csv('dataset', rows[1:], (0, 1, None, 2))
@@ -84,6 +91,8 @@ def estimate(args):
 def main(args):
     if args.action == 'estimate':
         estimate(args)
+    elif args.action == 'consistency':
+        consistency(args)
     elif args.action == 'budgetary':
         budgetary_consistency(args)
     else:
@@ -103,6 +112,14 @@ if __name__ == '__main__':
     )
     apE.add_argument('-s', '--sequential', default=False, action='store_true', help='disable paralellism')
     apE.add_argument('-m', dest='models', metavar='MODEL', nargs='+', help='model(s)')
+
+    apC = sub.add_parser('consistency', help='general consistency')
+    apC.add_argument('fname_in', metavar='input.csv')
+    apC.add_argument('fname_out', metavar='output.csv')
+    apC.add_argument('-e', dest='export_variant',
+        default='Summary',
+        help='export variant [%(default)s]',
+    )
 
     apB = sub.add_parser('budgetary', help='budgetary consistency')
     apB.add_argument('fname_in', metavar='input.csv')

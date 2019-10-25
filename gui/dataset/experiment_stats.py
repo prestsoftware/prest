@@ -12,9 +12,10 @@ class Subject(NamedTuple):
     name : str
     observations : int
     active_choices : int
+    active_choices_binary : int
     deferrals : int
 
-SubjectC = namedtupleC(Subject, strC, intC, intC, intC)
+SubjectC = namedtupleC(Subject, strC, intC, intC, intC, intC)
 
 class SubjectNode(util.tree_model.Node):
     def __init__(self, parent_node, row: int, subject: Subject) -> None:
@@ -41,7 +42,8 @@ class ExperimentStats(Dataset):
             self.ds = ds
             self.model = util.tree_model.TreeModel(
                 RootNode(ds.subjects),
-                headers=('Subject', 'Observations', 'Active choices', 'Deferrals'),
+                headers=('Subject', 'Observations', 'Active choices',
+                    'Active choices in binary menus', 'Deferrals'),
             )
             self.twRows.setModel(self.model)
 
@@ -69,6 +71,7 @@ class ExperimentStats(Dataset):
                     'subject',
                     'observations',
                     'active_choices',
+                    'active_choices_binary',
                     'deferrals',
                 ),
                 get_rows=self.export_detailed,
@@ -76,7 +79,7 @@ class ExperimentStats(Dataset):
             ),
         )
 
-    def export_detailed(self) -> Iterator[Optional[Tuple[str,int,int,int]]]:
+    def export_detailed(self) -> Iterator[Optional[Tuple[str,int,int,int,int]]]:
         for subject in self.subjects:
             yield subject
             yield None  # bump progress

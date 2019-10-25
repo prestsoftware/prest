@@ -25,12 +25,16 @@ pub struct Response {
     name : String,
     observations : usize,
     active_choices : usize,
+    active_choices_binary : usize,
     deferrals : usize,
 }
 
 impl Encode for Response {
     fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
-        (&self.name, self.observations, self.active_choices, self.deferrals).encode(f)
+        (&self.name, self.observations,
+         self.active_choices, self.active_choices_binary,
+         self.deferrals
+        ).encode(f)
     }
 }
 
@@ -41,6 +45,10 @@ pub fn run(request : Request) -> Result<Response> {
         name,
         observations: choices.len(),
         active_choices: choices.iter().filter(|cr| cr.choice.view().is_nonempty()).count(),
+        active_choices_binary: choices.iter().filter(
+            |cr| cr.menu.view().size() == 2
+                && cr.choice.view().is_nonempty()
+        ).count(),
         deferrals: choices.iter().filter(|cr| cr.choice.view().is_empty()).count(),
     })
 }
@@ -76,6 +84,7 @@ mod test {
 
         assert_eq!(response.observations, 7);
         assert_eq!(response.active_choices, 4);
+        assert_eq!(response.active_choices_binary, 1);
         assert_eq!(response.deferrals, 3);
     }
 }

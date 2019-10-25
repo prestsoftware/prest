@@ -1,3 +1,8 @@
+## 0.9.14
+
+- Add consistency analysis to the CLI.
+- Count number of active choices in binary menus.
+
 ## 0.9.13
 
 - Add deferral preservation to simulations based on existing datasets.

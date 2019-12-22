@@ -30,7 +30,8 @@ the user can choose from the following options:
      	 
      * **Uniformly random:** a random element of each menu is the default alternative in that menu.
 
-The possible options under *"Choice mode"*, and their implications for the probability distribution used in the simulations, depend on what the user selected under *"Default alternative"*, as follows:
+The possible options under *"Choice mode"*, and their implications for the probability distribution used in the simulations, 
+depend on what the user selected under *"Default alternative"*, as follows:
 
   * Under **Default alternative -> None**, the *"Observations without default alternatives"* menu is activated, featuring the following options:
 
@@ -121,8 +122,16 @@ select *"Analysis -> Generate similar random dataset"*. In the pop-up window, th
 subjects will be generated in the way described above for each subject in the original dataset. The *"Subjects"* and *"Observations"* entries below that option
 inform the user about the corresponding size dimensions of the simulated dataset that will be produced.
 
-The options that were specified above are also available here under *"Choice mode"*. In addition, if the existing dataset contains some observations
-with default alternatives and others without (see, for example, :ref:`the hybrid dataset  <dataset-examples>`), then the user can configure the simulation for each mode of analysis.
+The options that were specified above are also available here under *"Choice mode"*. In addition: 
+
+  * If the existing dataset contains some observations with default alternatives 
+	and others without (see, for example, :ref:`the hybrid dataset  <dataset-examples>`), 
+	then the user can configure the simulation for each mode of analysis.
+
+  * If the existing dataset contains some observations where the deferral/outside option was chosen, 
+	then the user can check the *"Preserve deferrals"* box to ensure that the simulated datasets also 
+	feature choice of the deferral/outside option at all relevant menus. 
+  
 
 The resulting random dataset will again appear in the workspace and the user can apply on it the consistency analysis and/or
 model estimation operations that were described in the previous sections. The simulated subjects here

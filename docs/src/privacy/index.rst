@@ -128,4 +128,4 @@ How to Contact the Appropriate Authority
 
 Should you wish to report a complaint or if you feel that we have not addressed 
 your concern in a satisfactory manner, you may contact the 
-Information Commissioner’s Office: <https://ico.org.uk/>`_ 
+Information Commissioner’s Office: https://ico.org.uk/ 

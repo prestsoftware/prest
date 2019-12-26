@@ -51,6 +51,7 @@ define the terms used in the graphical user interface, and explain relevant back
    references
    acknowledgements/index
    copyright/index
+   privacy/index
 
 
 Citation

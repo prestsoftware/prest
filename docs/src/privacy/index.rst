@@ -1,52 +1,131 @@
 Privacy Notice
 ==============
 
-Does **Prest** Collect any User Data?
--------------------------------------
+Does Prest Collect any User Data?
+---------------------------------
 
 No.
 
-Does this **Website** Collect any User Data?
---------------------------------------------
+Does this Website Collect any User Data?
+----------------------------------------
 
 Yes.
 
 What Kind of Data Does this Website Collect?
 --------------------------------------------
 
-**Anonymous** data such as city and country where 
+Standard Internet log data such as the city and country where 
 the web session originated, operating system, web browser, date and session duration.
-If a user also downloads files from this website (including Prest itself) 
-then the website also stores their IP address and the names of the 
-files that were downloaded.
+If you also download files from this website (including Prest itself) 
+then the website also gathers and stores your IP address and the names of the 
+files that you downloaded.
 
 How Does the Website Collect Your Data?
 ---------------------------------------
 
 All collected data are provided directly by you. 
-The anonymous data are collected by the GDPR-compliant Google Analytics service. 
+The standard Internet log data are collected by Google Analytics. 
 Where apaplicable, the additional data that include your IP address are 
-collected through a simple download tracker that has been developed by the creators of Prest.
+collected by a simple download tracker that has been developed by this website's developers.
+
+Where Are Your Data Stored?
+---------------------------
+
+The standard Internet log data are stored in the servers of Google Analytics.
+Where applicable, the additional data that include your IP addresses are stored in a text file 
+on the servers of this website's webhost (currently Namesco). All data will be deleted 
+automatically after a period of four years.
 
 
-Why Does the Website Collect These Data?
-----------------------------------------
+Why Does the Website Collect Your Data?
+---------------------------------------
 
 Prest is an open-source project. Knowing the degree to which it is considered a useful 
 resource by the community can be a potential motivator for its creators 
-to continue working towards its improvement and invite others to contribute to it.
+to continue working towards its improvement, and also invite others to contribute to it.
+
+What Are your Data Protection Rights?
+-------------------------------------
+
+We would like to make sure you are fully aware of your data protection rights.
+Every user is entitled to the following:
+
+*The right to access*: if you have downloaded files from this website, you have 
+the right to request copies of your personal data from us.
+
+*The right to rectification*: if you have downloaded files from this website, 
+you have the right to request that we correct any information 
+you believe is inaccurate, and to request from us to complete information 
+you believe is incomplete.
+
+*The right to erasure*: if you have downloaded files from this website, 
+you have the right to request that we erase your personal data,
+under certain conditions.
+
+*The right to restrict processing*: if you have downloaded files from this website, 
+you have the right to request that our processing of your personal data be restricted,  
+under certain conditions.
+
+*The right to object to processing*: if you have downloaded files from this website, 
+you have the right to object to our processing of your personal data, under certain conditions.
+
+*The right to data portability*: if you have downloaded files from this website, you have the right 
+to request that we transfer the personal data that we have collected from you 
+to another organization, or directly to you, under certain conditions.
+
+If you make a request, we have one month to respond to you.
+If you would like to exercise any of these rights, please contact us at:
+
+**gerasimou AT outlook DOT com** (Georgios Gerasimou)
 
 
-Where Are These Data Stored?
-----------------------------
+What Are Cookies?
+-----------------
 
-The anonymous data are stored in the servers used by the Google Analytics platform.
-Where applicable, the additional data that include user IP addresses are stored 
-on the servers of the website's webhost (currently Namesco).
-
-
+Cookies are text files placed on your computer to collect standard Internet log 
+information and visitor behaviour information.
 
 Do You Use Cookies on this Website?
 -----------------------------------
 
-No.
+Google Analytics uses cookies to provide their services.
+These cookies help Google identify unique users, 
+identify unique sessions, gather information and store information.
+No other cookies are used on this website.
+
+How to Manage Cookies?
+----------------------
+
+You can set your browser not to accept cookies, 
+and the above website tells you how to remove cookies from your browser. 
+However, in a few cases, some of our website features may not function as a result.
+
+Privacy Policies of Other Websites
+----------------------------------
+
+Our website contains links to other websites. 
+Our privacy policy applies only to our website, so if you click on a link to another website, 
+you should read their privacy policy.
+
+Changes to our Privacy Policy
+-----------------------------
+
+We keep this website's privacy policy under regular review and place any updates on this webpage.
+This privacy policy was last updated on xx xxxxxx 2020.
+
+
+How to Contact Us
+-----------------
+
+If you have any questions about this website's privacy policy, 
+the data we hold on you, or you would like to exercise one of your data protection rights, 
+please do not hesitate to contact us:
+
+**gerasimou AT outlook DOT com** (Georgios Gerasimou)
+
+How to Contact the Appropriate Authority
+----------------------------------------
+
+Should you wish to report a complaint or if you feel that we have not addressed 
+your concern in a satisfactory manner, you may contact the 
+Information Commissioner’s Office: <https://ico.org.uk/>`_ 

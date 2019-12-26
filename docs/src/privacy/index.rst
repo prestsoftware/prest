@@ -16,7 +16,7 @@ What Kind of Data Does this Website Collect?
 
 Standard Internet log data such as the city and country where 
 the web session originated, operating system, web browser, date and session duration.
-If you also download files from this website (including Prest itself) 
+If you download files from this website (including Prest itself) 
 then the website also gathers and stores your IP address and the names of the 
 files that you downloaded.
 

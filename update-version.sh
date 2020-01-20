@@ -1,6 +1,6 @@
 #!/bin/bash
 
-current_version="$(git describe)"
+current_version="$(git describe --always)"
 cached_version="$(cat version.txt)"
 
 if [ "$current_version" != "$cached_version" ]; then

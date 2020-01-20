@@ -15,7 +15,7 @@ done
 # $1 might be undefined in the parser above
 set -euo pipefail
 
-PNAME="prest-$(git describe)"
+PNAME="prest-$(git describe --always)"
 echo "Building ${PNAME} for mac..."
 
 make

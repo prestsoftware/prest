@@ -4,7 +4,7 @@ set -euo pipefail
 cd "$(dirname $0)/.."
 
 version_rust="$(grep '^version' core/Cargo.toml | cut -d \" -f2)"
-version_git="$(git describe)"
+version_git="$(git describe --always)"
 
 echo "= Prest release tagging script ="
 echo "You can press ^C anytime to cancel."

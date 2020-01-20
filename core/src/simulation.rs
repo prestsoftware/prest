@@ -3,6 +3,7 @@ use std::fmt;
 use std::io::{Read,Write};
 use std::iter::FromIterator;
 use rand::Rng;
+use rand::seq::SliceRandom;
 
 use model;
 use rpc_common::{ChoiceRow,Subject};
@@ -79,7 +80,7 @@ impl GenMenus {
             menus.into_iter().map(
                 |(m, _)| {
                     let alts = Vec::from_iter(m.view().into_iter());
-                    let default = rng.choose(&alts).unwrap().clone();
+                    let default = alts.choose(rng).expect("empty menu").clone();
                     (m, Some(default))
                 }
             ).collect()
@@ -141,7 +142,7 @@ impl GenChoices {
                     feasible
                 };
 
-                let choice = *rng.choose(&feasible).unwrap();
+                let choice = feasible.choose(rng).unwrap().clone(); // contains at least deferral
 
                 if choice == defer {
                     if let Some(alt) = default {
@@ -174,6 +175,7 @@ pub struct Request {
     alternatives : Vec<String>,
     gen_menus : GenMenus,
     gen_choices : GenChoices,
+    preserve_deferrals : bool,
 }
 
 impl Decode for Request {
@@ -183,6 +185,7 @@ impl Decode for Request {
             alternatives: Decode::decode(f)?,
             gen_menus: Decode::decode(f)?,
             gen_choices: Decode::decode(f)?,
+            preserve_deferrals: Decode::decode(f)?,
         })
     }
 }
@@ -217,16 +220,34 @@ pub type Result<T> = result::Result<T, Error>;
 
 pub fn run<R : Rng>(rng : &mut R, request : Request) -> Result<Response> {
     let alt_count = request.alternatives.len() as u32;
-    let choices : Vec<ChoiceRow> = request.gen_menus.gen(rng, alt_count).into_iter().map(
-        // we use this order of ChoiceRow fields
-        // because we first need to generate the choice
-        // and only then pass the ownership of the menu
-        |(menu, default)| ChoiceRow {
-            choice: request.gen_choices.gen(rng, alt_count, menu.view(), default),
-            menu,
-            default,
-        }
-    ).collect();
+
+    let choices : Vec<ChoiceRow> = match request.gen_menus.generator {
+        MenuGenerator::Copycat(Packed(ref subj)) => subj.choices.iter().map(
+            |cr| ChoiceRow {
+                menu: cr.menu.clone(),
+                default: cr.default.clone(),
+                choice: if request.preserve_deferrals
+                    && cr.choice.view().is_empty() {
+                        AltSet::empty()
+                    } else {
+                        request.gen_choices.gen(
+                            rng, alt_count, cr.menu.view(), cr.default
+                        )
+                    }
+            }
+        ).collect(),
+
+        _ => request.gen_menus.gen(rng, alt_count).into_iter().map(
+            // we use this order of ChoiceRow fields
+            // because we first need to generate the choice
+            // and only then pass the ownership of the menu
+            |(menu, default)| ChoiceRow {
+                choice: request.gen_choices.gen(rng, alt_count, menu.view(), default),
+                menu,
+                default,
+            }
+        ).collect(),
+    };
 
     let name = match request.gen_menus.generator {
         MenuGenerator::Copycat(subject_packed)

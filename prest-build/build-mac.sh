@@ -1,5 +1,7 @@
 #!/bin/bash
 
+PATH="$HOME/.cargo/bin:$HOME/Library/Python/3.7/bin:$PATH"
+
 cd "$(dirname $0)/.." # work from the root directory of Prest
 
 sign=0
@@ -8,7 +10,7 @@ while [ -n "$1" ]; do
     case "$1" in
         --sign) sign=1; shift;;
         --preorders) preorders=1; shift;;
-        *) echo "unrecognosed option: $1"; exit 1;;
+        *) echo "unrecognised option: $1"; exit 1;;
     esac
 done
 

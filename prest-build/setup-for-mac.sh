@@ -9,7 +9,7 @@ sh rustup-init.sh -y --default-toolchain "${rust_version}"
 # install python3
 python_version="3.7.4-macosx10.9"
 
-curl -sSfL "https://www.python.or/ftp/python/3.7.4/python-${python_version}.pkg" > python3.pkg
+curl -sSfL "https://www.python.org/ftp/python/3.7.4/python-${python_version}.pkg" > python3.pkg
 installer -package python3.pkg -target /
 
 pip3 install --user --no-use-pep517 pyinstaller

@@ -21,4 +21,5 @@ pip3 install --user \
     pytest \
     hypothesis \
     numpy \
-    openpyxl
+    openpyxl \
+    mypy

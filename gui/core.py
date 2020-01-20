@@ -109,10 +109,13 @@ class Core:
                 stderr=subprocess.PIPE,
             )
 
+            self.stdin : FileOut
+            self.stdout : FileIn
+
             if f_tee:
                 f_in, f_out = f_tee
-                self.stdin : FileOut = typing.cast(FileOut, Tee(self.core.stdin, f_in))
-                self.stdout : FileIn = typing.cast(FileIn, Tee(self.core.stdout, f_out))
+                self.stdin = typing.cast(FileOut, Tee(self.core.stdin, f_in))
+                self.stdout = typing.cast(FileIn, Tee(self.core.stdout, f_out))
             else:
                 self.stdin = typing.cast(FileOut, self.core.stdin)
 
@@ -135,7 +138,6 @@ class Core:
 
     def __exit__(self, *_exc_info) -> Literal[False]:
         self.shutdown()
-        return False
 
     def call(self, name : str, codec_req : Codec, codec_resp : Codec, request : Any) -> Any:
         strC.encode(self.stdin, name)

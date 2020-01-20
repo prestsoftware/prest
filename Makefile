@@ -15,7 +15,7 @@ $(DOCS):
 $(GUI):
 	make -C gui .typecheck-ts
 
-# build everything there is to build/generate
+# build everything there is to build or generate
 build: version.txt preorders-7.bin $(CORE) $(DOCS) $(GUI)
 
 preorders-7.bin:
@@ -31,16 +31,17 @@ clean:
 	(cd core; cargo clean --release)
 
 run: build
-	python3 gui/main.py
+	python gui/main.py
 
 test: build
-	python3 -m pytest -v -m "not long" gui
+	python -m pytest -v -m "not long" gui
 
 bench: build
-	python3 -m pytest -v -m benchmark gui
+	python -m pytest -v -m benchmark gui
 
 longtest: fulltest
 
 fulltest: check
 	(cd core; cargo test --release)
-	python3 -m pytest -v -m "not benchmark" gui
+	[ $(TRAVIS_OS_NAME) = windows ] || python -m pytest -v -m "not benchmark" gui
+

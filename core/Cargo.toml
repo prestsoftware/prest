@@ -13,7 +13,7 @@ license = "BSD-3-Clause"
 
 [dependencies]
 argparse = "*"
-rand = "*"
+rand = "0.6"
 base64 = "*"
 byteorder = "*"
 num = "*"

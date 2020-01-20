@@ -44,3 +44,8 @@ longtest: fulltest
 fulltest: check
 	(cd core; cargo test --release)
 	python3 -m pytest -v -m "not benchmark" gui
+
+fulltest-mac: check
+	(cd core; cargo test --release)
+	python3 -m pytest -v -m "not benchmark" gui
+	make -C gui .typecheck-ts-mac

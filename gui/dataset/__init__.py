@@ -75,6 +75,11 @@ SubjectC = namedtupleC(Subject, strC, listC(strC), listC(ChoiceRowC))
 DatasetHeaderC = tupleC(strC, listC(strC))
 
 class Dataset:
+
+    # abstract method
+    def ViewDialog(self, x):
+        raise NotImplementedError()
+
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:
         self.name = name
         self.alternatives = list(alternatives)

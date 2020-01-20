@@ -15,7 +15,7 @@ $(DOCS):
 $(GUI):
 	make -C gui .typecheck-ts
 
-# build everything there is to build/generate
+# build everything there is to build or generate
 build: version.txt preorders-7.bin $(CORE) $(DOCS) $(GUI)
 
 preorders-7.bin:

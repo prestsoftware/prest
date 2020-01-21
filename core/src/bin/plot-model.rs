@@ -58,12 +58,12 @@ fn main() {
 
     match instance {
         Instance::PreorderMaximization(ref p) => {
-            assert_eq!(p.size, alt_names.len() as u32);
+            assert_eq!(p.size, alt_names.len() as u32, "preorder size ({}) does not match the number of alternatives ({})", p.size, alt_names.len());
             println!("{}", fmt_digraph(p, &alt_names, &[]));
         }
 
         Instance::Unattractiveness{ref p, ref mask} => {
-            assert_eq!(p.size, alt_names.len() as u32);
+            assert_eq!(p.size, alt_names.len() as u32, "preorder size ({}) does not match the number of alternatives ({})", p.size, alt_names.len());
             let mut attr = Vec::new();
             let mut unattr = Vec::new();
             let mut unattr_idx = Vec::new();
@@ -81,12 +81,12 @@ fn main() {
         }
 
         Instance::UndominatedChoice(ref p) => {
-            assert_eq!(p.size, alt_names.len() as u32);
+            assert_eq!(p.size, alt_names.len() as u32, "preorder size ({}) does not match the number of alternatives ({})", p.size, alt_names.len());
             println!("{}", fmt_digraph(p, &alt_names, &[]));
         }
 
         Instance::PartiallyDominantChoice{ref p, fc:_} => {
-            assert_eq!(p.size, alt_names.len() as u32);
+            assert_eq!(p.size, alt_names.len() as u32, "preorder size ({}) does not match the number of alternatives ({})", p.size, alt_names.len());
             assert!(p.is_strict());  // if this does not hold, something's gone very wrong
             // see the corresponding match branch in Instance::choice() for explanation
 
@@ -94,17 +94,17 @@ fn main() {
         }
 
         Instance::StatusQuoUndominatedChoice(ref p) => {
-            assert_eq!(p.size, alt_names.len() as u32);
+            assert_eq!(p.size, alt_names.len() as u32, "preorder size ({}) does not match the number of alternatives ({})", p.size, alt_names.len());
             println!("{}", fmt_digraph(p, &alt_names, &[]));
         }
 
         Instance::Overload{ref p, limit:_} => {
-            assert_eq!(p.size, alt_names.len() as u32);
+            assert_eq!(p.size, alt_names.len() as u32, "preorder size ({}) does not match the number of alternatives ({})", p.size, alt_names.len());
             println!("{}", fmt_digraph(p, &alt_names, &[]));
         }
 
         Instance::TopTwo(ref p) => {
-            assert_eq!(p.size, alt_names.len() as u32);
+            assert_eq!(p.size, alt_names.len() as u32, "preorder size ({}) does not match the number of alternatives ({})", p.size, alt_names.len());
 
             let order : Vec<&str> = p.as_linear_order().into_iter().map(
                 |Alt(i)| alt_names[i as usize].as_ref()
@@ -115,8 +115,8 @@ fn main() {
         }
 
         Instance::SequentiallyRationalizableChoice(ref p, ref q) => {
-            assert_eq!(p.size, alt_names.len() as u32);
-            assert_eq!(q.size, alt_names.len() as u32);
+            assert_eq!(p.size, alt_names.len() as u32, "preorder size ({}) does not match the number of alternatives ({})", p.size, alt_names.len());
+            assert_eq!(q.size, alt_names.len() as u32, "preorder size ({}) does not match the number of alternatives ({})", q.size, alt_names.len());
 
             println!("P = {}", fmt_digraph(p, &alt_names, &[]));
             println!("Q = {}", fmt_digraph(q, &alt_names, &[]));

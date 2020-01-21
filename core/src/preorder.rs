@@ -54,6 +54,29 @@ impl Preorder {
     }
 
     pub fn simple_digraph(&self) -> Vec<(Alt, Alt)> {
+        fn is_redundant(edges : &HashSet<(Alt, Alt)>, from : Alt, to : Alt) -> bool {
+            let mut reach : HashSet<Alt> = HashSet::new();
+            reach.insert(from);
+
+            loop {
+                let new_alts : HashSet<Alt> = edges.iter().filter_map(
+                    |&(u,v)| if reach.contains(&u) {
+                        Some(v)
+                    } else {
+                        None
+                    }
+                ).collect();
+
+                if new_alts.is_empty() {
+                    return false;
+                }
+
+                if new_alts.contains(&to) {
+                    return true;
+                }
+            }
+        }
+
         let mut edges : HashSet<_> = self.edges().into_iter().collect();
         let mut changing = true;
 
@@ -61,14 +84,7 @@ impl Preorder {
             changing = false;
 
             for (i, j) in edges.clone() {
-                let can_remove = Alt::all(self.size).any(
-                    |k| (k != i)
-                        && (k != j)
-                        && edges.contains(&(i, k))
-                        && edges.contains(&(k, j))
-                );
-
-                if can_remove {
+                if is_redundant(&edges, i, j) {
                     edges.remove(&(i, j));
                     changing = true;
                 }

@@ -60,7 +60,7 @@ impl Preorder {
 
             loop {
                 let new_alts : HashSet<Alt> = edges.iter().filter_map(
-                    |&(u,v)| if reach.contains(&u) {
+                    |&(u,v)| if reach.contains(&u) && (u != from || v != to) {
                         Some(v)
                     } else {
                         None

@@ -22,8 +22,6 @@ echo "Building ${PNAME} for mac..."
 
 make
 
-make fulltest-mac
-
 preorders_opt=""
 if [ "preorders" = 1 ]; then
     preorders_opt="--addbinary 'preorders-7.bin;.'"

@@ -1,7 +1,12 @@
 os: osx
 osx_image: xcode11.3
 
-script: |
-  cd prest-build
-  ./setup-for-mac.sh
-  ./build-mac.sh
+before_install:
+  - cd prest_build
+
+install:
+  - bash setup-for-mac.sh
+  - bash build-mac.sh
+
+test:
+  - make fulltest

@@ -15,3 +15,11 @@ before_script:
 
 script:
   - make fulltest
+
+deploy:
+  provider: releases
+  api_key:
+    secure: lbYmDOfhg2oU6J+F5iFemSNVCbx93JWEXNO5DqRZh+Sdy0Sel+V3umbRXTG1kElCOrs0PtD/Yh8rnKmKejHcflvtAXuXXI6T0zGz8q0LQX3qUTrYSgyksWuwZS1p9mNrXL1qXHaIfD0NfSx/nczNb6umllrqi3VuVwXOUDrsWwjbyayECZgX11SeM6WxUqvr24S22iF58ZaDhHd1lExm595V8KNTyM91SZk07d1Yl2gzid36qcXlr7WlC9fOltWWr5MmSvYJobNpw+ZJiCILonWV6D07hKlFzRlxEjVsaCugtGrMYsAxD5EvUvQ/kfEnSzVCnxcqe0Gwl4LnPlBLsKuiOJtTU62u2RdmqYjyQwuPw4EW9SsmMiViBLGh6DINDOVN5j/oqRPyg/jANB8h3NIsvPkr64ZBc2ZSk2vMj0qlOUslJUMhAoT3NeIrXewRuGUs4nitmR9I4pB7xujb5u0tttH6WeuaRmGGVyx5MtlOxRWYDWhtNOKf60AthJ7IZBbSdtwmCU5rgH+QEFdo8yfP+qS10uJly5F+2X54W7NdbwIkGpAgq6PFO9j+3jOU2AKvPKLzByIae34tPC+mZozwtk4eDVC3OPd0tx4dnNzYAY5d2CJ5LqQwwMBYYltDSxIUBFVnDhLZX2w9BUz3W/V/yFOxoZ8pkqCWycVlpzA=
+  file: gui/main.py
+  on:
+    repo: magnostherobot/prest-ci

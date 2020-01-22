@@ -9,5 +9,8 @@ before_install:
 install:
   - bash build-mac.sh
 
+before_script:
+  - cd ..
+
 script:
   - make fulltest

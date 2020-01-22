@@ -11,6 +11,7 @@ install:
 
 before_script:
   - cd ..
+  - export PATH="$HOME/.cargo/bin:$HOME/Library/Python/3.7/bin:$PATH"
 
 script:
   - make fulltest

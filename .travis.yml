@@ -1,12 +1,13 @@
+language: generic
 os: osx
 osx_image: xcode11.3
 
 before_install:
   - cd prest-build
+  - bash setup-for-mac.sh
 
 install:
-  - bash setup-for-mac.sh
   - bash build-mac.sh
 
-test:
+script:
   - make fulltest

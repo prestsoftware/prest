@@ -27,7 +27,7 @@ class Codec(NamedTuple):
 
     def dbg_encode(self, f : FileOut, x : Any) -> None:
         bs = self.encode_to_memory(x)
-        log.debug('encoding %s: %s' % (self.__class__.__name__, bs))
+        log.debug('encoding %r: %r' % (self.__class__.__name__, bs))
         f.write(bs)
 
     def encode_to_memory(self, x : Any) -> bytes:

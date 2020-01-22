@@ -109,17 +109,20 @@ class Core:
                 stderr=subprocess.PIPE,
             )
 
+            self.stdin : FileOut
+            self.stdout : FileIn
+
             if f_tee:
                 f_in, f_out = f_tee
-                self.stdin : FileOut = typing.cast(FileOut, Tee(self.core.stdin, f_in))
-                self.stdout : FileIn = typing.cast(FileIn, Tee(self.core.stdout, f_out))
+                self.stdin = typing.cast(FileOut, Tee(self.core.stdin, f_in))
+                self.stdout = typing.cast(FileIn, Tee(self.core.stdout, f_out))
             else:
-                self.stdin : FileOut = typing.cast(FileOut, self.core.stdin)
+                self.stdin = typing.cast(FileOut, self.core.stdin)
 
                 if f_mock:
-                    self.stdout : FileIn = typing.cast(FileIn, f_mock)
+                    self.stdout = typing.cast(FileIn, f_mock)
                 else:
-                    self.stdout : FileIn = typing.cast(FileIn, self.core.stdout)
+                    self.stdout = typing.cast(FileIn, self.core.stdout)
 
             self.stderr : FileIn = typing.cast(FileIn, self.core.stderr)
         except OSError:
@@ -133,9 +136,8 @@ class Core:
     def __enter__(self) -> 'Core':
         return self
 
-    def __exit__(self, *_exc_info) -> bool:
+    def __exit__(self, *_exc_info):
         self.shutdown()
-        return False
 
     def call(self, name : str, codec_req : Codec, codec_resp : Codec, request : Any) -> Any:
         strC.encode(self.stdin, name)

@@ -47,7 +47,7 @@ class Worker(QThread):
     def __init__(self, *args) -> None:
         QObject.__init__(self)
         self.result = None
-        self.exception = None
+        self.exception: Optional[Exception] = None
         self.args = args
         self.position = 0
 

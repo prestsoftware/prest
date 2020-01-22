@@ -13,13 +13,4 @@ curl -sSfL "https://www.python.org/ftp/python/3.7.4/python-${python_version}.pkg
 installer -package python3.pkg -target /
 
 pip3 install --user --no-use-pep517 pyinstaller
-pip3 install --user \
-    sphinx \
-    sphinx-rtd-theme \
-    sphinxcontrib-bibtex \
-    pyqt5 \
-    pytest \
-    hypothesis \
-    numpy \
-    openpyxl \
-    mypy
+pip3 install --user -r gui/requirements.txt

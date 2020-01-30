@@ -13,4 +13,4 @@ curl -sSfL "https://www.python.org/ftp/python/3.7.4/python-${python_version}.pkg
 installer -package python3.pkg -target /
 
 pip3 install --user --no-use-pep517 pyinstaller
-pip3 install --user -r ../gui/requirements.txt
+pip3 install --user -r gui/requirements.txt

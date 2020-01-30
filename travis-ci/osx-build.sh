@@ -15,7 +15,7 @@ pyinstaller \
     --add-binary 'core/target/release/prest-core:.' \
     --add-data 'gui/images:images' \
     --add-data 'docs/build/html:html' \
-    --addbinary 'preorders-7.bin;.' \
+    --add-binary 'preorders-7.bin;.' \
     --onefile \
     -i gui/images/prest.ico \
     gui/main.py

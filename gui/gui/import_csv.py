@@ -22,8 +22,8 @@ class ImportCsv(QDialog, uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
         self.tblPreview.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         self.tblPreview.horizontalHeader().setStretchLastSection(False)
 
-        # self.rows: Optional[List[List[str]]] = None
-        # self.column_names: Optional[List[str]] = None
+        self.rows: Optional[List[List[str]]] = None
+        self.column_names: Optional[List[str]] = None
 
     def fill_rows(self, rows: List[List[str]]):
         # the UI will have warned the user otherwise so this must be true
@@ -99,6 +99,9 @@ class ImportCsv(QDialog, uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
         preview()
 
     def make_dataset(self, name='CSV preview') -> dataset.experimental_data.ExperimentalData:
+        assert self.column_names is not None
+        assert self.rows is not None
+
         indices = (
             self.cbSubject.currentIndex(),
             self.cbMenu.currentIndex(),

@@ -33,6 +33,7 @@ class ImportCsv(QDialog, uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
         self.rows = rows[1:]
 
         def fill_cols(cb, allow_none=False):
+            assert self.column_names is not None
             cb.clear()
             for col in self.column_names:
                 cb.addItem(col)
@@ -47,6 +48,8 @@ class ImportCsv(QDialog, uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
                 self.lwAlternatives.clear()
                 self.tblPreview.setRowCount(0)
                 return
+
+            assert self.rows is not None
 
             self.lwAlternatives.clear()
             for alt in ds.alternatives:

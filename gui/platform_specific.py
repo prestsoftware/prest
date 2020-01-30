@@ -24,15 +24,15 @@ def is_windows() -> bool:
 
 def hide_console() -> None:
     log.debug('hiding console...')
-    whnd = ctypes.windll.kernel32.GetConsoleWindow()
+    whnd = ctypes.windll.kernel32.GetConsoleWindow()  # type:ignore
     if whnd != 0:
-        ctypes.windll.user32.ShowWindow(whnd, 0)
+        ctypes.windll.user32.ShowWindow(whnd, 0)  # type:ignore
 
 def show_console() -> None:
     log.debug('showing console...')
-    whnd = ctypes.windll.kernel32.GetConsoleWindow()
+    whnd = ctypes.windll.kernel32.GetConsoleWindow()  # type:ignore
     if whnd != 0:
-        ctypes.windll.user32.ShowWindow(whnd, 1)
+        ctypes.windll.user32.ShowWindow(whnd, 1)  # type:ignore
 
 def get_frozen_dir() -> str:
     return getattr(sys, '_MEIPASS', None)

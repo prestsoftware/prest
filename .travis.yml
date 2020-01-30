@@ -1,24 +1,19 @@
 language: minimal
 os: osx
 osx_image: xcode11.3
-
 before_install:
-  - bash travis-ci/osx-install-deps.sh
-
+- bash travis-ci/osx-install-deps.sh
 install:
-  - bash travis-ci/osx-build.sh
-
+- bash travis-ci/osx-build.sh
 before_script:
-  - export PATH="$HOME/.cargo/bin:$HOME/Library/Python/3.7/bin:$PATH"
-
+- export PATH="$HOME/.cargo/bin:$HOME/Library/Python/3.7/bin:$PATH"
 script:
-  - make fulltest
-
+- make fulltest
 deploy:
   provider: releases
   api_key:
-    secure: lbYmDOfhg2oU6J+F5iFemSNVCbx93JWEXNO5DqRZh+Sdy0Sel+V3umbRXTG1kElCOrs0PtD/Yh8rnKmKejHcflvtAXuXXI6T0zGz8q0LQX3qUTrYSgyksWuwZS1p9mNrXL1qXHaIfD0NfSx/nczNb6umllrqi3VuVwXOUDrsWwjbyayECZgX11SeM6WxUqvr24S22iF58ZaDhHd1lExm595V8KNTyM91SZk07d1Yl2gzid36qcXlr7WlC9fOltWWr5MmSvYJobNpw+ZJiCILonWV6D07hKlFzRlxEjVsaCugtGrMYsAxD5EvUvQ/kfEnSzVCnxcqe0Gwl4LnPlBLsKuiOJtTU62u2RdmqYjyQwuPw4EW9SsmMiViBLGh6DINDOVN5j/oqRPyg/jANB8h3NIsvPkr64ZBc2ZSk2vMj0qlOUslJUMhAoT3NeIrXewRuGUs4nitmR9I4pB7xujb5u0tttH6WeuaRmGGVyx5MtlOxRWYDWhtNOKf60AthJ7IZBbSdtwmCU5rgH+QEFdo8yfP+qS10uJly5F+2X54W7NdbwIkGpAgq6PFO9j+3jOU2AKvPKLzByIae34tPC+mZozwtk4eDVC3OPd0tx4dnNzYAY5d2CJ5LqQwwMBYYltDSxIUBFVnDhLZX2w9BUz3W/V/yFOxoZ8pkqCWycVlpzA=
+    secure: h5SEZwpqmXwuOPN3IrFjNOZHTgpUfq+MJ5OMlgjgfjNZYy+F4tSssIwt7pAkU3CTVMeFffhQVPrgMr376yHNpALl5iHX7/l46FiXaQnJwu0o0SCLYAyPEZGp+22z04UkCa06sA1DtQk0ip2+eibTKrnvlRsdK8P5yDTLg8s489tUZmms6rZpV8ToALQVOmpYcVxYy34WGWoyjYUwHMNUTrxpOw3JePvXhrMcelA7EwatMbD9r87YBWf1sYSdkF8kIjaYk7FAzj5RhOkFXdzHH5Hhlsh+PJQLVs7On1LtwV5ObDdTNcZIerWsFBKy5i6dBS5d4kh+TNYXK5UBuWqtwBpcEYTBQuJFPrckJw8jzWVpXZEbL5uLkmnvakZY0GNNyKzgn4SCE/xBb0LdBbBaaHLhpH30MdZhMe+iQ9PLzHCLysV1c0FmYI4i9QzhHwKv96DII/VvdUEmjvxxrpPsUMiJvK+LOC641LzU2V9W4oBux0UEc5fYULBB339R48ywkMEp87Eq4mWKe1bfX8X2hkXm8OWcNmihc1OWgH1LehcbOS/0elrBf8ohsE58VAMAQt6h+Rwgy62Z3JauPYI5MNb1/SxC3wxheiYMkFJYQLf5cXRNlKHv6OJHABGHV4UsN0fV25NrK+9GEEcOXvZzxNqME+jsJx0E+WtfQlsrE/I=
   file: dist/main
   on:
-    repo: magnostherobot/prest-ci
-  skip_cleanup: true
+    repo: ziman/prest-tmp
+    branch: travis

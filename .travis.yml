@@ -4,10 +4,10 @@ osx_image: xcode11.3
 
 before_install:
   - cd prest-build
-  - bash setup-for-mac.sh
+  - bash travis-ci/osx-install-deps.sh
 
 install:
-  - bash build-mac.sh
+  - bash travis-ci/osx-build.sh
 
 before_script:
   - cd ..

@@ -60,7 +60,7 @@ impl Preorder {
 
             loop {
                 let new_alts : HashSet<Alt> = edges.iter().filter_map(
-                    |&(u,v)| if reach.contains(&u) && (u != from || v != to) {
+                    |&(u,v)| if reach.contains(&u) && !reach.contains(&v) && (u != from || v != to) {
                         Some(v)
                     } else {
                         None
@@ -74,6 +74,8 @@ impl Preorder {
                 if new_alts.contains(&to) {
                     return true;
                 }
+
+                reach.extend(new_alts);
             }
         }
 

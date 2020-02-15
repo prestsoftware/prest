@@ -25,8 +25,8 @@ How Does the Website Collect Your Data?
 
 All collected data are provided directly by you. 
 The standard Internet log data are collected by Google Analytics. 
-Where apaplicable, the additional data that include your IP address are 
-collected by a simple download tracker that has been developed by this website's developers.
+Where applicable, the additional data that include your IP address are 
+collected by a simple download tracker that has been developed by Prest's developers.
 
 Where Are Your Data Stored?
 ---------------------------
@@ -40,9 +40,9 @@ automatically after a period of four years.
 Why Does the Website Collect Your Data?
 ---------------------------------------
 
-Prest is an open-source project. Knowing the degree to which it is considered a useful 
-resource by the community can be a potential motivator for its creators 
-to continue working towards its improvement, and also invite others to contribute to it.
+Prest is an open-source project. Knowledge of the degree to which it is considered a useful 
+resource by the community could motivate its creators to continue working towards improving it.
+The data collected from this website is one way in which such an assessment can be made.
 
 What Are your Data Protection Rights?
 -------------------------------------
@@ -111,7 +111,7 @@ Changes to our Privacy Policy
 -----------------------------
 
 We keep this website's privacy policy under regular review and place any updates on this webpage.
-This privacy policy was last updated on xx xxxxxx 2020.
+This privacy policy was last updated on |today|.
 
 
 How to Contact Us

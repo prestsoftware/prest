@@ -19,13 +19,15 @@ Prest does not collect any data entered by its users.
 Downloads
 ---------
 
-* `Prest VERSION for Windows <_static/prest-VERSION.exe>`_
+* `Prest VERSION for Windows <_static/prest-win-VERSION.exe>`_
+
+* `Prest VERSION for macOS <_static/prest-mac-VERSION.exe>`_
+
+* `Prest VERSION for Linux <_static/prest-linux-VERSION.exe>`_
 
 * The `Prest source code <https://github.com/prestsoftware/prest>`_, written
   in `Rust <https://www.rust-lang.org/>`_ (core) and `Python
   <https://www.python.org/>`_ (GUI).
-
-On Linux, use `the provided instructions <https://github.com/prestsoftware/prest#building-and-running-prest>`_ to run Prest.
 
 
 Prest Documentation
@@ -57,7 +59,7 @@ define the terms used in the graphical user interface, and explain relevant back
 Citation
 --------
 
-If you would like to cite Prest in your academic work, you can use the following reference:
+If you use Prest in your academic work, please cite it as follows:
 
 Georgios Gerasimou and Matúš Tejiščák (2018) Prest: Open-Source Software for Computational Revealed Preference Analysis, *Journal of Open Source Software*, 3(30), 1015, `doi:10.21105.joss.01015 <https://doi.org/10.21105/joss.01015>`_.
 
@@ -66,4 +68,6 @@ Georgios Gerasimou and Matúš Tejiščák (2018) Prest: Open-Source Software fo
 Contact
 -------
 
-Email address: **contact AT prestsoftware DOT com** 
+Georgios: **gerasimou AT outlook DOT com**
+
+Matúš: **ziman AT functor DOT sk**

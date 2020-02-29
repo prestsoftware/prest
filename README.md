@@ -1,8 +1,8 @@
 # Prest
 
-Preference estimation from choice data: https://prestsoftware.com
+Revealed-preference analysis and preference estimation from choice data: https://prestsoftware.com
 
-Reach us at contact AT prestsoftware DOT com.
+Reach us at gerasimou AT outlook DOT com  and  ziman AT functor DOT sk.
 
 ## Introduction
 
@@ -69,7 +69,7 @@ The full license texts can be found in the corresponding subdirectories of the s
 
 ## Citation
 
-If you would like to cite Prest in your academic work, you can use the following reference:
+If you use Prest in your academic work, please cite it as follows:
 
 Georgios Gerasimou and Matúš Tejiščák (2018) Prest: Open-Source Software for Computational Revealed Preference Analysis, _Journal of Open Source Software_, 3(30), 1015, [doi:10.21105.joss.01015](https://doi.org/10.21105/joss.01015).
 

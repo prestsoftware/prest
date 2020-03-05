@@ -2,6 +2,7 @@ use std::result;
 
 use std::fmt;
 use std::io::{Read,Write};
+use alt::{Alt};
 use alt_set::{AltSet};
 use codec::{self,Packed,Encode,Decode};
 use rpc_common::{Subject};
@@ -23,14 +24,18 @@ impl Decode for Request {
 
 enum IssueDescription {
     RepeatedMenu(AltSet),
+    ChoiceNotInMenu(AltSet, Alt),
 }
 
 impl Encode for IssueDescription {
     fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
         use self::IssueDescription::*;
         match self {
-            &RepeatedMenu(ref menu) => {
+            RepeatedMenu(ref menu) => {
                 (0u8, menu).encode(f)
+            }
+            ChoiceNotInMenu(ref menu, ref alt) => {
+                (1u8, menu, alt).encode(f)
             }
         }
     }
@@ -74,6 +79,9 @@ impl fmt::Display for IntegrityError {
 
 pub type Result<T> = result::Result<T, IntegrityError>;
 
+fn find_issues(subject : &Subject) -> Vec<IssueDescription> {
+}
+
 pub fn run(req : Request) -> Result<Response> {
     use self::Request::*;
     match req {
@@ -81,6 +89,13 @@ pub fn run(req : Request) -> Result<Response> {
             let mut issues = Vec::new();
 
             for Packed(subject) in subjects {
+                let subject_issues = find_issues(&subject);
+                issues.extend(subject_issues.into_iter().map(
+                    |idesc| Issue {
+                        subject_name: subject.name,
+                        description: idesc,
+                    }
+                ));
             }
 
             Ok(Response{issues})

@@ -8,7 +8,7 @@ from typing import Sequence, Tuple, Dict, List, Set, \
     FrozenSet, Iterator, NamedTuple, Iterable, Any, Optional
 
 from PyQt5.QtCore import Qt, QModelIndex, QAbstractItemModel
-from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
+from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView, QMessageBox
 
 import model
 import dataset
@@ -412,20 +412,38 @@ class ExperimentalData(Dataset):
         ds.subjects = subjects
         return ds
 
-    def analysis_integrity_check(self, worker : Worker, _config : None) -> None:
+    def analysis_integrity_check(self, worker : Worker, _config : None) -> Optional[dataset.integrity_check.IntegrityCheck]:
         worker.set_work_size(len(self.subjects))
+
+        subjects : List[dataset.integrity_check.Subject] = []
 
         with Core() as core:
             worker.interrupt = lambda: core.shutdown()
 
             for i, subject in enumerate(self.subjects):
-                issues = core.call(
+                subj_issues = core.call(
                     'integrity-check',
                     PackedSubjectC,
-                    listC(dataset.integrity_check.IssueC),
+                    dataset.integrity_check.SubjectC,
                     subject
                 )
+
+                if subj_issues.issues:
+                    subjects.append(subj_issues)
+
                 worker.set_progress(i+1)
+
+        if subjects:
+            ds = dataset.integrity_check.IntegrityCheck(self.name + ' (integrity check)', self.alternatives)
+            ds.subjects = subjects
+            return ds
+        else:
+            QMessageBox.info(
+                self,
+                'Integrity check',
+                'No integrity issues found.',
+            )
+            return None
 
     def get_analyses(self) -> Sequence[Analysis]:
         return (

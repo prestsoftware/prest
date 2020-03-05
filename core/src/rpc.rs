@@ -42,6 +42,7 @@ impl Decode for ActionRequest {
             "tuple-intrans-menus" => Ok(TupleIntransMenus(Decode::decode(f)?)),
             "tuple-intrans-alts" => Ok(TupleIntransAlts(Decode::decode(f)?)),
             "estimation" => Ok(Estimation(Decode::decode(f)?)),
+            "integrity-check" => Ok(IntegrityCheck(Decode::decode(f)?)),
             "echo" => Ok(Echo(Decode::decode(f)?)),
             "crash" => Ok(Crash(Decode::decode(f)?)),
             "fail" => Ok(Fail(Decode::decode(f)?)),

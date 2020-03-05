@@ -11,3 +11,4 @@ version.txt
 preorders-7.bin
 /paper/betterbib_cache.sqlite
 prest.env/
+.mypy_cache/

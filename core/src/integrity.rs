@@ -6,6 +6,7 @@ use alt::{Alt};
 use alt_set::{AltSet};
 use codec::{self,Packed,Encode,Decode};
 use rpc_common::{Subject};
+use std::collections::HashMap;
 
 #[derive(Debug)]
 pub enum Request {
@@ -80,6 +81,45 @@ impl fmt::Display for IntegrityError {
 pub type Result<T> = result::Result<T, IntegrityError>;
 
 fn find_issues(subject : &Subject) -> Vec<IssueDescription> {
+    let mut issues = Vec::new();
+
+    // repeated menus
+    {
+        let mut menu_counts = HashMap::new();
+        for row in &subject.choices {
+            *menu_counts.entry(&row.menu).or_insert(0) += 1;
+        }
+
+        for (menu, repetitions) in menu_counts.into_iter() {
+            if repetitions > 1 {
+                issues.push(IssueDescription::RepeatedMenu(menu.clone()));
+            }
+        }
+    }
+
+    for row in &subject.choices {
+        // choice not in menu
+        for choice in row.choice.view() {
+            if !row.menu.view().contains(choice) {
+                issues.push(IssueDescription::ChoiceNotInMenu(
+                    row.menu.clone(),
+                    choice,
+                ));
+            }
+        }
+
+        // default choice not in menu
+        if let Some(choice) = row.default {
+            if !row.menu.view().contains(choice) {
+                issues.push(IssueDescription::ChoiceNotInMenu(
+                    row.menu.clone(),
+                    choice,
+                ));
+            }
+        }
+    }
+
+    issues
 }
 
 pub fn run(req : Request) -> Result<Response> {
@@ -92,7 +132,7 @@ pub fn run(req : Request) -> Result<Response> {
                 let subject_issues = find_issues(&subject);
                 issues.extend(subject_issues.into_iter().map(
                     |idesc| Issue {
-                        subject_name: subject.name,
+                        subject_name: subject.name.clone(),
                         description: idesc,
                     }
                 ));

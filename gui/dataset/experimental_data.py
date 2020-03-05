@@ -28,6 +28,7 @@ import dataset.consistency_result
 import dataset.experiment_stats
 import dataset.tuple_intrans_alts
 import dataset.tuple_intrans_menus
+import dataset.integrity_check
 import dataset.estimation_result as estimation_result
 from model import Model, ModelC
 import uic.view_dataset
@@ -293,7 +294,8 @@ class ExperimentalData(Dataset):
                 self.alternatives,
             )
             ds.subjects = rows
-            return ds
+
+        return ds
 
     # detailed consistency
     def analysis_consistency(self, worker : Worker, _config : None) -> ConsistencyResult:
@@ -410,8 +412,27 @@ class ExperimentalData(Dataset):
         ds.subjects = subjects
         return ds
 
+    def analysis_integrity_check(self, worker : Worker, _config : None) -> None:
+        worker.set_work_size(len(self.subjects))
+
+        with Core() as core:
+            worker.interrupt = lambda: core.shutdown()
+
+            for i, subject in enumerate(self.subjects):
+                issues = core.call(
+                    'integrity-check',
+                    PackedSubjectC,
+                    listC(dataset.integrity_check.IssueC),
+                    subject
+                )
+                worker.set_progress(i+1)
+
     def get_analyses(self) -> Sequence[Analysis]:
         return (
+            Analysis('Integrity check',
+                config=None,
+                run=self.analysis_integrity_check,
+            ),
             Analysis(
                 name='Summary information',
                 config=None,

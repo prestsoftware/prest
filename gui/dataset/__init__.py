@@ -30,7 +30,7 @@ class ExportVariant(NamedTuple):
 class Analysis(NamedTuple):
     name : str
     config : Optional[Callable[[], Optional[Any]]]  # display config dialog, return config | can be None
-    run :  Callable[[Worker, Any], 'Dataset']  # (worker, config) -> result
+    run :  Callable[[Worker, Any], Optional['Dataset']]  # (worker, config) -> result
     is_hidden : bool = False
 
 AltSet = FrozenSet[int]

@@ -10,7 +10,7 @@ pub struct Alt(pub u32);
 
 impl Alt {
     #[inline]
-    pub fn index(&self) -> u32 {
+    pub fn index(self) -> u32 {
         self.0
     }
 

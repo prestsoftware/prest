@@ -11,8 +11,8 @@ pub fn all(alt_count : u32) -> LinearPreorders {
     let vals : Vec<_> = (0..alt_count).collect();
     let dirs = vals.iter().map(|&i| if i == 0 { 0 } else { -1 }).collect();
     LinearPreorders {
-        vals: vals,
-        dirs: dirs,
+        vals,
+        dirs,
         first: true,
     }
 }

@@ -84,7 +84,7 @@ impl Decode for Matrix<f32> {
         //
         let ndims : u8 = Decode::decode(f)?;
         assert_eq!(ndims, 2, "only 2-dimensional matrices are supported, got {} dimensions", ndims);
-        
+
         let (nrows, ncols) = Decode::decode(f)?;
         let nbytes : usize = Decode::decode(f)?;
         assert_eq!(nbytes, 4 * nrows * ncols);
@@ -102,8 +102,8 @@ impl Encode for Matrix<f32> {
         // header
         (2u8, self.nrows, self.ncols, 4 * self.nrows * self.ncols).encode(f)?;
 
-        // the array        
-        f.write(unsafe {
+        // the array
+        f.write_all(unsafe {
             mem_bytes(&self.values)
         })?;
 

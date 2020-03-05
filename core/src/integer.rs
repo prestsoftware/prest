@@ -109,7 +109,7 @@ impl Encode for Integer {
         for i in 0..bytes.len()-1 {
             bytes[i] |= 0x80;  // mark every but the last byte
         }
-        f.write(&bytes)?;
+        f.write_all(&bytes)?;
         Ok(())
     }
 }

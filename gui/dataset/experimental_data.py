@@ -438,11 +438,11 @@ class ExperimentalData(Dataset):
             ds.subjects = subjects
             return ds
         else:
-            QMessageBox.info(
-                self,
-                'Integrity check',
-                'No integrity issues found.',
-            )
+            #QMessageBox.information(
+            #    main.main_win,  # ugly but what can you do
+            #    'Integrity check',
+            #    'No integrity issues found.',
+            #)
             return None
 
     def get_analyses(self) -> Sequence[Analysis]:

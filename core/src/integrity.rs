@@ -9,28 +9,26 @@ use rpc_common::{Subject};
 use std::collections::HashMap;
 
 #[derive(Debug)]
-pub enum Request {
-    GeneralIntegrity{ subjects: Vec<Packed<Subject>> },
+pub struct Request {
+    subject : Packed<Subject>
 }
 
 impl Decode for Request {
     fn decode<R : Read>(f : &mut R) -> codec::Result<Request> {
-        use self::Request::*;
-        Ok(match Decode::decode(f)? {
-            0u8 => GeneralIntegrity{ subjects: Decode::decode(f)? },
-            _ => panic!("wrong request tag"),
+        Ok(Request {
+            subject: Decode::decode(f)?
         })
     }
 }
 
-enum IssueDescription {
+enum Issue {
     RepeatedMenu(AltSet),
     ChoiceNotInMenu(AltSet, Alt),
 }
 
-impl Encode for IssueDescription {
+impl Encode for Issue {
     fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
-        use self::IssueDescription::*;
+        use self::Issue::*;
         match self {
             RepeatedMenu(ref menu) => {
                 (0u8, menu).encode(f)
@@ -42,24 +40,14 @@ impl Encode for IssueDescription {
     }
 }
 
-pub struct Issue {
-    subject_name : String,
-    description : IssueDescription,
-}
-
-impl Encode for Issue {
-    fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
-        (&self.subject_name, &self.description).encode(f)
-    }
-}
-
 pub struct Response {
+    subject_name : String,
     issues : Vec<Issue>,
 }
 
 impl Encode for Response {
     fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
-        self.issues.encode(f)
+        (&self.subject_name, &self.issues).encode(f)
     }
 }
 
@@ -80,7 +68,7 @@ impl fmt::Display for IntegrityError {
 
 pub type Result<T> = result::Result<T, IntegrityError>;
 
-fn find_issues(subject : &Subject) -> Vec<IssueDescription> {
+fn find_issues(subject : &Subject) -> Vec<Issue> {
     let mut issues = Vec::new();
 
     // repeated menus
@@ -92,7 +80,7 @@ fn find_issues(subject : &Subject) -> Vec<IssueDescription> {
 
         for (menu, repetitions) in menu_counts.into_iter() {
             if repetitions > 1 {
-                issues.push(IssueDescription::RepeatedMenu(menu.clone()));
+                issues.push(Issue::RepeatedMenu(menu.clone()));
             }
         }
     }
@@ -101,7 +89,7 @@ fn find_issues(subject : &Subject) -> Vec<IssueDescription> {
         // choice not in menu
         for choice in row.choice.view() {
             if !row.menu.view().contains(choice) {
-                issues.push(IssueDescription::ChoiceNotInMenu(
+                issues.push(Issue::ChoiceNotInMenu(
                     row.menu.clone(),
                     choice,
                 ));
@@ -111,7 +99,7 @@ fn find_issues(subject : &Subject) -> Vec<IssueDescription> {
         // default choice not in menu
         if let Some(choice) = row.default {
             if !row.menu.view().contains(choice) {
-                issues.push(IssueDescription::ChoiceNotInMenu(
+                issues.push(Issue::ChoiceNotInMenu(
                     row.menu.clone(),
                     choice,
                 ));
@@ -123,22 +111,10 @@ fn find_issues(subject : &Subject) -> Vec<IssueDescription> {
 }
 
 pub fn run(req : Request) -> Result<Response> {
-    use self::Request::*;
-    match req {
-        GeneralIntegrity{subjects} => {
-            let mut issues = Vec::new();
-
-            for Packed(subject) in subjects {
-                let subject_issues = find_issues(&subject);
-                issues.extend(subject_issues.into_iter().map(
-                    |idesc| Issue {
-                        subject_name: subject.name.clone(),
-                        description: idesc,
-                    }
-                ));
-            }
-
-            Ok(Response{issues})
-        }
-    }
+    let Packed(subject) = req.subject;
+    let issues = find_issues(&subject);
+    Ok(Response{
+        subject_name: subject.name,
+        issues
+    })
 }

@@ -149,7 +149,7 @@ fn rotate_min<T : Ord+Clone>(xs : &[T]) -> Vec<T> {
     result.extend_from_slice(&xs[min_idx..]);
     result.extend_from_slice(&xs[0..min_idx]);
 
-    return result;
+    result
 }
 
 fn find<T : PartialEq>(x : T, xs : &[T]) -> Option<usize> {
@@ -159,7 +159,7 @@ fn find<T : PartialEq>(x : T, xs : &[T]) -> Option<usize> {
         }
     }
 
-    return None;
+    None
 }
 
 fn find_cycles_from(

@@ -26,14 +26,14 @@ impl Display for Graph {
         for j in Alt::all(self.vertices) {
             write!(f, "(,{}) ", j)?;
         }
-        writeln!(f, "")?;
+        writeln!(f)?;
 
         for i in Alt::all(self.vertices) {
             write!(f, "({},) ", i)?;
             for j in Alt::all(self.vertices) {
                 write!(f, "{:>4} ", self.edges(i, j).len())?;
             }
-            writeln!(f, "")?;
+            writeln!(f)?;
         }
 
         Ok(())
@@ -43,7 +43,7 @@ impl Display for Graph {
 impl Graph {
     fn new(vertices : u32) -> Graph {
         Graph {
-            vertices: vertices,
+            vertices,
             edges: vec![Vec::new(); (vertices*vertices) as usize],
         }
     }
@@ -212,7 +212,7 @@ fn rotate_min<T : Ord+Clone>(xs : &[T]) -> Vec<T> {
     result.extend_from_slice(&xs[min_idx..]);
     result.extend_from_slice(&xs[0..min_idx]);
 
-    return result;
+    result
 }
 
 fn find<T : PartialEq>(x : T, xs : &[T]) -> Option<usize> {
@@ -222,7 +222,7 @@ fn find<T : PartialEq>(x : T, xs : &[T]) -> Option<usize> {
         }
     }
 
-    return None;
+    None
 }
 
 fn find_cycles_from(
@@ -740,7 +740,7 @@ pub mod tuple_intrans {
             Request{subject: codec::Packed(Subject{
                 name: String::from("subject"),
                 alternatives: (0..alt_count).map(|s| s.to_string()).collect(),
-                choices: choices,
+                choices,
             })}
         }
 
@@ -788,7 +788,7 @@ mod test {
         Request{subject: codec::Packed(Subject{
             name: String::from("subject"),
             alternatives: (0..alt_count).map(|s| s.to_string()).collect(),
-            choices: choices,
+            choices,
         })}
     }
 

@@ -150,15 +150,13 @@ impl GenChoices {
                     } else {
                         AltSet::empty()
                     }
+                } else if multiple_choice {
+                    // nonempty subset of menu
+                    AltSet::rand_nonempty(rng, menu.size()).view().iter().map(
+                        |Alt(i)| feasible[i as usize]
+                    ).collect()
                 } else {
-                    if multiple_choice {
-                        // nonempty subset of menu
-                        AltSet::rand_nonempty(rng, menu.size()).view().iter().map(
-                            |Alt(i)| feasible[i as usize]
-                        ).collect()
-                    } else {
-                        AltSet::singleton(choice)
-                    }
+                    AltSet::singleton(choice)
                 }
             }
 
@@ -258,9 +256,9 @@ pub fn run<R : Rng>(rng : &mut R, request : Request) -> Result<Response> {
     Ok(Response {
         observation_count: choices.len() as u32,
         subject: Packed(Subject {
-            name: name,
+            name,
             alternatives: request.alternatives,
-            choices: choices,
+            choices,
         })
     })
 }

@@ -252,13 +252,13 @@ impl Instance {
             &Instance::UndominatedChoice(ref p) =>
                 Model::UndominatedChoice{strict: p.is_strict()},
 
-            &Instance::PartiallyDominantChoice{p:_, fc} =>
+            &Instance::PartiallyDominantChoice{fc, ..} =>
                 Model::PartiallyDominantChoice{fc},
 
             &Instance::StatusQuoUndominatedChoice(_) =>
                 Model::StatusQuoUndominatedChoice,
 
-            &Instance::Overload{ref p, limit:_} =>
+            &Instance::Overload{ref p, ..} =>
                 Model::Overload(PreorderParams::from_preorder(p)),
 
             &Instance::TopTwo(_) =>
@@ -407,8 +407,8 @@ impl PreorderError {
         match self {
             PreorderError::TooManyAlternatives(alt_count)
                 => InstanceError::TooManyAlternatives {
-                    model: model,
-                    alt_count: alt_count,
+                    model,
+                    alt_count,
                 },
 
             PreorderError::NeedPrecomputedPreorders
@@ -432,6 +432,7 @@ impl fmt::Display for InstanceError {
     }
 }
 
+#[allow(clippy::collapsible_if)]
 fn traverse_preorders<F>(
     precomputed : &Precomputed,
     preorder_params : PreorderParams,

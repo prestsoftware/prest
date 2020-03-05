@@ -101,14 +101,14 @@ impl Preorder {
         let stride = (size + block_size - 1) / block_size;  // round upwards
         let nblocks = size * stride;
 
-        let mut result = Preorder{ blocks: vec![0; nblocks as usize], size: size };
+        let mut result = Preorder{ blocks: vec![0; nblocks as usize], size };
         for i in Alt::all(size) {
             result.set_leq(i, i, true);
         }
 
         result
     }
-    
+
     pub fn from_fast_preorder(size : u32, p : FastPreorder) -> Preorder {
         let FastPreorder(mut matrix) = p;
 
@@ -120,7 +120,7 @@ impl Preorder {
             matrix >>= 8;
         }
 
-        Preorder { blocks: blocks, size: size }
+        Preorder{blocks, size}
     }
 
     #[inline]
@@ -243,7 +243,7 @@ impl Preorder {
         }
 
         Preorder {
-            blocks: blocks,
+            blocks,
             size: values.len() as u32,
         }
     }

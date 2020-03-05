@@ -17,7 +17,7 @@ pub fn parse() -> Args {
         ap.parse_args_or_exit();
     }
 
-    return Args {
+    Args {
         fname_precomputed_preorders:
             if fname_precomputed_preorders.is_empty() {
                 None

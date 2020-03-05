@@ -12,6 +12,10 @@ pub type Block = u32;
 // WARNING: AltSet::blocks must not contain trailing zeroes
 // as that will affect the equality comparison. Use AltSet::normalise()
 // after every mutable change.
+//
+// Allowing clippy::derive_hash_xor_eq is fine because the behaviour of PartialEq
+// is exactly the same as if it were derived; it just adds assertions.
+#[allow(clippy::derive_hash_xor_eq)]
 #[derive(PartialOrd,Ord,Clone,Hash,Debug)]
 pub struct AltSet {
     blocks : Vec<Block>,  // little endian
@@ -64,7 +68,7 @@ impl<'a> Iterator for Iter<'a> {
         // note that this handles empty sets correctly
         loop {
             if self.head == 0 {
-                if self.tail.len() == 0 {
+                if self.tail.is_empty() {
                     // no more blocks
                     return None;
                 }

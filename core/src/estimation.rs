@@ -76,8 +76,8 @@ pub struct InstanceInfo {
 impl InstanceInfo {
     pub fn from(model : Model, penalty : Penalty, inst : &Instance) -> Self {
         InstanceInfo {
-            model: model,
-            penalty: penalty,
+            model,
+            penalty,
             instance: codec::encode_to_memory(inst).unwrap(),
         }
     }
@@ -219,7 +219,7 @@ impl BestInstances {
 
                     BestInstances{
                         lowest_penalty: Some(penalty),
-                        instances: instances,
+                        instances,
                     }
                 }
             }
@@ -293,8 +293,8 @@ pub fn run_one(precomputed : &Precomputed, subject : &Subject, models : &[Model]
 
     Ok(Response {
         subject_name: subject.name.clone(),
-        best_instances: best_instances,
-        score: score,
+        best_instances,
+        score,
     })
 }
 
@@ -350,7 +350,7 @@ mod test {
         Subject{
             name: String::from("subject"),
             alternatives: (0..alt_count).map(|s| s.to_string()).collect(),
-            choices: choices,
+            choices,
         }
     }
 

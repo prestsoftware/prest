@@ -39,7 +39,7 @@ impl Encode for Response {
 }
 
 pub fn run(request : Request) -> Result<Response> {
-    let Request{ subject: Packed(Subject{name, alternatives:_, choices}) } = request;
+    let Request{ subject: Packed(Subject{name, choices, ..}) } = request;
 
     Ok(Response{
         name,
@@ -66,7 +66,7 @@ mod test {
         Request{subject: codec::Packed(Subject{
             name: String::from("subject"),
             alternatives: (0..alt_count).map(|s| s.to_string()).collect(),
-            choices: choices,
+            choices,
         })}
     }
 

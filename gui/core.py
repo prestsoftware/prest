@@ -7,7 +7,6 @@ import threading
 import subprocess
 import collections
 import typing
-from typing_extensions import Literal
 from typing import Sequence, Any, Type, Optional, NamedTuple, Union
 
 import model
@@ -137,9 +136,8 @@ class Core:
     def __enter__(self) -> 'Core':
         return self
 
-    def __exit__(self, *_exc_info) -> Literal[False]:
+    def __exit__(self, *_exc_info):
         self.shutdown()
-        return False
 
     def call(self, name : str, codec_req : Codec, codec_resp : Codec, request : Any) -> Any:
         strC.encode(self.stdin, name)

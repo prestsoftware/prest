@@ -138,6 +138,7 @@ class Core:
 
     def __exit__(self, *_exc_info) -> Literal[False]:
         self.shutdown()
+        return False
 
     def call(self, name : str, codec_req : Codec, codec_resp : Codec, request : Any) -> Any:
         strC.encode(self.stdin, name)

@@ -110,7 +110,7 @@ class IntegrityCheck(Dataset):
         return ''  # no alternatives in this dataset
 
     def label_size(self) -> str:
-        return '%d issues' % len(self.subjects)
+        return '%d issues' % sum(len(subj.issues) for subj in self.subjects)
 
     def get_analyses(self) -> Sequence[Analysis]:
         return ()

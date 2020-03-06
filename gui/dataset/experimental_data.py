@@ -8,7 +8,7 @@ from typing import Sequence, Tuple, Dict, List, Set, \
     FrozenSet, Iterator, NamedTuple, Iterable, Any, Optional
 
 from PyQt5.QtCore import Qt, QModelIndex, QAbstractItemModel
-from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView, QMessageBox
+from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
 
 import model
 import dataset
@@ -412,7 +412,7 @@ class ExperimentalData(Dataset):
         ds.subjects = subjects
         return ds
 
-    def analysis_integrity_check(self, worker : Worker, _config : None) -> Optional[dataset.integrity_check.IntegrityCheck]:
+    def analysis_integrity_check(self, worker : Worker, _config : None) -> dataset.AnalysisResult:
         worker.set_work_size(len(self.subjects))
 
         subjects : List[dataset.integrity_check.Subject] = []
@@ -438,12 +438,11 @@ class ExperimentalData(Dataset):
             ds.subjects = subjects
             return ds
         else:
-            #QMessageBox.information(
-            #    main.main_win,  # ugly but what can you do
-            #    'Integrity check',
-            #    'No integrity issues found.',
-            #)
-            return None
+            return dataset.ShowMessageBox(
+                type=dataset.MessageBoxType.INFORMATION,
+                title='Integrity check',
+                message='No integrity issues found.',
+            )
 
     def get_analyses(self) -> Sequence[Analysis]:
         return (

@@ -1,5 +1,7 @@
 # Prest
 
+[![Build Status](https://travis-ci.org/prestsoftware/prest.svg?branch=master)](https://travis-ci.org/prestsoftware/prest)
+
 Revealed-preference analysis and preference estimation from choice data: https://prestsoftware.com
 
 Reach us at gerasimou AT outlook DOT com  and  ziman AT functor DOT sk.

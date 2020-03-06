@@ -7,7 +7,7 @@ import threading
 import subprocess
 import collections
 import typing
-from typing import Sequence, Any, Type, Optional, NamedTuple, Union
+from typing import Sequence, Any, Type, Optional, NamedTuple, Union, Literal
 
 import model
 import platform_specific
@@ -133,7 +133,7 @@ class Core:
     def __enter__(self) -> 'Core':
         return self
 
-    def __exit__(self, *_exc_info) -> bool:
+    def __exit__(self, *_exc_info) -> Literal[False]:
         self.shutdown()
         return False
 

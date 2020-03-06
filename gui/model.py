@@ -143,10 +143,10 @@ class ModelGroup(NamedTuple):
 def mgroup(name: str, help_url: Optional[str]=None, *variants : Optional[Tuple[str, Model]]) -> ModelGroup:
     return ModelGroup(name, help_url, variants)
 
-def preorder(strict: bool=None, total: bool=None) -> Model:
+def preorder(strict: Optional[bool]=None, total: Optional[bool]=None) -> Model:
     return PreorderMaximization(PreorderParams(strict, total))
 
-def unattractive(strict: bool=None, total: bool=None) -> Model:
+def unattractive(strict: Optional[bool]=None, total: Optional[bool]=None) -> Model:
     return Unattractiveness(PreorderParams(strict, total))
 
 def sublabel(main : str, detail : str) -> str:

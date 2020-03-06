@@ -22,8 +22,8 @@ class ImportCsv(QDialog, uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
         self.tblPreview.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         self.tblPreview.horizontalHeader().setStretchLastSection(False)
 
-        self.rows: List[List[str]] = None
-        self.column_names: List[str] = None
+        self.rows: Optional[List[List[str]]] = None
+        self.column_names: Optional[List[str]] = None
 
     def fill_rows(self, rows: List[List[str]]):
         # the UI will have warned the user otherwise so this must be true
@@ -34,6 +34,7 @@ class ImportCsv(QDialog, uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
 
         def fill_cols(cb, allow_none=False):
             cb.clear()
+            assert self.column_names is not None
             for col in self.column_names:
                 cb.addItem(col)
             if allow_none:
@@ -54,6 +55,7 @@ class ImportCsv(QDialog, uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
 
             # then grid preview
             MAX_ROWS = 256
+            assert self.rows is not None
             nrows = min(len(self.rows), MAX_ROWS)
             self.tblPreview.setRowCount(nrows)
             #self.tblPreview.setColumnCount(len(self.column_names))
@@ -99,6 +101,9 @@ class ImportCsv(QDialog, uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
         preview()
 
     def make_dataset(self, name='CSV preview') -> dataset.experimental_data.ExperimentalData:
+        assert self.column_names is not None
+        assert self.rows is not None
+
         indices = (
             self.cbSubject.currentIndex(),
             self.cbMenu.currentIndex(),

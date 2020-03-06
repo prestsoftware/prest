@@ -88,6 +88,8 @@ SubjectC = namedtupleC(Subject, strC, listC(strC), listC(ChoiceRowC))
 DatasetHeaderC = tupleC(strC, listC(strC))
 
 class Dataset:
+    ViewDialog : Any  # to be overridden in subclasses
+
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:
         self.name = name
         self.alternatives = list(alternatives)

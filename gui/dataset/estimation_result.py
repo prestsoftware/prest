@@ -41,7 +41,7 @@ class Penalty(NamedTuple):
 
 PenaltyC = namedtupleC(Penalty, intC, intC)
 
-class Request(NamedTuple):  # type: ignore
+class Request(NamedTuple):
     subjects : List[dataset.PackedSubject]
     models : Sequence[model.Model]
     disable_parallelism : bool
@@ -51,14 +51,14 @@ RequestC = namedtupleC(Request, listC(dataset.PackedSubjectC), listC(ModelC), bo
 InstanceRepr = NewType('InstanceRepr', bytes)
 InstanceReprC = bytesC
 
-class InstanceInfo(NamedTuple):  # type: ignore
+class InstanceInfo(NamedTuple):
     model : ModelRepr
     penalty : Penalty
     instance : InstanceRepr
 
 InstanceInfoC = namedtupleC(InstanceInfo, ModelC, PenaltyC, InstanceReprC)
 
-class Response(NamedTuple):  # type: ignore
+class Response(NamedTuple):
     subject_name : str
     penalty : Penalty
     best_instances : List[InstanceInfo]

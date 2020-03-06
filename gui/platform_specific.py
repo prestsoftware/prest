@@ -24,15 +24,21 @@ def is_windows() -> bool:
 
 def hide_console() -> None:
     log.debug('hiding console...')
-    whnd = ctypes.windll.kernel32.GetConsoleWindow()  # type:ignore
-    if whnd != 0:
-        ctypes.windll.user32.ShowWindow(whnd, 0)  # type:ignore
+    if sys.platform == 'win32':
+        whnd = ctypes.windll.kernel32.GetConsoleWindow()
+        if whnd != 0:
+            ctypes.windll.user32.ShowWindow(whnd, 0)
+    else:
+        raise Exception('console hiding unsupported on %s' % sys.platform)
 
 def show_console() -> None:
     log.debug('showing console...')
-    whnd = ctypes.windll.kernel32.GetConsoleWindow()  # type:ignore
-    if whnd != 0:
-        ctypes.windll.user32.ShowWindow(whnd, 1)  # type:ignore
+    if sys.platform == 'win32':
+        whnd = ctypes.windll.kernel32.GetConsoleWindow()
+        if whnd != 0:
+            ctypes.windll.user32.ShowWindow(whnd, 1)
+    else:
+        raise Exception('console showing unsupported on %s' % sys.platform)
 
 def get_frozen_dir() -> str:
     result : Optional[str] = cast(

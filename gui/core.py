@@ -7,7 +7,8 @@ import threading
 import subprocess
 import collections
 import typing
-from typing import Sequence, Any, Type, Optional, NamedTuple, Union, Literal
+from typing_extensions import Literal
+from typing import Sequence, Any, Type, Optional, NamedTuple, Union
 
 import model
 import platform_specific

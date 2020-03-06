@@ -240,7 +240,7 @@ class EstimationResult(Dataset):
         intC_encode, intC_decode = intC
 
         def get_size(x : 'EstimationResult') -> int:
-            return subjects_size(x.subjects)
+            return cast(int, subjects_size(x.subjects))
 
         def encode(worker : Worker, f : FileOut, x : 'EstimationResult') -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))

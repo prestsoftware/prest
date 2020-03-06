@@ -5,7 +5,7 @@ import os
 import sys
 import ctypes
 import logging
-from typing import Optional
+from typing import Optional, cast
 
 log = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ class FileNotFound(Exception):
             Exception.__init__(self, 'could not find embedded file: %s' % ', '.join(fnames))
 
 def is_frozen() -> bool:
-    return getattr(sys, 'frozen', False)
+    return cast(bool, getattr(sys, 'frozen', False))
 
 def is_windows() -> bool:
     return sys.platform.lower().startswith('win')
@@ -35,7 +35,12 @@ def show_console() -> None:
         ctypes.windll.user32.ShowWindow(whnd, 1)  # type:ignore
 
 def get_frozen_dir() -> str:
-    return getattr(sys, '_MEIPASS', None)
+    result : Optional[str] = cast(
+        Optional[str],
+        getattr(sys, '_MEIPASS', None),
+    )
+    assert result is not None
+    return result
 
 # takes list of possible names
 def get_embedded_file_path(*fnames : str) -> str:

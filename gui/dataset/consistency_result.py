@@ -1,7 +1,7 @@
 import logging
 import collections
 from typing import NamedTuple, List, Dict, Iterator, Tuple, FrozenSet, \
-    Sequence, Optional, Union, Set
+    Sequence, Optional, Union, Set, cast
 
 from PyQt5.QtCore import Qt, QModelIndex, QAbstractItemModel
 from PyQt5.QtGui import QIcon, QCursor
@@ -285,7 +285,7 @@ class ConsistencyResult(Dataset):
         intC_encode, intC_decode = intC
 
         def get_size(x : 'ConsistencyResult') -> int:
-            return subjects_size(x.subjects)
+            return cast(int, subjects_size(x.subjects))
 
         def encode(worker : Worker, f : FileOut, x : 'ConsistencyResult') -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))

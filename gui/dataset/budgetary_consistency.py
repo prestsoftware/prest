@@ -4,7 +4,7 @@ import util.tree_model
 import uic.view_dataset
 import platform_specific
 from dataset import Dataset, Analysis, ExportVariant, DatasetHeaderC
-from typing import Sequence, NamedTuple, List, Iterator, Tuple
+from typing import Sequence, NamedTuple, List, Iterator, Tuple, cast
 from gui.progress import Worker, Cancelled
 from util.codec import namedtupleC, strC, intC, listC, tupleC, FileIn, FileOut
 from util.codec_progress import CodecProgress, listCP, oneCP
@@ -168,7 +168,7 @@ class BudgetaryConsistency(Dataset):
         subjects_get_size, subjects_encode, subjects_decode = listCP(oneCP(SubjectC))
 
         def get_size(x : 'BudgetaryConsistency') -> int:
-            return subjects_get_size(x.subjects)
+            return cast(int, subjects_get_size(x.subjects))
 
         def encode(worker : Worker, f : FileOut, x : 'BudgetaryConsistency') -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))

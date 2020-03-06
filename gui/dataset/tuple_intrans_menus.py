@@ -1,5 +1,5 @@
 import logging
-from typing import NamedTuple, List, Sequence, Iterator, Tuple, Optional, Set, FrozenSet, Union
+from typing import NamedTuple, List, Sequence, Iterator, Tuple, Optional, Set, FrozenSet, Union, cast
 from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
 
 import uic.view_dataset
@@ -161,7 +161,7 @@ class TupleIntransMenus(Dataset):
         intC_encode, intC_decode = intC
 
         def get_size(x : 'TupleIntransMenus') -> int:
-            return subjects_size(x.subjects)
+            return cast(int, subjects_size(x.subjects))
 
         def encode(worker : Worker, f : FileOut, x : 'TupleIntransMenus') -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))

@@ -8,7 +8,7 @@ import dataset.budgetary_consistency
 from core import Core
 from dataset import Dataset, Analysis, ExportVariant, DatasetHeaderC
 from dataset.budgetary_consistency import BudgetaryConsistency
-from typing import Sequence, NamedTuple, List, Dict, Tuple, Iterator, Union, Optional
+from typing import Sequence, NamedTuple, List, Dict, Tuple, Iterator, Union, Optional, cast
 from gui.progress import Worker, Cancelled
 from util.codec import FileOut, FileIn, namedtupleC, strC, numpyC, listC
 from util.codec_progress import CodecProgress, listCP, oneCP
@@ -119,7 +119,7 @@ class Budgetary(Dataset):
         subjects_get_size, subjects_encode, subjects_decode = listCP(oneCP(SubjectC))
 
         def get_size(x : 'Budgetary') -> int:
-            return subjects_get_size(x.subjects)
+            return cast(int, subjects_get_size(x.subjects))
 
         def encode(worker : Worker, f : FileOut, x : 'Budgetary') -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))

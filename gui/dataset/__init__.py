@@ -3,7 +3,7 @@ import openpyxl
 import csv
 import logging
 from typing import Sequence, Any, List, Type, NamedTuple, Callable, Iterator, \
-    Optional, FrozenSet, Iterable, NewType, Union
+    Optional, FrozenSet, Iterable, NewType, Union, cast
 
 from PyQt5.QtWidgets import QDialog, QMessageBox
 
@@ -81,7 +81,7 @@ class Subject(NamedTuple):
 
     @staticmethod
     def unpack(packed : PackedSubject) -> 'Subject':
-        return SubjectC.decode_from_memory(packed)
+        return cast(Subject, SubjectC.decode_from_memory(packed))
 
 SubjectC = namedtupleC(Subject, strC, listC(strC), listC(ChoiceRowC))
 
@@ -133,9 +133,12 @@ class Dataset:
                 return analysis.run(self, config)
 
         try:
-            result = MyWorker().run_with_progress(
-                None,  # parent widget
-                '{0}...'.format(analysis.name),
+            result = cast(
+                AnalysisResult,
+                MyWorker().run_with_progress(
+                    None,  # parent widget
+                    '{0}...'.format(analysis.name),
+                ),
             )
         except Cancelled:
             log.debug('analysis cancelled: {0}'.format(analysis.name))

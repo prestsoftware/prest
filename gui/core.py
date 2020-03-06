@@ -169,13 +169,13 @@ class Core:
         except CodecError as e:
             raise MalformedResponse('malformed response from core') from e
 
-    def crash(self):
-        return self.call('crash', strC, strC, 'Crash test')
+    def crash(self) -> None:
+        self.call('crash', strC, strC, 'Crash test')
 
-    def soft_failure(self):
-        return self.call('fail', strC, strC, 'Failure test')
+    def soft_failure(self) -> None:
+        self.call('fail', strC, strC, 'Failure test')
 
-    def shutdown(self):
+    def shutdown(self) -> None:
         log.debug('core shutdown')
 
         try:

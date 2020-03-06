@@ -5,7 +5,7 @@ import logging
 import threading
 import collections
 from typing import Sequence, Tuple, Dict, List, Set, \
-    FrozenSet, Iterator, NamedTuple, Iterable, Any, Optional
+    FrozenSet, Iterator, NamedTuple, Iterable, Any, Optional, cast
 
 from PyQt5.QtCore import Qt, QModelIndex, QAbstractItemModel
 from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
@@ -494,7 +494,7 @@ class ExperimentalData(Dataset):
         intC_encode, intC_decode = intC
 
         def get_size(x : 'ExperimentalData') -> int:
-            return subjects_size(x.subjects)
+            return cast(int, subjects_size(x.subjects))
 
         def encode(worker : Worker, f : FileOut, x : 'ExperimentalData') -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))

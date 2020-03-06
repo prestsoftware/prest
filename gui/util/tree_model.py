@@ -1,6 +1,6 @@
 import re
 from util.codec import Codec
-from typing import Sequence, List, Any, NamedTuple, Optional, Generic, TypeVar, Callable
+from typing import Sequence, List, Any, NamedTuple, Optional, Generic, TypeVar, Callable, cast
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, QModelIndex, QAbstractItemModel
 
@@ -101,7 +101,10 @@ class TreeModel(QAbstractItemModel):
     def headerData(self, nr: int, orientation: Qt.Orientation, role) -> Optional[str]:
         if orientation == Qt.Horizontal:
             try:
-                return self.headers[nr].data(role)
+                return cast(
+                    Optional[str],
+                    self.headers[nr].data(role),
+                )
             except IndexError:
                 return None
         else:
@@ -109,7 +112,7 @@ class TreeModel(QAbstractItemModel):
 
     def get_node(self, idx: QModelIndex) -> Node:
         if idx.isValid():
-            return idx.internalPointer()
+            return cast(Node, idx.internalPointer())
         else:
             return self.root
 
@@ -122,7 +125,7 @@ class TreeModel(QAbstractItemModel):
         return self.createIndex(row, col, child)
 
     def parent(self, idx: QModelIndex) -> Node:
-        return self.get_node(idx).parent_idx(self)
+        return cast(Node, self.get_node(idx).parent_idx(self))
 
     def rowCount(self, idx: QModelIndex) -> int:
         return self.get_node(idx).child_count
@@ -132,7 +135,7 @@ class TreeModel(QAbstractItemModel):
 
     def data(self, idx: QModelIndex, role) -> Optional[str]:
         try:
-            return self.get_node(idx).field(idx.column()).data(role)
+            return cast(Optional[str], self.get_node(idx).field(idx.column()).data(role))
         except IndexError:
             return None
 

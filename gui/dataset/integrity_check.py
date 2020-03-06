@@ -4,7 +4,7 @@ import uic.view_dataset
 from gui.progress import Worker
 from dataset import Dataset, Analysis, ExportVariant, DatasetHeaderC
 from util.codec import namedtupleC, setC, intC, enumC, strC
-from typing import NamedTuple, Set, Union, List, Sequence
+from typing import NamedTuple, Set, Union, List, Sequence, cast
 from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
 from util.codec import Codec, FileIn, FileOut, listC, strC, intC, \
     tupleC, namedtupleC, setC, frozensetC
@@ -125,7 +125,7 @@ class IntegrityCheck(Dataset):
         intC_encode, intC_decode = intC
 
         def get_size(x : 'IntegrityCheck') -> int:
-            return subjects_size(x.subjects)
+            return cast(int, subjects_size(x.subjects))
 
         def encode(worker : Worker, f : FileOut, x : 'IntegrityCheck') -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))

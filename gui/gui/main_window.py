@@ -160,7 +160,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
 
                 def mkanalyse(analysis):
                     def analyse(_flag):
-                        new_ds = ds.analyse(analysis)
+                        new_ds = ds.analyse(analysis, self)
                         if new_ds is not None:
                             self.add_dataset(new_ds)
 

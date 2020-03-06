@@ -120,7 +120,7 @@ class Dataset:
     def get_codec_progress() -> CodecProgress:
         raise NotImplementedError()
 
-    def analyse(self, analysis : Analysis) -> Optional['Dataset']:
+    def analyse(self, analysis : Analysis, main_win : Any) -> Optional['Dataset']:
         if analysis.config is not None:
             config = analysis.config()
             if config is None:
@@ -136,7 +136,7 @@ class Dataset:
             result = cast(
                 AnalysisResult,
                 MyWorker().run_with_progress(
-                    None,  # parent widget
+                    main_win,  # parent widget
                     '{0}...'.format(analysis.name),
                 ),
             )
@@ -146,11 +146,11 @@ class Dataset:
 
         if isinstance(result, ShowMessageBox):
             if result.type is MessageBoxType.INFORMATION:
-                QMessageBox.information(None, result.title, result.message)
+                QMessageBox.information(main_win, result.title, result.message)
             elif result.type is MessageBoxType.WARNING:
-                QMessageBox.warning(None, result.title, result.message)
+                QMessageBox.warning(main_win, result.title, result.message)
             elif result.type is MessageBoxType.CRITICAL:
-                QMessageBox.critical(None, result.title, result.message)
+                QMessageBox.critical(main_win, result.title, result.message)
             else:
                 raise Exception('unknown message box type: %s', result.type)
 

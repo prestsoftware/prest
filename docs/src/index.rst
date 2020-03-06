@@ -21,9 +21,7 @@ Downloads
 
 * `Prest VERSION for Windows <_static/prest-win-VERSION.exe>`_
 
-* `Prest VERSION for macOS <_static/prest-mac-VERSION.exe>`_
-
-* `Prest VERSION for Linux <_static/prest-linux-VERSION.exe>`_
+* `Prest VERSION for macOS <_static/prest-osx-VERSION>`_
 
 * The `Prest source code <https://github.com/prestsoftware/prest>`_, written
   in `Rust <https://www.rust-lang.org/>`_ (core) and `Python

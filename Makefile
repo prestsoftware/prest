@@ -34,14 +34,14 @@ run: build
 	python gui/main.py
 
 test: build
-	python -m pytest -v -m "not long" gui
+	pytest -v -m "not long" gui
 
 bench: build
-	python -m pytest -v -m benchmark gui
+	pytest -v -m benchmark gui
 
 longtest: fulltest
 
 fulltest: check
 	(cd core; cargo test --release)
-	[ $(TRAVIS_OS_NAME) = windows ] || python -m pytest -v -m "not benchmark" gui
+	[ $(TRAVIS_OS_NAME) = windows ] || pytest -v -m "not benchmark" gui
 

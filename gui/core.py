@@ -7,7 +7,7 @@ import threading
 import subprocess
 import collections
 import typing
-from typing import Sequence, Any, Type, Optional, NamedTuple, Union
+from typing import Sequence, Any, Type, Optional, NamedTuple, Union, Literal
 
 import model
 import platform_specific
@@ -133,7 +133,7 @@ class Core:
     def __enter__(self) -> 'Core':
         return self
 
-    def __exit__(self, *_exc_info) -> bool:
+    def __exit__(self, *_exc_info) -> Literal[False]:
         self.shutdown()
         return False
 
@@ -169,13 +169,13 @@ class Core:
         except CodecError as e:
             raise MalformedResponse('malformed response from core') from e
 
-    def crash(self):
-        return self.call('crash', strC, strC, 'Crash test')
+    def crash(self) -> None:
+        self.call('crash', strC, strC, 'Crash test')
 
-    def soft_failure(self):
-        return self.call('fail', strC, strC, 'Failure test')
+    def soft_failure(self) -> None:
+        self.call('fail', strC, strC, 'Failure test')
 
-    def shutdown(self):
+    def shutdown(self) -> None:
         log.debug('core shutdown')
 
         try:

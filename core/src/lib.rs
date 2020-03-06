@@ -34,3 +34,4 @@ pub mod void;
 pub mod budgetary;
 pub mod matrix;
 pub mod set_cover;
+pub mod integrity;

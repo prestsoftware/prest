@@ -4,7 +4,7 @@ extern crate rand;
 use rand::SeedableRng;
 use rand::rngs::SmallRng;
 use prest::{rpc,precomputed,estimation,args,consistency,simulation};
-use prest::{experiment_stats,budgetary};
+use prest::{experiment_stats,budgetary,integrity};
 use precomputed::Precomputed;
 
 fn rpc_loop(args : &args::Args) {
@@ -80,6 +80,10 @@ fn rpc_loop(args : &args::Args) {
             ActionRequest::BudgetaryConsistency(req) => {
                 let resp = budgetary::consistency::run(Logger::new(&mut rpc), req);
                 rpc.write_result(resp).unwrap();
+            }
+
+            ActionRequest::IntegrityCheck(req) => {
+                rpc.write_result(integrity::run(req)).unwrap();
             }
         }
     }

@@ -9,9 +9,11 @@ use consistency;
 use simulation;
 use experiment_stats;
 use budgetary;
+use integrity;
 
 #[derive(Debug)]
 pub enum ActionRequest {
+    IntegrityCheck(integrity::Request),
     BudgetaryConsistency(budgetary::consistency::Request),
     Summary(experiment_stats::Request),
     SetRngSeed(Vec<u8>),
@@ -40,6 +42,7 @@ impl Decode for ActionRequest {
             "tuple-intrans-menus" => Ok(TupleIntransMenus(Decode::decode(f)?)),
             "tuple-intrans-alts" => Ok(TupleIntransAlts(Decode::decode(f)?)),
             "estimation" => Ok(Estimation(Decode::decode(f)?)),
+            "integrity-check" => Ok(IntegrityCheck(Decode::decode(f)?)),
             "echo" => Ok(Echo(Decode::decode(f)?)),
             "crash" => Ok(Crash(Decode::decode(f)?)),
             "fail" => Ok(Fail(Decode::decode(f)?)),

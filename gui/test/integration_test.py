@@ -128,6 +128,24 @@ def test_budgetary(tmpdir):
     check_export(tmpdir, newds, 'Summary', 'gui/test/expected/budgetary-summary.csv')
     check_export(tmpdir, newds, 'Violations by cycle length', 'gui/test/expected/budgetary-cycles.csv')
 
+def test_integrity(tmpdir):
+    rows = load_raw_csv('docs/src/_static/examples/integrity.csv')
+    ds = ExperimentalData.from_csv('dataset', rows[1:], (0, 1, None, 2))
+    nds = ds.analysis_integrity_check(MockWorker(), None)
+    assert isinstance(nds, dataset.integrity_check.IntegrityCheck)
+
+    assert len(nds.subjects) == 1
+    assert nds.subjects[0].name == 'a'
+    assert nds.subjects[0].issues == [
+        dataset.integrity_check.RepeatedMenu(
+            menu={0,1},
+        ),
+        dataset.integrity_check.ChoiceNotInMenu(
+            menu={0,1},
+            choice=2,
+        ),
+    ]
+
 if __name__ == '__main__':
     import logging
     logging.basicConfig(level=logging.DEBUG)

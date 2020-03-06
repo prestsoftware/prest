@@ -1,4 +1,4 @@
-from typing import NamedTuple, Union, List
+from typing import NamedTuple, Union, List, cast
 
 from core import Core
 from dataset import ChoiceRow, ChoiceRowC, Menu, MenuC, Subject, SubjectC, \
@@ -74,4 +74,7 @@ class Response(NamedTuple):
 ResponseC = namedtupleC(Response, PackedSubjectC, intC)
 
 def run(core : Core, request : Request) -> Response:
-    return core.call('simulation', RequestC, ResponseC, request)
+    return cast(
+        Response,
+        core.call('simulation', RequestC, ResponseC, request),
+    )

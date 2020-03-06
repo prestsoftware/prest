@@ -3,11 +3,12 @@ import openpyxl
 import csv
 import logging
 from typing import Sequence, Any, List, Type, NamedTuple, Callable, Iterator, \
-    Optional, FrozenSet, Iterable, NewType
+    Optional, FrozenSet, Iterable, NewType, Union, cast
 
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import QDialog, QMessageBox
 
 import core
+import enum
 import model
 import branding
 from gui.progress import Worker, Cancelled
@@ -27,10 +28,22 @@ class ExportVariant(NamedTuple):
     size : int
     get_rows : Callable[[], Iterator[Optional[tuple]]]  # None -> bump progress
 
+class MessageBoxType(enum.Enum):
+    INFORMATION = 'info'
+    WARNING = 'warn'
+    CRITICAL = 'critical'
+
+class ShowMessageBox(NamedTuple):
+    type : MessageBoxType
+    title : str
+    message : str
+
+AnalysisResult = Union[None, ShowMessageBox, 'Dataset']
+
 class Analysis(NamedTuple):
     name : str
     config : Optional[Callable[[], Optional[Any]]]  # display config dialog, return config | can be None
-    run :  Callable[[Worker, Any], 'Dataset']  # (worker, config) -> result
+    run :  Callable[[Worker, Any], AnalysisResult]  # (worker, config) -> result
     is_hidden : bool = False
 
 AltSet = FrozenSet[int]
@@ -68,13 +81,15 @@ class Subject(NamedTuple):
 
     @staticmethod
     def unpack(packed : PackedSubject) -> 'Subject':
-        return SubjectC.decode_from_memory(packed)
+        return cast(Subject, SubjectC.decode_from_memory(packed))
 
 SubjectC = namedtupleC(Subject, strC, listC(strC), listC(ChoiceRowC))
 
 DatasetHeaderC = tupleC(strC, listC(strC))
 
 class Dataset:
+    ViewDialog : Any  # to be overridden in subclasses
+
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:
         self.name = name
         self.alternatives = list(alternatives)
@@ -118,13 +133,30 @@ class Dataset:
                 return analysis.run(self, config)
 
         try:
-            return MyWorker().run_with_progress(
-                None,  # parent widget
-                '{0}...'.format(analysis.name),
+            result = cast(
+                AnalysisResult,
+                MyWorker().run_with_progress(
+                    None,  # parent widget
+                    '{0}...'.format(analysis.name),
+                ),
             )
         except Cancelled:
             log.debug('analysis cancelled: {0}'.format(analysis.name))
             return None
+
+        if isinstance(result, ShowMessageBox):
+            if result.type is MessageBoxType.INFORMATION:
+                QMessageBox.information(None, result.title, result.message)
+            elif result.type is MessageBoxType.WARNING:
+                QMessageBox.warning(None, result.title, result.message)
+            elif result.type is MessageBoxType.CRITICAL:
+                QMessageBox.critical(None, result.title, result.message)
+            else:
+                raise Exception('unknown message box type: %s', result.type)
+
+            return None
+
+        return result
 
     def get_export_variants(self) -> Sequence[ExportVariant]:
         raise NotImplementedError()

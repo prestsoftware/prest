@@ -5,7 +5,7 @@ import logging
 import threading
 import collections
 from typing import Sequence, Tuple, Dict, List, Set, \
-    FrozenSet, Iterator, NamedTuple, Iterable, Any, Optional
+    FrozenSet, Iterator, NamedTuple, Iterable, Any, Optional, cast
 
 from PyQt5.QtCore import Qt, QModelIndex, QAbstractItemModel
 from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
@@ -28,6 +28,7 @@ import dataset.consistency_result
 import dataset.experiment_stats
 import dataset.tuple_intrans_alts
 import dataset.tuple_intrans_menus
+import dataset.integrity_check
 import dataset.estimation_result as estimation_result
 from model import Model, ModelC
 import uic.view_dataset
@@ -293,7 +294,8 @@ class ExperimentalData(Dataset):
                 self.alternatives,
             )
             ds.subjects = rows
-            return ds
+
+        return ds
 
     # detailed consistency
     def analysis_consistency(self, worker : Worker, _config : None) -> ConsistencyResult:
@@ -410,8 +412,44 @@ class ExperimentalData(Dataset):
         ds.subjects = subjects
         return ds
 
+    def analysis_integrity_check(self, worker : Worker, _config : None) -> dataset.AnalysisResult:
+        worker.set_work_size(len(self.subjects))
+
+        subjects : List[dataset.integrity_check.Subject] = []
+
+        with Core() as core:
+            worker.interrupt = lambda: core.shutdown()
+
+            for i, subject in enumerate(self.subjects):
+                subj_issues = core.call(
+                    'integrity-check',
+                    PackedSubjectC,
+                    dataset.integrity_check.SubjectC,
+                    subject
+                )
+
+                if subj_issues.issues:
+                    subjects.append(subj_issues)
+
+                worker.set_progress(i+1)
+
+        if subjects:
+            ds = dataset.integrity_check.IntegrityCheck(self.name + ' (integrity check)', self.alternatives)
+            ds.subjects = subjects
+            return ds
+        else:
+            return dataset.ShowMessageBox(
+                type=dataset.MessageBoxType.INFORMATION,
+                title='Integrity check',
+                message='No integrity issues found.',
+            )
+
     def get_analyses(self) -> Sequence[Analysis]:
         return (
+            Analysis('Integrity check',
+                config=None,
+                run=self.analysis_integrity_check,
+            ),
             Analysis(
                 name='Summary information',
                 config=None,
@@ -456,7 +494,7 @@ class ExperimentalData(Dataset):
         intC_encode, intC_decode = intC
 
         def get_size(x : 'ExperimentalData') -> int:
-            return subjects_size(x.subjects)
+            return cast(int, subjects_size(x.subjects))
 
         def encode(worker : Worker, f : FileOut, x : 'ExperimentalData') -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))

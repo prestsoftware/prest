@@ -6,7 +6,7 @@ import typing
 from io import BytesIO
 import numpy as np
 from typing import Union, Any, BinaryIO, Type, NewType, NamedTuple, List, \
-    Tuple, Callable, TypeVar, Optional, Dict, Sequence, Generic
+    Tuple, Callable, TypeVar, Optional, Dict, Sequence, Generic, cast
 
 log = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ class Codec(NamedTuple):
 
     def dbg_encode(self, f : FileOut, x : Any) -> None:
         bs = self.encode_to_memory(x)
-        log.debug('encoding %s: %s' % (self.__class__.__name__, bs))
+        log.debug('encoding %s: %r' % (self.__class__.__name__, bs))
         f.write(bs)
 
     def encode_to_memory(self, x : Any) -> bytes:
@@ -92,7 +92,7 @@ def _floatC() -> Codec:
         f.write(pack('f', x))
 
     def decode(f : FileIn) -> float:
-        return unpack('f', f.read(4))[0]
+        return cast(float, unpack('f', f.read(4))[0])
 
     return Codec(encode, decode)
 
@@ -105,7 +105,7 @@ def _doubleC() -> Codec:
         f.write(pack('d', x))
 
     def decode(f : FileIn) -> float:
-        return unpack('d', f.read(8))[0]
+        return cast(float, unpack('d', f.read(8))[0])
 
     return Codec(encode, decode)
 
@@ -133,7 +133,7 @@ def _strC() -> Codec:
         bytesC_encode(f, x.encode('utf8'))
 
     def decode(f : FileIn) -> str:
-        return bytesC_decode(f).decode('utf8')
+        return cast(str, bytesC_decode(f).decode('utf8'))
 
     return Codec(encode, decode)
 
@@ -173,7 +173,7 @@ def namedtupleC(cls : Type, *codecs : Codec) -> Codec:
             encode(f, x)
 
     def decode(f : FileIn) -> tuple:
-        return cls(*[decode(f) for decode in decodes])
+        return cast(tuple, cls(*[decode(f) for decode in decodes]))
 
     return Codec(encode, decode)
 

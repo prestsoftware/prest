@@ -1,4 +1,4 @@
-from typing import NamedTuple, List, Sequence, Iterator, Tuple, Optional
+from typing import NamedTuple, List, Sequence, Iterator, Tuple, Optional, cast
 from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
 
 import uic.view_dataset
@@ -91,7 +91,7 @@ class ExperimentStats(Dataset):
         intC_encode, intC_decode = intC
 
         def get_size(x : 'ExperimentStats') -> int:
-            return subjects_size(x.subjects)
+            return cast(int, subjects_size(x.subjects))
 
         def encode(worker : Worker, f : FileOut, x : 'ExperimentStats') -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))

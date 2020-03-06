@@ -103,7 +103,7 @@ class Budgetary(Dataset):
             rows,
         )
         return ds
-    
+
     def get_analyses(self) -> Sequence[Analysis]:
         return (
             Analysis(

@@ -24,6 +24,14 @@ Right-clicking on a dataset in the workspace area leads to the following options
       
      * **General datasets**
 
+              * **Integrity check**: This option checks if: 
+
+                     (a) the specified choices in the dataset are indeed elements of the corresponding menus of alternatives; 
+
+                     (b) any menus are repeated more than once for a given subject in the dataset.
+
+                 A detailed report-dataset is produced if one of (a) or (b) is true.
+
               * **Summary information**: This option generates a new dataset that gives the following counts per subject: 
 
                      1) *Observations*.

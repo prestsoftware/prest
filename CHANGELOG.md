@@ -1,3 +1,9 @@
+## 1.0.0
+
+- Add integrity check.
+- Add Travis CI for Windows, Linux and OSX.
+- Various website updates.
+
 ## 0.9.14
 
 - Add consistency analysis to the CLI.

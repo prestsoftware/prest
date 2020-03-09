@@ -15,7 +15,8 @@ What Kind of Data Does this Website Collect?
 --------------------------------------------
 
 Standard Internet log data such as the city and country where 
-the web session originated, operating system, web browser, date and session duration.
+the web session originated, the user's operating system, 
+web browser, session duration and date.
 If you download files from this website (including Prest itself) 
 then the website also gathers and stores your IP address and the names of the 
 files that you downloaded.
@@ -26,7 +27,7 @@ How Does the Website Collect Your Data?
 All collected data are provided directly by you. 
 The standard Internet log data are collected by Google Analytics. 
 Where applicable, the additional data that include your IP address are 
-collected by a simple download tracker that has been developed by Prest's developers.
+collected by a simple download tracker that has been created by Prest's developers.
 
 Where Are Your Data Stored?
 ---------------------------
@@ -40,8 +41,9 @@ automatically after a period of four years.
 Why Does the Website Collect Your Data?
 ---------------------------------------
 
-Prest is an open-source project. Knowledge of the degree to which it is considered a useful 
-resource by the community could motivate its creators to continue working towards improving it.
+Prest is an open-source project. Knowing the degree to which it is considered a useful 
+resource by the community could help its developers decide whether to continue allocating 
+time towards expanding and improving it.
 The data collected from this website is one way in which such an assessment can be made.
 
 What Are your Data Protection Rights?
@@ -96,9 +98,7 @@ No other cookies are used on this website.
 How to Manage Cookies?
 ----------------------
 
-You can set your browser not to accept cookies, 
-and the above website tells you how to remove cookies from your browser. 
-However, in a few cases, some of our website features may not function as a result.
+You can set your browser not to accept cookies. 
 
 Privacy Policies of Other Websites
 ----------------------------------

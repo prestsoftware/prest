@@ -9,6 +9,5 @@ version.txt
 .pytest_cache/
 .hypothesis/
 preorders-7.bin
-/paper
 prest.env/
 .mypy_cache/

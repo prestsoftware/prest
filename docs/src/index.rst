@@ -19,9 +19,9 @@ Prest does not collect any data entered by its users.
 Downloads
 ---------
 
-* `Prest VERSION for Windows <_static/prest-win-VERSION.exe>`_  No installation required: run by double-clicking on the .exe file.
+* `Prest VERSION for Windows <_static/prest-win-VERSION.exe>`_  No installation required: run by double-clicking the `.exe` file.
 
-* `Prest VERSION for macOS <_static/prest-osx-VERSION.zip>`_  
+* `Prest VERSION for macOS <_static/prest-osx-VERSION.command>`_  No installation required: run by double-clicking the `.command` file.
 
 * The `Prest source code <https://github.com/prestsoftware/prest>`_, written
   in `Rust <https://www.rust-lang.org/>`_ (core) and `Python

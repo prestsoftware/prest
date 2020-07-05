@@ -120,6 +120,9 @@ class ImportCsv(QDialog, uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
             indices=indices,
         )
 
+        if '' in ds.alternatives:
+            raise Exception('dataset contains an alternative with an empty name')
+
         return ds
 
     # override

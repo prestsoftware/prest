@@ -110,7 +110,7 @@ impl<'a> AltSetView<'a> {
     pub fn contains(&self, Alt(i) : Alt) -> bool {
         let block_size = 8 * mem::size_of::<Block>();  // in bits
         let offset = i as usize / block_size;
-        
+
         if offset >= self.blocks.len() {
             false
         } else {
@@ -142,6 +142,10 @@ impl<'a> AltSetView<'a> {
 
     pub fn size(&self) -> u32 {
         self.blocks.iter().map(|b| b.count_ones()).sum()
+    }
+
+    pub fn is_singleton(&self) -> bool {
+        self.size() == 1
     }
 
     pub fn iter(&self) -> Iter<'a> {

@@ -366,9 +366,21 @@ impl Instance {
     }
 
     pub fn penalty(&self, crs : &[ChoiceRow]) -> Penalty {
-        let upper_bound = crs.iter().map(
-            |cr| if cr.choice == self.choice(cr.menu.view(), cr.default) { 0 } else { 1 }
-        ).sum();
+        let upper_bound = crs.iter().map(|cr| {
+            let standard_penalty =
+                if cr.choice == self.choice(cr.menu.view(), cr.default) { 0 } else { 1 };
+
+            if cr.menu.view().is_singleton() {
+                if let Instance::PartiallyDominantChoice{p:_,fc:_} = self {
+                    // PDC should not be penalised for deferring at singletons
+                    0
+                } else {
+                    standard_penalty
+                }
+            } else {
+                standard_penalty
+            }
+        }).sum();
 
         let lower_bound = match self {
             &Instance::SequentiallyRationalizableChoice(_,_)

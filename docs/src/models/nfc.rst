@@ -200,4 +200,7 @@ such that for every menu `A` in `\mathcal{D}`
 	\right\}
 	\end{array}
 	
-	
+.. note::
+     In its distance-score computation of this model, Prest VERSION penalizes deferral/choice of the outside option at singleton menus. 
+     Although this is not a formal requirement of the model, its predictions at non-singleton menus are compatible with the assumption that all alternatives are desirable,
+     and hence that active choices be made at all singletons.

@@ -182,7 +182,7 @@ Incomplete-Preference Maximization: Partially Dominant Choice (non-forced)
 
 A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained by 
 **partially dominant choice (non-forced)** if there exists a strict partial order `\succ` on `X`
-such that for every menu `A` in `\mathcal{D}`
+such that for every menu `A` in `\mathcal{D}` with at least two alternatives
 
 
 .. math::

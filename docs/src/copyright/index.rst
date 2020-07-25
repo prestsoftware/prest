@@ -10,7 +10,7 @@ Below, we also list the copyright notices of the libraries Prest uses.
 Prest GUI
 ---------
 
-Copyright (c) 2018 Georgios Gerasimou, Matúš Tejiščák
+Copyright (c) 2018-2020 Georgios Gerasimou, Matúš Tejiščák
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 Prest core
 ----------
 
-Copyright 2018 Georgios Gerasimou, Matúš Tejiščák
+Copyright 2018-2020 Georgios Gerasimou, Matúš Tejiščák
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

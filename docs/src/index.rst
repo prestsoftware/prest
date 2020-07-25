@@ -27,7 +27,7 @@ Downloads
   in `Rust <https://www.rust-lang.org/>`_ (core) and `Python
   <https://www.python.org/>`_ (graphical user interface).
 
-* Previous downloadable versions of Prest are available :ref:`here <history>`.
+* Previous downloadable versions of Prest are available in :ref:`the archive <history>`.
 
 Prest Documentation
 -------------------

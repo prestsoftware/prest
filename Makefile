@@ -43,5 +43,5 @@ longtest: fulltest
 
 fulltest: check
 	(cd core; cargo test --release)
-	[ $(TRAVIS_OS_NAME) = windows ] || pytest -v -m "not benchmark" gui
+	[ "$(TRAVIS_OS_NAME)" = windows ] || pytest -v -m "not benchmark" gui
 

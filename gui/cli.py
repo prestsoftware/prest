@@ -4,21 +4,22 @@ import sys
 import logging
 import argparse
 import tqdm
+from typing import Optional
 
 import dataset.budgetary
 
 from model import *
-from test import MockWorker
 from dataset import load_raw_csv
+from gui.progress import Worker, MockWorker
 from gui.estimation import Options as EstimationOpts
 from dataset.experimental_data import ExperimentalData
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
-class ProgressWorker:
+class ProgressWorker(Worker):
     def __init__(self):
-        self.bar = None
+        self.bar : Optional[tqdm.tqdm] = None
         self.size = None
         self.last_value = 0
 
@@ -27,6 +28,7 @@ class ProgressWorker:
         self.bar = tqdm.tqdm(total=size)
 
     def set_progress(self, value : int) -> None:
+        assert self.bar
         self.bar.update(value - self.last_value)
         self.last_value = value
 

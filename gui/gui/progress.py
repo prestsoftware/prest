@@ -11,10 +11,8 @@ from PyQt5.QtWidgets import QHeaderView, QDialog, QMessageBox, QTreeWidgetItem, 
 
 import gui
 import model
-import dataset
 import uic.progress
 import platform_specific
-from test import AbstractWorker
 from core import Core
 
 log = logging.getLogger(__name__)
@@ -44,7 +42,7 @@ class WorkerError(Exception):
 class Cancelled(Exception):
     pass
 
-class Worker(QThread, AbstractWorker):
+class Worker(QThread):
     work_size = pyqtSignal(int)
     progress = pyqtSignal(int)
 
@@ -154,3 +152,13 @@ class Worker(QThread, AbstractWorker):
                 raise Cancelled()
             else:
                 raise self.exception
+
+class MockWorker(Worker):
+    def __init__(self):
+        pass
+
+    def set_work_size(self, _size : int) -> None:
+        pass
+
+    def set_progress(self, _value : int) -> None:
+        pass

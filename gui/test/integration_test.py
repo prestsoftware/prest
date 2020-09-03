@@ -2,7 +2,7 @@ import os
 import pytest
 from typing import Optional, Tuple
 
-from test import MockWorker
+from gui.progress import MockWorker
 from model import preorder, unattractive, UndominatedChoice, PartiallyDominantChoice, \
     StatusQuoUndominatedChoice, Overload, PreorderParams
 from dataset import load_raw_csv, SubjectC

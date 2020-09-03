@@ -9,7 +9,7 @@ def test_simulation(nsubjects=256, f_mock=None):
     with Core(f_mock=f_mock) as core:
         response = simulation.run(core, simulation.Request(
             name='random',
-            alternatives=('A','B','C','D','E'),
+            alternatives=['A','B','C','D','E'],
             gen_menus=simulation.GenMenus(
                 generator=simulation.Exhaustive(),
                 defaults=False,
@@ -30,7 +30,7 @@ def _simulation_gen():
     with Core(f_tee=(f_in, f_out)) as core:
         response = simulation.run(core, simulation.Request(
             name='random',
-            alternatives=('A','B','C','D','E'),
+            alternatives=['A','B','C','D','E'],
             gen_menus=simulation.GenMenus(
                 generator=simulation.Exhaustive(),
                 defaults=False,

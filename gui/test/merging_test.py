@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from test import MockWorker
+from gui.progress import MockWorker
 from model import preorder
 from dataset import load_raw_csv
 from dataset.experimental_data import ExperimentalData

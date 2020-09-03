@@ -1,7 +1,6 @@
 from typing import Callable, Any, NamedTuple, List, Sequence, Tuple
 
-from test import MockWorker
-from gui.progress import Worker, Cancelled
+from gui.progress import Worker, MockWorker, Cancelled
 from util.codec import Codec, FileIn, FileOut, intC, strC, CodecError
 
 class CodecProgress(NamedTuple):

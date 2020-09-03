@@ -4,5 +4,5 @@ uic/%.py: uic/%.ui
 	pyuic5 $< -o $@
 
 .typecheck-ts: $(UIC_PY) *.py */*.py
-	mypy main.py
+	mypy $(shell find -name \*.py)
 	touch .typecheck-ts

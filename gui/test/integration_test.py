@@ -1,5 +1,6 @@
 import os
 import pytest
+from typing import Optional, Tuple
 
 from test import MockWorker
 from model import preorder, unattractive, UndominatedChoice, PartiallyDominantChoice, \
@@ -91,6 +92,7 @@ def test_consistency_analysis_long(tmpdir, name, alts, subj_count):
 
 @pytest.mark.parametrize('name,alts,subj_count', DATASETS)
 def test_model_estimation(tmpdir, name, alts, subj_count):
+    indices : Tuple[Optional[int], ...]
     if name in ('status-quo',):
         indices = (0,1,2,3)
     else:

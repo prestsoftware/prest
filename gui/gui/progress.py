@@ -14,6 +14,7 @@ import model
 import dataset
 import uic.progress
 import platform_specific
+from test import AbstractWorker
 from core import Core
 
 log = logging.getLogger(__name__)
@@ -43,7 +44,7 @@ class WorkerError(Exception):
 class Cancelled(Exception):
     pass
 
-class Worker(QThread):
+class Worker(QThread, AbstractWorker):
     work_size = pyqtSignal(int)
     progress = pyqtSignal(int)
 

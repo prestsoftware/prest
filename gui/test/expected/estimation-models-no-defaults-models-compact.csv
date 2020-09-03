@@ -7,6 +7,7 @@
 "Subject-4","3","Undominated Choice (Strict)","2"
 "Subject-5","0","Partially Dominant Choice (Forced)","1"
 "Subject-6","0","Utility Maximization with an Outside Option (Strict)","1"
+"","0","Partially Dominant Choice (Non-forced)","1"
 "Subject-7","0","Utility Maximization with an Outside Option (Non-strict)","1"
 "Subject-8","0","Overload-Constrained Utility Maximization (Strict)","1"
 "Subject-9","0","Maximally Dominant Choice (Strict)","1"

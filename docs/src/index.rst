@@ -7,6 +7,14 @@ Prest is a free and user-friendly desktop application for computational revealed
 It allows for processing choice datasets that economists, psychologists and consumer/marketing researchers 
 often generate through experiments, market studies or surveys.
 
+The key novelties of Prest pertain to general datasets where choice alternatives are discrete.
+
+Prest allows for estimating non-parametrically the decision maker's preferences from such general datasets.
+
+It does so by finding out how "close" the observed choices are to being explainable by rational choice or by some model of bounded-rational choice.
+
+In this way, Prest recovers both the individual's *decision rule* and their *preferences* conditional on this decision rule.
+
 Declarations
 ------------
 
@@ -21,7 +29,7 @@ Downloads
 
 * `Prest VERSION for Windows <_static/prest-win-VERSION.exe>`_  No installation required: run by double-clicking the :code:`.exe` file.
 
-* `Prest VERSION for macOS <_static/prest-osx-VERSION.zip>`_  No installation required: run by double-clicking the :code:`.command` file.
+* `Prest VERSION for macOS <_static/prest-osx-VERSION.zip>`_  No installation required: run by double-clicking the :code:`.command` file (select "Open anyway" if prompted).
 
 * The `Prest source code <https://github.com/prestsoftware/prest>`_, written
   in `Rust <https://www.rust-lang.org/>`_ (core) and `Python

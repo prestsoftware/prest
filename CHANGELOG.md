@@ -1,3 +1,8 @@
+## 1.0.1
+
+- Reject datasets with empty alternative names.
+- Do not penalise deferrals at singleton menus in PDC/NFC.
+
 ## 1.0.0
 
 - Add integrity check.

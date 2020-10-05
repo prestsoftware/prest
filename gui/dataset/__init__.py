@@ -5,6 +5,7 @@ import logging
 from typing import Sequence, Any, List, Type, NamedTuple, Callable, Iterator, \
     Optional, FrozenSet, Iterable, NewType, Union, cast
 
+import openpyxl.utils.cell
 from PyQt5.QtWidgets import QDialog, QMessageBox
 
 import core
@@ -210,7 +211,7 @@ class Dataset:
             # autosize columns
             # who knows what the units are but it approximately fits
             # furthermore, we fudge the numbers by 1 unit because that looks better
-            for column_number, column_cells in enumerate(ws.columns):
+            for column_number, column_cells in enumerate(ws.columns, start=1):
                 length = max(
                     (len(str(cell.value or '')) for cell in column_cells),
                     default=5
@@ -219,7 +220,9 @@ class Dataset:
                 if length < 4:
                     length = 4
 
-                ws.column_dimensions[chr(ord('A') + column_number)].width = length
+                ws.column_dimensions[
+                    openpyxl.utils.cell.get_column_letter(column_number)
+                ].width = length
 
             wb.save(fname)
 

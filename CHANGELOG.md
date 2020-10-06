@@ -1,3 +1,7 @@
+## 1.0.2
+
+- Fix XLSX export.
+
 ## 1.0.1
 
 - Reject datasets with empty alternative names.

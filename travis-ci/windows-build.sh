@@ -6,10 +6,10 @@ cd "$(dirname $0)/.." # work from the root directory of Prest
 
 PNAME="prest-${TRAVIS_OS_NAME}-$(git describe --always)"
 
-export PATH="/c/python38:/c/python38/Scripts:/c/Users/travis/AppData/Roaming/Python/Python38/Scripts:$PATH"
+export PATH="/c/python39:/c/python39/Scripts:/c/Users/travis/AppData/Roaming/Python/Python39/Scripts:$PATH"
 
 # try this
-PIP=/c/python38/Scripts/pip
+PIP=/c/python39/Scripts/pip
 $PIP install --user --upgrade pip
 $PIP install --user pyinstaller
 $PIP install --user -r gui/requirements.txt

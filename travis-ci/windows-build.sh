@@ -6,10 +6,9 @@ cd "$(dirname $0)/.." # work from the root directory of Prest
 
 PNAME="prest-${TRAVIS_OS_NAME}-$(git describe --always)"
 
-# does not seem to be necessary anymore
-# but let's keep it, just in case
-#export PATH="/c/python38:/c/python38/Scripts:/c/Users/travis/AppData/Roaming/Python/Python38/Scripts:$PATH"
-#PIP=/c/python38/Scripts/pip
+# include both versions in $PATH
+export PATH="/c/python38:/c/python38/Scripts:/c/Users/travis/AppData/Roaming/Python/Python38/Scripts:$PATH"
+export PATH="/c/python39:/c/python39/Scripts:/c/Users/travis/AppData/Roaming/Python/Python39/Scripts:$PATH"
 
 PIP=pip
 $PIP install --user --upgrade pip

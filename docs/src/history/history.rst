@@ -3,6 +3,10 @@ Previous Releases of Prest
 
 .. _history:
 
+2020-Sep-27: `Prest 1.0.1 for Windows </_static/prest-win-1.0.1.exe>`_
+
+2020-Sep-27: `Prest 1.0.1 for macOS </_static/prest-osx-1.0.1.zip>`_
+
 2020-Mar-10: `Prest 1.0.0 for Windows </_static/prest-win-1.0.0.exe>`_
 
 2020-Mar-10: `Prest 1.0.0 for macOS </_static/prest-osx-1.0.0.zip>`_

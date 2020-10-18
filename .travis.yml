@@ -52,3 +52,16 @@ deploy:
   draft: true
   on:
     repo: prestsoftware/prest
+    branch: master
+
+deploy:
+- provider: releases
+  api_key:
+    secure: lK+AJ7wllyVCeEZHqyxYkJ/H4a6svR8bi3tsl6+W5i0x0hm9tccdcDt+5MGQZmw3Punme4Ibp9NOSlUOh1vXQB9Nn0KXQCNb+NSFMqLCSSPBu60RrJoOO1n4hvSTyt480XBHCJCKjlkcSmavUXliL/MdmQjqMnLpsnjda2hRC5EFMPQ1s1bZWWqHM135uSMUOtl3EkwyLNuivPup8nRExtFW8NyogWlSOzT26TOchhl6YKqKTKx68UKwBuuWsMFddPm8c8q01uMIfYdohDkjIuD8/149mZSwLRVv8vy3PcVXfQ+zYlBA+GnTjHMBIWQGpbPH0zpIbpjmJKK3ldxF2hYsaBUbIy/hU9p4+M4X9piu/alQaEhdrWbGCWgd97aNPdc1sbeBeW0M2+b/NTPxhwFFBxuUMCg8Q9O2l6LrHw03VbAVpe9SPFTZe5jizluFdFiz2TUeJ5BSVyarkkxh5koekhEA+bdbAt7H8y/zR7bP9bqZGTtcUEX3VunfCSQOHNAFkZajRDMmc5UD9jNIHDIh1jqPfcZaoWg+T/L6t1XGbliSylvP9hSOHhEUjhzrm1+5fUxrY+Ac2eq9cKL4bUForNaNgg1Li6qgnLQ6m92AXKDbz1i4P2uQdDfiZN2Zn0dVe2ibAKlfkiq2YB3PrwCXobkrnSyfy1a/X+QErjg=
+  file: dist/prest-*
+  file_glob: true
+  skip_cleanup: true
+  draft: true
+  on:
+    repo: prestsoftware/prest
+    branch: hybrid

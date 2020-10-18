@@ -93,9 +93,8 @@ fn main() {
             println!("{}", fmt_digraph(p, &alt_names, &[]));
         }
 
-        Instance::HybridDomination(ref p) => {
+        Instance::Swaps(ref p) => {
             assert_eq!(p.size, alt_names.len() as u32, "preorder size ({}) does not match the number of alternatives ({})", p.size, alt_names.len());
-            assert!(!p.is_total());
 
             println!("{}", fmt_digraph(p, &alt_names, &[]));
         }

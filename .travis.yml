@@ -52,4 +52,3 @@ deploy:
   draft: true
   on:
     repo: prestsoftware/prest
-    branches: /^(master|testing|hybrid)$/

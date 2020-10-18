@@ -73,6 +73,7 @@ pub enum Model {
     Overload(PreorderParams),
     TopTwo,
     SequentiallyRationalizableChoice,
+    HybridDomination{strict: bool},
 }
 
 impl Encode for Model {
@@ -86,6 +87,7 @@ impl Encode for Model {
             &Model::Overload(p) => (5u8, p).encode(f),
             &Model::TopTwo => 6u8.encode(f),
             &Model::SequentiallyRationalizableChoice => 7u8.encode(f),
+            &Model::HybridDomination{strict} => (8u8, strict).encode(f),
         }
     }
 }
@@ -101,6 +103,7 @@ impl Decode for Model {
             5u8 => Ok(Model::Overload(Decode::decode(f)?)),
             6u8 => Ok(Model::TopTwo),
             7u8 => Ok(Model::SequentiallyRationalizableChoice),
+            8u8 => Ok(Model::HybridDomination{strict: Decode::decode(f)?}),
             _ => Err(codec::Error::BadEnumTag),
         }
     }
@@ -125,6 +128,7 @@ pub enum Instance {
     },
     TopTwo(Preorder),
     SequentiallyRationalizableChoice(Preorder, Preorder),
+    HybridDomination(Preorder),
 }
 
 impl Encode for Instance {
@@ -153,6 +157,9 @@ impl Encode for Instance {
 
             &Instance::SequentiallyRationalizableChoice(ref p, ref q)
                 => (7u8, p, q).encode(f),
+
+            &Instance::HybridDomination(ref p)
+                => (8u8, p).encode(f),
         }
     }
 }
@@ -180,6 +187,7 @@ impl Decode for Instance {
                 Decode::decode(f)?,
                 Decode::decode(f)?,
             )),
+            8u8 => Ok(Instance::HybridDomination(Decode::decode(f)?)),
             _ => Err(codec::Error::BadEnumTag),
         }
     }
@@ -266,6 +274,9 @@ impl Instance {
 
             &Instance::SequentiallyRationalizableChoice(_,_) =>
                 Model::SequentiallyRationalizableChoice,
+
+            &Instance::HybridDomination(ref p) =>
+                Model::HybridDomination{strict: p.is_strict()},
         }
     }
 
@@ -308,6 +319,18 @@ impl Instance {
                     AltSet::from(menu)
                 } else {
                     result
+                }
+            }
+
+            &Instance::HybridDomination(ref p) => {
+                // maximally dominant choice = preorder maximisation on incomplete preorders
+                let choice = preorder_maximization(p, menu);
+                if choice.view().is_nonempty() {
+                    // if MDC did yield an answer, that's what we return
+                    choice
+                } else {
+                    // otherwise try UC
+                    undominated_choice(p, menu)
                 }
             }
 
@@ -571,6 +594,14 @@ pub fn traverse_all<F>(
                 PreorderParams{strict: Some(true), total: Some(false)},
                 alt_count,
                 &mut |p| f(Instance::PartiallyDominantChoice{p, fc})
+            ).map_err(&ann)?,
+
+        Model::HybridDomination{strict}
+            => traverse_preorders(
+                precomputed,
+                PreorderParams{strict: Some(strict), total: Some(false)},
+                alt_count,
+                &mut |p| f(Instance::HybridDomination(p))
             ).map_err(&ann)?,
 
         Model::StatusQuoUndominatedChoice

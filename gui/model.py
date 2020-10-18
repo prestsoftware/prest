@@ -50,8 +50,7 @@ class TopTwo(NamedTuple):
 class SequentiallyRationalizableChoice(NamedTuple):
     tag : int = 7
 
-class HybridDomination(NamedTuple):
-    strict : bool
+class Swaps(NamedTuple):
     tag : int = 8
 
 Model = Union[
@@ -63,7 +62,7 @@ Model = Union[
     Overload,
     TopTwo,
     SequentiallyRationalizableChoice,
-    HybridDomination,
+    Swaps,
 ]
 
 ModelC = enumC('Model', {
@@ -75,7 +74,7 @@ ModelC = enumC('Model', {
     Overload: (PreorderParamsC,),
     TopTwo: (),
     SequentiallyRationalizableChoice: (),
-    HybridDomination: (boolC,),
+    Swaps: (),
 })
 
 # dicts are ordered from python 3.5 onwards
@@ -110,10 +109,8 @@ SPECIAL_NAMES = {
         'Top-Two Choice',
     SequentiallyRationalizableChoice():
         'Sequentially Rationalizable Choice',
-    HybridDomination(strict=True):
-        'Hybrid Dominance and Undomination (strict)',
-    HybridDomination(strict=False):
-        'Hybrid Dominance and Undomination (non-strict)',
+    Swaps():
+        'SWAPS',
 }
 
 ORDERING_INDICES = (
@@ -185,10 +182,10 @@ MODELS = [
                 ('Strict', PartiallyDominantChoice(fc=True)),
                 None,
             ),
-            mgroup('Incomplete-Preference Maximization: Hybrid Dominance & Undomination',
-                'models/fc.html#incomplete-preference-maximization-hybrid-dominance-undomination',
-                ('Strict', HybridDomination(strict=True)),
-                ('Non-strict', HybridDomination(strict=False)),
+            mgroup('SWAPS',
+                'models/fc.html#swaps',
+                ('Strict', Swaps()),
+                None,
             ),
             mgroup(sublabel(
                     'Sequentially Rationalizable Choice',

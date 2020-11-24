@@ -33,8 +33,8 @@ class Workspace:
         self.datasets: List[dataset.Dataset] = []
 
     def save_to_file(self, worker : Worker, fname: str) -> None:
-        with bz2.open(fname, 'wb') as f:
-            f = cast(FileOut, f)  # assert we're doing output
+        with bz2.open(fname, 'wb') as f_raw:
+            f = cast(FileOut, f_raw)  # assert we're doing output
 
             f.write(PREST_SIGNATURE)
             intC.encode(f, FILE_FORMAT_VERSION)  # version
@@ -47,8 +47,8 @@ class Workspace:
             listCP(DatasetCP).encode(worker, f, self.datasets)
 
     def load_from_file(self, worker : Worker, fname: str) -> None:
-        with bz2.open(fname, 'rb') as f:
-            f = cast(FileIn, f)  # assert we're doing input
+        with bz2.open(fname, 'rb') as f_raw:
+            f = cast(FileIn, f_raw)  # assert we're doing input
 
             sig = f.read(len(PREST_SIGNATURE))
             if sig != PREST_SIGNATURE:

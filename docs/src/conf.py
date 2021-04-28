@@ -65,7 +65,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Prest'
-copyright = '2018-2020, Georgios Gerasimou, Matúš Tejiščák'
+copyright = '2018-2021, Georgios Gerasimou, Matúš Tejiščák'
 author = 'Georgios Gerasimou, Matúš Tejiščák'
 
 # The version info for the project you're documenting, acts as replacement for

@@ -45,9 +45,7 @@ Downloads
 Prest Developers
 ----------------
 
-`Georgios Gerasimou <https://sites.google.com/site/georgiosgerasimou/>`_ (project coordinator): **gerasimou AT outlook DOT com**
-
-`Matúš Tejiščák <https://ziman.functor.sk/>`_ (lead programmer): **ziman AT functor DOT sk**
+`Georgios Gerasimou <https://sites.google.com/site/georgiosgerasimou/>`_ (project coordinator) and `Matúš Tejiščák <https://ziman.functor.sk/>`_ (lead programmer).
 
 If you use Prest in your work, please cite it as follows:
 

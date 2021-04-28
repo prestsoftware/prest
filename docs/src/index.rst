@@ -13,7 +13,7 @@ Prest allows for estimating non-parametrically the decision maker's preferences 
 
 It does so by finding out how "close" the observed choices are to being explainable by rational choice or by some model of bounded-rational choice.
 
-In this way, Prest recovers both the individual's *decision rule* and their *preferences* conditional on this decision rule.
+In this way, Prest recovers both the individual's **decision rule** and their **preferences** conditional on this decision rule.
 
 Declarations
 ------------
@@ -41,6 +41,19 @@ Downloads
 
 * Previous downloadable versions of Prest are available in :ref:`the archive <history>`.
 
+
+Prest Developers
+----------------
+
+`Georgios Gerasimou <https://sites.google.com/site/georgiosgerasimou/>`_ (project coordinator): **gerasimou AT outlook DOT com**
+
+`Matúš Tejiščák <https://ziman.functor.sk/>`_ (lead programmer): **ziman AT functor DOT sk**
+
+If you use Prest in your work, please cite it as follows:
+
+Georgios Gerasimou and Matúš Tejiščák (2018) Prest: Open-Source Software for Computational Revealed Preference Analysis, *Journal of Open Source Software*, 3(30), 1015, `doi:10.21105.joss.01015 <https://doi.org/10.21105/joss.01015>`_.
+
+
 Prest Documentation
 -------------------
 
@@ -65,20 +78,3 @@ define the terms used in the graphical user interface, and explain relevant back
    acknowledgements/index
    copyright/index
    privacy/index 
-
-
-Citation
---------
-
-If you use Prest in your academic work, please cite it as follows:
-
-Georgios Gerasimou and Matúš Tejiščák (2018) Prest: Open-Source Software for Computational Revealed Preference Analysis, *Journal of Open Source Software*, 3(30), 1015, `doi:10.21105.joss.01015 <https://doi.org/10.21105/joss.01015>`_.
-
-
-
-Contact
--------
-
-Georgios: **gerasimou AT outlook DOT com**
-
-Matúš: **ziman AT functor DOT sk**

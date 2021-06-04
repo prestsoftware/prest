@@ -162,9 +162,10 @@ fn process(alternatives : &[String], subjects : &[Subject<ExpRow>]) -> Vec<Subje
                     &p, cr.menu.view()
                 );
 
-                cr.choice != model_choice
+                cr.choice.view().is_nonempty()
+                    && (cr.choice != model_choice)
             }).collect();
-            let score = diff.iter().map(|d| d).len() as u32;
+            let score = diff.iter().map(|d| *d as u32).sum();
             let instance = Instance{diff};
 
             match best_score {

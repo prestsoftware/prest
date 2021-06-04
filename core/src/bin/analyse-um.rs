@@ -83,14 +83,28 @@ fn write_stdout(alternatives : &[String], subjects : &[Subject<OutRow>]) {
         "position", "subject", "menu", "choice",
         "n_instances", "n_tweaks", "hm_avg",
         "position_active", "menu_size", "is_active_choice",
+        "largest_menu_seen_excl", "largest_menu_seen_incl",
+        "alternatives_seen_excl", "alternatives_seen_incl",
+        "deferrals_seen_excl", "deferrals_seen_incl",
     ]).unwrap();
 
     for subject in subjects {
         let mut i_total = 1u32;
         let mut i_active = 1u32;
+        let mut largest_menu_seen = 0u32;
+        let mut alternatives_seen = AltSet::empty();
+        let mut deferrals_seen = 0u32;
 
         for cr in &subject.choices {
             assert_eq!(cr.exp_row.position, i_total);
+
+            let largest_menu_seen_incl = largest_menu_seen.max(cr.exp_row.menu.size());
+            let alternatives_seen_incl = {
+                let mut xs = alternatives_seen.clone();
+                xs |= cr.exp_row.menu.view();
+                xs
+            };
+            let deferrals_seen_incl = deferrals_seen + (cr.exp_row.choice.view().is_empty() as u32);
 
             csv_writer.write_record(&[
                 cr.exp_row.position.to_string().as_str(),
@@ -105,10 +119,19 @@ fn write_stdout(alternatives : &[String], subjects : &[Subject<OutRow>]) {
                 i_active.to_string().as_str(),
                 cr.exp_row.menu.size().to_string().as_str(),
                 (cr.exp_row.choice.view().is_nonempty() as u32).to_string().as_str(),
+                largest_menu_seen.to_string().as_str(),
+                largest_menu_seen_incl.to_string().as_str(),
+                alternatives_seen.size().to_string().as_str(),
+                alternatives_seen_incl.size().to_string().as_str(),
+                deferrals_seen.to_string().as_str(),
+                deferrals_seen_incl.to_string().as_str(),
             ]).unwrap();
 
             i_total += 1;
             i_active += cr.exp_row.choice.view().is_nonempty() as u32;
+            largest_menu_seen = largest_menu_seen_incl;
+            alternatives_seen = alternatives_seen_incl;
+            deferrals_seen = deferrals_seen_incl;
         }
     }
 }

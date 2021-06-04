@@ -185,7 +185,7 @@ impl Decode for Instance {
     }
 }
 
-fn preorder_maximization(p : &Preorder, menu : AltSetView) -> AltSet {
+pub fn preorder_maximization(p : &Preorder, menu : AltSetView) -> AltSet {
     let mut result = AltSet::from(menu);
     for i in menu.iter() {
         result &= p.upset(i);

@@ -18,6 +18,7 @@ base64 = "*"
 byteorder = "*"
 num = "*"
 rayon = "*"
+csv = "*"
 #nalgebra = "*"
 #log = "*"
 

@@ -24,7 +24,11 @@ struct Subject<ChoiceRow> {
 }
 
 fn parse_alts(alternatives : &mut Vec<String>, s : &str) -> AltSet {
-    s.split(',').map(|alt_s| {
+    if s.trim() == "" {
+        return AltSet::empty();
+    }
+
+    s.trim().split(',').map(|alt_s| {
         match alternatives.iter().position(|s| s == alt_s) {
             None => {
                 let i = alternatives.len();

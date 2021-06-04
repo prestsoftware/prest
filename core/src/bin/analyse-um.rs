@@ -123,7 +123,7 @@ fn write_stdout(alternatives : &[String], subjects : &[Subject<OutRow>]) {
 
                 cr.n_instances.to_string().as_str(),
                 cr.n_tweaks.to_string().as_str(),
-                (cr.n_instances as f32 / cr.n_tweaks as f32).to_string().as_str(),
+                (cr.n_tweaks as f32 / cr.n_instances as f32).to_string().as_str(),
 
                 i_active.to_string().as_str(),
                 cr.exp_row.menu.size().to_string().as_str(),

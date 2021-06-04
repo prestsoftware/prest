@@ -14,6 +14,7 @@ struct ExpRow {
 
 struct OutRow {
     exp_row : ExpRow,
+    hm_total : u32,
     n_instances : u32,
     n_tweaks : u32,
 }
@@ -90,7 +91,7 @@ fn write_stdout(alternatives : &[String], subjects : &[Subject<OutRow>]) {
     let mut csv_writer = csv::Writer::from_writer(std::io::stdout());
     csv_writer.write_record(&[
         "position", "subject", "menu", "choice",
-        "n_instances", "n_tweaks", "hm_avg",
+        "n_instances", "n_tweaks", "hm_avg", "hm_total",
         "position_active", "menu_size", "is_active_choice",
         "largest_menu_seen_excl", "largest_menu_seen_incl",
         "alternatives_seen_excl", "alternatives_seen_incl",
@@ -124,6 +125,7 @@ fn write_stdout(alternatives : &[String], subjects : &[Subject<OutRow>]) {
                 cr.n_instances.to_string().as_str(),
                 cr.n_tweaks.to_string().as_str(),
                 (cr.n_tweaks as f32 / cr.n_instances as f32).to_string().as_str(),
+                cr.hm_total.to_string().as_str(),
 
                 i_active.to_string().as_str(),
                 cr.exp_row.menu.size().to_string().as_str(),
@@ -201,6 +203,7 @@ fn process(alternatives : &[String], subjects : &[Subject<ExpRow>]) -> Vec<Subje
                     exp_row: (*exp_row).clone(),
                     n_instances: best_instances.len() as u32,
                     n_tweaks,
+                    hm_total: best_score.unwrap(),
                 }
             ).collect(),
         }

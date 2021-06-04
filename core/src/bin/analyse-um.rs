@@ -78,7 +78,12 @@ fn load_stdin() -> (Vec<String>, Vec<Subject<ExpRow>>) {
         }
     }
 
-    (alternatives, subjects.into_iter().map(|(_k,v)| v).collect())
+    (alternatives, subjects.into_iter().map(
+        |(_k, mut v)| {
+            v.choices.sort_by(|crx, cry| Ord::cmp(&crx.position, &cry.position));
+            v
+        }
+    ).collect())
 }
 
 fn write_stdout(alternatives : &[String], subjects : &[Subject<OutRow>]) {

@@ -2,7 +2,7 @@ extern crate csv;
 extern crate prest;
 
 use prest::alt::Alt;
-use prest::alt_set::AltSet;
+use prest::alt_set::{AltSet,AltSetView};
 use std::collections::HashMap;
 
 #[derive(Clone)]
@@ -37,6 +37,12 @@ fn parse_alts(alternatives : &mut Vec<String>, s : &str) -> AltSet {
     }).collect()
 }
 
+fn fmt_alts(alternatives : &[String], s : AltSetView) -> String {
+    s.into_iter().map(
+        |Alt(i)| alternatives[i as usize].as_str()
+    ).collect::<Vec<&str>>().join(",")
+}
+
 fn load_stdin() -> (Vec<String>, Vec<Subject<ExpRow>>) {
     let mut alternatives : Vec<String> = Vec::new();
     let mut subjects : HashMap<String, Subject<ExpRow>> = HashMap::new();
@@ -69,6 +75,42 @@ fn load_stdin() -> (Vec<String>, Vec<Subject<ExpRow>>) {
     }
 
     (alternatives, subjects.into_iter().map(|(_k,v)| v).collect())
+}
+
+fn write_stdout(alternatives : &[String], subjects : &[Subject<OutRow>]) {
+    let mut csv_writer = csv::Writer::from_writer(std::io::stdout());
+    csv_writer.write_record(&[
+        "position", "subject", "menu", "choice",
+        "n_instances", "n_tweaks", "hm_avg",
+        "position_active", "menu_size", "is_active_choice",
+    ]).unwrap();
+
+    for subject in subjects {
+        let mut i_total = 1u32;
+        let mut i_active = 1u32;
+
+        for cr in &subject.choices {
+            assert_eq!(cr.exp_row.position, i_total);
+
+            csv_writer.write_record(&[
+                cr.exp_row.position.to_string().as_str(),
+                subject.name.as_str(),
+                fmt_alts(alternatives, cr.exp_row.menu.view()).as_str(),
+                fmt_alts(alternatives, cr.exp_row.choice.view()).as_str(),
+
+                cr.n_instances.to_string().as_str(),
+                cr.n_tweaks.to_string().as_str(),
+                (cr.n_instances as f32 / cr.n_tweaks as f32).to_string().as_str(),
+
+                i_active.to_string().as_str(),
+                cr.exp_row.menu.size().to_string().as_str(),
+                (cr.exp_row.choice.view().is_nonempty() as u32).to_string().as_str(),
+            ]).unwrap();
+
+            i_total += 1;
+            i_active += cr.exp_row.choice.view().is_nonempty() as u32;
+        }
+    }
 }
 
 struct Instance {
@@ -136,7 +178,7 @@ fn process(alternatives : &[String], subjects : &[Subject<ExpRow>]) -> Vec<Subje
 fn main() {
     let (alternatives, subjects) = load_stdin();
     assert_eq!(alternatives.len(), 5);
-
-    let _ = process(&alternatives, &subjects);
-
+    let subjects_solved = process(&alternatives, &subjects);
+    assert_eq!(subjects_solved.len(), subjects.len());
+    write_stdout(&alternatives, &subjects_solved);
 }

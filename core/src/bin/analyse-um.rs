@@ -30,10 +30,11 @@ fn parse_alts(alternatives : &mut Vec<String>, s : &str) -> AltSet {
     }
 
     s.trim().split(',').map(|alt_s| {
-        match alternatives.iter().position(|s| s == alt_s) {
+        let alt_trimmed = alt_s.trim();
+        match alternatives.iter().position(|s| s == alt_trimmed) {
             None => {
                 let i = alternatives.len();
-                alternatives.push(String::from(alt_s));
+                alternatives.push(String::from(alt_trimmed));
                 Alt(i as u32)
             }
 

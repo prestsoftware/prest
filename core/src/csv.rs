@@ -2,15 +2,63 @@ use std::io::Read;
 use std::marker::PhantomData;
 use std::collections::HashSet;
 
+use alt::Alt;
+use alt_set::AltSet;
+
 pub trait FromCsv {
     type ParseError;
     fn column_names() -> Vec<&'static str>;
-    fn from_row(row : &[&str]) -> Result<Self, Self::ParseError>
+    fn from_row(alternatives : &mut Vec<String>, row : &[&str]) -> Result<Self, Self::ParseError>
         where Self : Sized;
+}
+
+pub trait FromCell {
+    type ParseError;
+    fn from_cell(alternatives : &mut Vec<String>, cell : &str) -> Result<Self, Self::ParseError>
+        where Self : Sized;
+}
+
+pub trait ToCell {
+    fn to_cell(&self, alternatives : &[String]) -> String;
+}
+
+pub enum Void {}
+
+impl FromCell for AltSet {
+    type ParseError = Void;
+    fn from_cell(alternatives : &mut Vec<String>, cell : &str) -> Result<AltSet, Void> {
+        let ctrim = cell.trim();
+
+        if ctrim == "" {
+            return Ok(AltSet::empty());
+        }
+
+        Ok(ctrim.split(',').map(|alt_s| {
+            let alt_trimmed = alt_s.trim();
+            match alternatives.iter().position(|s| s == alt_trimmed) {
+                None => {
+                    let i = alternatives.len();
+                    alternatives.push(String::from(alt_trimmed));
+                    Alt(i as u32)
+                }
+
+                Some(i) => Alt(i as u32)
+            }
+        }).collect())
+    }
+}
+
+impl ToCell for AltSet {
+    fn to_cell(&self, alternatives : &[String]) -> String {
+        self.view().into_iter().map(
+            |Alt(i)| alternatives[i as usize].as_str()
+        ).collect::<Vec<&str>>().join(",")
+    }
 }
 
 pub struct Subject<Sub, Row> {
     name : String,
+    alternatives : Vec<String>,
     data : Sub,
     rows : Vec<Row>,
 }
@@ -43,6 +91,7 @@ pub struct IterSubjects<R, Sub, Row> {
     cols_row : Columns<Row>,
     closed_subjects : HashSet<String>,
     current_subject : Option<Subject<Sub, Row>>,
+    alternatives : Vec<String>,
 }
 
 impl<R : Read, Sub : FromCsv+Eq, Row : FromCsv>
@@ -54,7 +103,10 @@ impl<R : Read, Sub : FromCsv+Eq, Row : FromCsv>
         loop {
             let csv_row = match self.csv.next() {
                 None => return match self.current_subject.take() {
-                    Some(subj) => Some(Ok(subj)),  // last subject
+                    Some(mut subj) => {
+                        subj.alternatives = self.alternatives.clone();
+                        Some(Ok(subj))
+                    },  // last subject
                     None => None, // EOF
                 },
                 Some(r) => match r {
@@ -77,7 +129,7 @@ impl<R : Read, Sub : FromCsv+Eq, Row : FromCsv>
                     }
                 }
 
-                match Sub::from_row(&row) {
+                match Sub::from_row(&mut self.alternatives, &row) {
                     Err(e) => return Some(Err(Error::ParseSub(e))),
                     Ok(data) => data,
                 }
@@ -92,7 +144,7 @@ impl<R : Read, Sub : FromCsv+Eq, Row : FromCsv>
                     }
                 }
 
-                match Row::from_row(&row) {
+                match Row::from_row(&mut self.alternatives, &row) {
                     Err(e) => return Some(Err(Error::ParseRow(e))),
                     Ok(row) => row,
                 }
@@ -104,7 +156,8 @@ impl<R : Read, Sub : FromCsv+Eq, Row : FromCsv>
                     self.current_subject = Some(Subject {
                         name: String::from(subject_name),
                         data: sub_data,
-                        rows: Vec::new(),
+                        rows: vec![row],
+                        alternatives: Vec::new(), // we'll set this at the end
                     });
                 }
 
@@ -132,11 +185,20 @@ impl<R : Read, Sub : FromCsv+Eq, Row : FromCsv>
                         let mut result = Subject {
                             name: String::from(subject_name),
                             data: sub_data,
-                            rows: Vec::new(),
+                            rows: vec![row],
+                            alternatives: Vec::new(),
                         };
 
                         // swap it for the old one
                         std::mem::swap(subj, &mut result);
+
+                        // copy the right list of alternatives
+                        //
+                        // in theory, this could contain alternatives
+                        // not found in the original subject
+                        // if they are present in the first row of the new subject
+                        // but that should be okay
+                        result.alternatives = self.alternatives.clone();
 
                         // and return the old one
                         return Some(Ok(result));
@@ -189,5 +251,6 @@ pub fn read_subjects<R, Sub, Row>(rdr : R, subj_name_column : &str)
         },
         closed_subjects: HashSet::new(),
         current_subject: None,
+        alternatives: Vec::new(),
     })
 }

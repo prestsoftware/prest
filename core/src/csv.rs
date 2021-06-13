@@ -5,9 +5,9 @@ use std::collections::HashSet;
 use alt::Alt;
 use alt_set::AltSet;
 
-pub trait FromCsv {
+pub trait FromRow {
     type ParseError;
-    fn column_names() -> Vec<&'static str>;
+    const COLUMN_NAMES : &'static[&'static str];
     fn from_row(alternatives : &mut Vec<String>, row : &[&str]) -> Result<Self, Self::ParseError>
         where Self : Sized;
 }
@@ -23,6 +23,14 @@ pub trait ToCell {
 }
 
 pub enum Void {}
+
+impl FromRow for () {
+    type ParseError = Void;
+    const COLUMN_NAMES : &'static[&'static str] = &[];
+    fn from_row(_alternatives : &mut Vec<String>, _row : &[&str]) -> Result<(), Void> {
+        Ok(())
+    }
+}
 
 impl FromCell for AltSet {
     type ParseError = Void;
@@ -57,9 +65,9 @@ impl ToCell for AltSet {
 }
 
 pub struct Subject<Sub, Row> {
-    name : String,
-    alternatives : Vec<String>,
-    data : Sub,
+    pub name : String,
+    pub alternatives : Vec<String>,
+    pub data : Sub,
     rows : Vec<Row>,
 }
 
@@ -94,7 +102,7 @@ pub struct IterSubjects<R, Sub, Row> {
     alternatives : Vec<String>,
 }
 
-impl<R : Read, Sub : FromCsv+Eq, Row : FromCsv>
+impl<R : Read, Sub : FromRow+Eq, Row : FromRow>
     Iterator for IterSubjects<R, Sub, Row>
 {
     type Item = Result<Subject<Sub, Row>, Error<Sub::ParseError, Row::ParseError>>;
@@ -211,19 +219,17 @@ impl<R : Read, Sub : FromCsv+Eq, Row : FromCsv>
 
 pub fn read_subjects<R, Sub, Row>(rdr : R, subj_name_column : &str)
     -> Result<IterSubjects<R, Sub, Row>, Error<Sub::ParseError, Row::ParseError>>
-    where R : Read, Sub : FromCsv, Row : FromCsv
+    where R : Read, Sub : FromRow, Row : FromRow
 {
     let mut csv_reader = csv::Reader::from_reader(rdr);
     let headers = csv_reader.headers()?;
 
     // split the columns between subject-specific and row-specific structs
-    let cols_sub = Sub::column_names();
-    let cols_row = Row::column_names();
     let mut ixs_sub = Vec::new();
     let mut ixs_row = Vec::new();
 
     for (ix, hdr) in headers.iter().enumerate() {
-        match (cols_sub.contains(&hdr), cols_row.contains(&hdr)) {
+        match (Sub::COLUMN_NAMES.contains(&hdr), Row::COLUMN_NAMES.contains(&hdr)) {
             (true, false) => ixs_sub.push(ix),
             (false, true) => ixs_row.push(ix),
             (true, true) => return Err(Error::ColumnOverlap(

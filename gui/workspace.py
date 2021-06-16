@@ -27,7 +27,7 @@ class PersistenceError(Exception):
 
 class Workspace:
     def __init__(self):
-        self.engine = sa.create_engine('sqlite://')  # in-memory DB
+        self.engine = sa.create_engine('sqlite://', future=True)  # in-memory DB
         with self.engine.connect() as db:
             dataset.metadata.create_all(db)
 
@@ -36,12 +36,13 @@ class Workspace:
 
     def save_to_file(self, worker : Worker, fname: str) -> None:
         # TODO: signatures, versioning
-        new_engine = sa.create_engine(f'sqlite:///{fname}')
-        self.engine.raw_connection().backup(
-            new_engine.raw_connection().connection
-        )
-        old_engine, self.engine = self.engine, new_engine
-        old_engine.dispose()
+        new_engine = sa.create_engine(f'sqlite:///{fname}', future=True)
+        with self.engine.connect() as db:
+            with new_engine.connect() as db2:
+                db.connection.backup(
+                    db2.connection.connection
+                )
+        self.engine = new_engine
 
     def load_from_file(self, worker : Worker, fname: str) -> None:
         self.engine = sa.create_engine(f'sqlite:///{fname}')

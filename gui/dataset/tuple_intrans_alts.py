@@ -1,7 +1,9 @@
 import logging
 from typing import NamedTuple, List, Sequence, Iterator, Tuple, Optional, Set, FrozenSet, Union, cast
 from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
+import sqlalchemy as sa
 
+import dataset
 import uic.view_dataset
 import util.tree_model
 from gui.progress import Worker
@@ -23,6 +25,16 @@ class Subject(NamedTuple):
     rows : List[Row]
 
 SubjectC = namedtupleC(Subject, strC, listC(RowC))
+
+tbl_subject = dataset.tbl_subject('tuple_intrans_alts_subject')
+tbl_row = sa.Table('tuple_intrans_alts_row', dataset.metadata,
+    sa.Column('id', sa.Integer, primary_key=True),
+    sa.Column('subject_id', sa.Integer, sa.ForeignKey(tbl_subject.c.id), nullable=False),
+    sa.Column('tuple_size', sa.Integer, nullable=False),
+    sa.Column('garp_alt_tuples', sa.String, nullable=False),  # comma-semicolon separated set of sets
+
+    sa.UniqueConstraint('subject_id', 'tuple_size'),
+)
 
 class AltRowNode(util.tree_model.Node):
     def __init__(self, parent_node, row: int, alternatives : List[str], xs : FrozenSet[int]) -> None:

@@ -229,15 +229,33 @@ MODELS = [
     )),
 ]
 
+# all available models
+# so we can assign a number to each model
+ALL_MODELS = [
+    preorder(strict=True, total=True),
+    preorder(strict=False, total=True),
+    unattractive(strict=True, total=True),
+    unattractive(strict=False, total=True),
+    preorder(strict=True, total=False),
+    preorder(strict=False, total=False),
+    UndominatedChoice(strict=True),
+    UndominatedChoice(strict=False),
+    PartiallyDominantChoice(fc=True),
+    PartiallyDominantChoice(fc=False),
+    Overload(PreorderParams(strict=True, total=True)),
+    Overload(PreorderParams(strict=False, total=True)),
+    StatusQuoUndominatedChoice(),
+    TopTwo(),
+    SequentiallyRationalizableChoice(),
+]
+
 def names_in_order() -> Iterator[str]:
     def traverse(item):
         if isinstance(item, Category):
             for child in item.children:
-                for name in traverse(child):
-                    yield name
+                yield from traverse(child)
         else:
             yield item.name
 
     for item in MODELS:
-        for name in traverse(item):
-            yield name
+        yield from traverse(item)

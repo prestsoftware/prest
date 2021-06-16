@@ -3,6 +3,7 @@ import dataset
 import util.tree_model
 import uic.view_dataset
 import numpy as np
+import sqlalchemy as sa
 
 import dataset.budgetary_consistency
 from core import Core
@@ -20,6 +21,15 @@ class Subject(NamedTuple):
     amounts : np.ndarray
 
 SubjectC = namedtupleC(Subject, strC, numpyC(np.float32), numpyC(np.float32))
+
+tbl_subject = dataset.tbl_subject('budgetary_subject')
+
+tbl_observation = sa.Table('budgetary_observation', dataset.metadata,
+    sa.Column('id', sa.Integer, primary_key=True),
+    sa.Column('subject_id', sa.Integer, sa.ForeignKey(tbl_subject.c.id), nullable=False),
+    sa.Column('price', sa.Float, nullable=False),
+    sa.Column('amount', sa.Float, nullable=False),
+)
 
 class RowNode(util.tree_model.Node):
     def __init__(self, parent_node, row: int, prices: np.ndarray, amounts: np.ndarray) -> None:

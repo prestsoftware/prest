@@ -5,6 +5,7 @@ import base64
 from typing import NamedTuple, Sequence, List, Iterator, Tuple, Dict, \
     Optional, Any, Union, NewType, cast, Callable
 
+import sqlalchemy as sa
 from PyQt5.QtGui import QIcon, QCursor
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView, QToolTip
@@ -86,6 +87,25 @@ SubjectC = namedtupleC(Subject, strC, PenaltyC, listC(tupleC(ModelC, PenaltyC, l
 
 PackedSubject = NewType('PackedSubject', bytes)
 PackedSubjectC = bytesC
+
+tbl_subject = dataset.tbl_subject('estimation_result_subject',
+    sa.Column('penalty_lo', sa.Integer, nullable=False),
+    sa.Column('penalty_hi', sa.Integer, nullable=False),
+)
+
+tbl_best_models = sa.Table('estimation_result_best_models', dataset.metadata,
+    sa.Column('id', sa.Integer, primary_key=True),
+    sa.Column('subject_id', sa.Integer, sa.ForeignKey(tbl_subject.c.id), nullable=False),
+    sa.Column('model', sa.Integer, nullable=False),
+    sa.Column('penalty_lo', sa.Integer, nullable=False),
+    sa.Column('penalty_hi', sa.Integer, nullable=False),
+)
+
+tbl_instances = sa.Table('estimation_result_instances', dataset.metadata,
+    sa.Column('id', sa.Integer, primary_key=True),
+    sa.Column('best_model_id', sa.Integer, sa.ForeignKey(tbl_best_models.c.id), nullable=False),
+    sa.Column('instance_repr', sa.LargeBinary, nullable=False),
+)
 
 def subject_from_response_bytes(response_bytes : PackedResponse) -> Subject:
     # returns something orderable

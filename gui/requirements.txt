@@ -11,3 +11,6 @@ sphinx-rtd-theme
 sphinxcontrib-bibtex
 sphinxcontrib-websupport
 pyinstaller
+sqlalchemy
+sqlitebck
+sqlalchemy-stubs

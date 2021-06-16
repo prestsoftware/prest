@@ -1,6 +1,8 @@
 from typing import NamedTuple, List, Sequence, Iterator, Tuple, Optional, cast
 from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
+import sqlalchemy as sa
 
+import dataset
 import uic.view_dataset
 import util.tree_model
 from gui.progress import Worker
@@ -16,6 +18,13 @@ class Subject(NamedTuple):
     deferrals : int
 
 SubjectC = namedtupleC(Subject, strC, intC, intC, intC, intC)
+
+tbl_subject = dataset.tbl_subject('experiment_stats_subject',
+    sa.Column('observations', sa.Integer, nullable=False),
+    sa.Column('active_choices', sa.Integer, nullable=False),
+    sa.Column('active_choices_binary', sa.Integer, nullable=False),
+    sa.Column('deferrals', sa.Integer, nullable=False),
+)
 
 class SubjectNode(util.tree_model.Node):
     def __init__(self, parent_node, row: int, subject: Subject) -> None:

@@ -48,39 +48,20 @@ def consistency(args):
 def estimate(args):
     rows = load_raw_csv(args.fname_in)
     ds = ExperimentalData.from_csv('dataset', rows[1:], (0, 1, None, 2))
-    
-    AVAILABLE_MODELS = [
-        preorder(strict=True, total=True),
-        preorder(strict=False, total=True),
-        unattractive(strict=True, total=True),
-        unattractive(strict=False, total=True),
-        preorder(strict=True, total=False),
-        preorder(strict=False, total=False),
-        UndominatedChoice(strict=True),
-        UndominatedChoice(strict=False),
-        PartiallyDominantChoice(fc=True),
-        PartiallyDominantChoice(fc=False),
-        Overload(PreorderParams(strict=True, total=True)),
-        Overload(PreorderParams(strict=False, total=True)),
-        StatusQuoUndominatedChoice(),
-        TopTwo(),
-        SequentiallyRationalizableChoice(),
-        Swaps(),
-    ]
 
     if not args.models:
         print('Please specify a model using -m:')
-        for m in AVAILABLE_MODELS:
+        for m in ALL_MODELS:
             print('  ' + str(m))
 
         sys.exit(1)
 
     if args.models == 'all':
-        models = AVAILABLE_MODELS
+        models = ALL_MODELS
     else:
         models = [
             m
-            for m in AVAILABLE_MODELS
+            for m in ALL_MODELS
             if str(m) in args.models
         ]
 

@@ -1,6 +1,8 @@
 import json
 import bz2
 import logging
+import sqlitebck
+import sqlalchemy as sa
 from typing import cast, List, Any, Iterable, BinaryIO
 
 import dataset
@@ -17,63 +19,30 @@ from util.codec_progress import CodecProgress, listCP, oneCP, enum_by_typenameCP
 
 log = logging.getLogger(__name__)
 
-PREST_SIGNATURE = b'Prest Workspace\0'
-FILE_FORMAT_VERSION = 16
-
-DatasetCP : CodecProgress = enum_by_typenameCP('Dataset', [
-    (cls, cls.get_codec_progress())
-    for cls in dataset.Dataset.__subclasses__()
-])
+PREST_SIGNATURE = 'Prest Workspace'
+DB_FORMAT_VERSION = 1
 
 class PersistenceError(Exception):
     pass
 
 class Workspace:
     def __init__(self):
-        self.datasets: List[dataset.Dataset] = []
+        self.engine = sa.create_engine('sqlite://')  # in-memory DB
+        with self.engine.connect() as db:
+            dataset.metadata.create_all(db)
+
+    def get_datasets(self) -> List[dataset.Dataset]:
+        return []  # todo
 
     def save_to_file(self, worker : Worker, fname: str) -> None:
-        with bz2.open(fname, 'wb') as f_raw:
-            f = cast(FileOut, f_raw)  # assert we're doing output
-
-            f.write(PREST_SIGNATURE)
-            intC.encode(f, FILE_FORMAT_VERSION)  # version
-            strC.encode(f, branding.VERSION)
-
-            work_size = listCP(DatasetCP).get_size(self.datasets)
-            intC.encode(f, work_size)
-
-            worker.set_work_size(work_size)
-            listCP(DatasetCP).encode(worker, f, self.datasets)
+        # TODO: signatures, versioning
+        new_engine = sa.create_engine(f'sqlite:///{fname}')
+        self.engine.raw_connection().backup(
+            new_engine.raw_connection().connection
+        )
+        old_engine, self.engine = self.engine, new_engine
+        old_engine.dispose()
 
     def load_from_file(self, worker : Worker, fname: str) -> None:
-        with bz2.open(fname, 'rb') as f_raw:
-            f = cast(FileIn, f_raw)  # assert we're doing input
-
-            sig = f.read(len(PREST_SIGNATURE))
-            if sig != PREST_SIGNATURE:
-                raise PersistenceError('not a Prest workspace file')
-
-            version = intC.decode(f)
-            if version >= 3:
-                prest_version = strC.decode(f)
-            else:
-                prest_version = None  # too old
-
-            if version != FILE_FORMAT_VERSION:
-                message = 'incompatible PWF version: expected {0}, received {1}'.format(
-                    FILE_FORMAT_VERSION,
-                    version,
-                )
-
-                if prest_version:
-                    message += ' (saved by {0})'.format(prest_version)
-
-                raise PersistenceError(message)
-
-            work_size = intC.decode(f)
-            worker.set_work_size(work_size)
-            datasets = listCP(DatasetCP).decode(worker, f)
-
-        # assign to self only once everything's gone all right
-        self.datasets = datasets
+        self.engine = sa.create_engine(f'sqlite:///{fname}')
+        # TODO: signatures, versioning

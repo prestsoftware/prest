@@ -9,6 +9,7 @@ from gui.progress import Worker, Cancelled
 from util.codec import namedtupleC, strC, intC, listC, tupleC, FileIn, FileOut
 from util.codec_progress import CodecProgress, listCP, oneCP
 
+import sqlalchemy as sa
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
 
@@ -43,6 +44,29 @@ class Subject(NamedTuple):
 SubjectC = namedtupleC(Subject, strC, listC(tupleC(intC, ViolationsC)), intC, intC,
     BoundEstimateC, BoundEstimateC,
     BoundEstimateC, BoundEstimateC,
+)
+
+tbl_subject = dataset.tbl_subject('budgetary_consistency_subject',
+    sa.Column('warp_strict', sa.Integer, nullable=False),
+    sa.Column('warp_nonstrict', sa.Integer, nullable=False),
+    sa.Column('hm_garp_lo', sa.Integer, nullable=False),
+    sa.Column('hm_garp_hi', sa.Integer, nullable=False),
+    sa.Column('hm_sarp_lo', sa.Integer, nullable=False),
+    sa.Column('hm_sarp_hi', sa.Integer, nullable=False),
+    sa.Column('hm_warp_strict_lo', sa.Integer, nullable=False),
+    sa.Column('hm_warp_strict_hi', sa.Integer, nullable=False),
+    sa.Column('hm_warp_nonstrict_lo', sa.Integer, nullable=False),
+    sa.Column('hm_warp_nonstrict_hi', sa.Integer, nullable=False),
+)
+
+tbl_violations = sa.Table('budgetary_consistency_violation', dataset.metadata,
+    sa.Column('id', sa.Integer, primary_key=True),
+    sa.Column('subject_id', sa.Integer, sa.ForeignKey(tbl_subject.c.id), nullable=False),
+    sa.Column('size', sa.Integer, nullable=False),
+    sa.Column('garp', sa.Integer, nullable=False),
+    sa.Column('sarp', sa.Integer, nullable=False),
+
+    sa.UniqueConstraint('subject_id', 'size'),
 )
 
 class ViolationsNode(util.tree_model.Node):

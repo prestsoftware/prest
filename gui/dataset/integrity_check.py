@@ -1,7 +1,10 @@
 import logging
+import sqlalchemy as sa
+
 import util.tree_model
 import uic.view_dataset
 from gui.progress import Worker
+import dataset
 from dataset import Dataset, Analysis, ExportVariant, DatasetHeaderC
 from util.codec import namedtupleC, setC, intC, enumC, strC
 from typing import NamedTuple, Set, Union, List, Sequence, cast
@@ -36,6 +39,15 @@ class Subject(NamedTuple):
     issues : List[Issue]
 
 SubjectC = namedtupleC(Subject, strC, listC(IssueC))
+
+tbl_subject = dataset.tbl_subject('integrity_check_subject')
+tbl_issue = sa.Table('integrity_check_issue', dataset.metadata,
+    sa.Column('id', sa.Integer, primary_key=True),
+    sa.Column('subject_id', sa.Integer, sa.ForeignKey(tbl_subject.c.id), nullable=False),
+    sa.Column('issue', sa.Integer, nullable=False),
+    sa.Column('menu', sa.String, nullable=False),
+    sa.Column('choice', sa.String, nullable=True),
+)
 
 class IssueNode(util.tree_model.Node):
     def __init__(self, parent_node, row: int, alternatives : List[str], issue : Issue) -> None:

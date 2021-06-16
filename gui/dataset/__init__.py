@@ -1,5 +1,7 @@
 import openpyxl
 
+import sqlalchemy as sa
+
 import csv
 import logging
 from typing import Sequence, Any, List, Type, NamedTuple, Callable, Iterator, \
@@ -18,6 +20,22 @@ from util.codec import Codec, tupleC, strC, listC, namedtupleC, frozensetC, \
 from util.codec_progress import CodecProgress
 
 log = logging.getLogger(__name__)
+metadata = sa.MetaData()
+
+tbl_dataset = sa.Table('dataset', metadata,
+    sa.Column('id', sa.Integer, primary_key=True),
+    sa.Column('name', sa.String, nullable=False, unique=True),
+    sa.Column('type', sa.String, nullable=False),
+    sa.Column('alternatives', sa.String, nullable=False),  # comma-separated
+)
+
+def tbl_subject(tbl_name : str, *columns : sa.Column) -> sa.Table:
+    return sa.Table(tbl_name, metadata,
+        sa.Column('id', sa.Integer, primary_key=True),
+        sa.Column('dataset_id', sa.Integer, sa.ForeignKey(tbl_dataset.c.id), nullable=False),
+        sa.Column('name', sa.String, nullable=False, unique=True),
+        *columns,
+    )
 
 def load_raw_csv(fname):
     with open(fname) as f:

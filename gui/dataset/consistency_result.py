@@ -3,6 +3,7 @@ import collections
 from typing import NamedTuple, List, Dict, Iterator, Tuple, FrozenSet, \
     Sequence, Optional, Union, Set, cast
 
+import sqlalchemy as sa
 from PyQt5.QtCore import Qt, QModelIndex, QAbstractItemModel
 from PyQt5.QtGui import QIcon, QCursor
 from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView, QToolTip
@@ -56,6 +57,27 @@ class Subject(NamedTuple):
         )
 
 SubjectC = namedtupleC(Subject, SubjectRawC, intC, intC, intC, intC)
+
+tbl_subject = dataset.tbl_subject('consistency_result_subject',
+    sa.Column('warp_pairs', sa.Integer, nullable=False),
+    sa.Column('warp_all', sa.Integer, nullable=False),
+    sa.Column('total_garp', sa.Integer, nullable=False),
+    sa.Column('total_sarp', sa.Integer, nullable=False),
+    sa.Column('total_garp_binary_menus', sa.Integer, nullable=False),
+    sa.Column('total_sarp_binary_menus', sa.Integer, nullable=False),
+)
+
+tbl_cycle = sa.Table('consistency_result_cycle', dataset.metadata,
+    sa.Column('id', sa.Integer, primary_key=True),
+    sa.Column('subject_id', sa.Integer, sa.ForeignKey(tbl_subject.c.id), nullable=False),
+    sa.Column('cycle_length', sa.Integer, nullable=False),
+    sa.Column('garp', sa.Integer, nullable=False),
+    sa.Column('sarp', sa.Integer, nullable=False),
+    sa.Column('garp_binary_menus', sa.Integer, nullable=False),
+    sa.Column('sarp_binary_menus', sa.Integer, nullable=False),
+
+    sa.UniqueConstraint('subject_id', 'cycle_length'),
+)
 
 class RootNode(util.tree_model.RootNode):
     def __init__(self, subjects: List[Subject]) -> None:

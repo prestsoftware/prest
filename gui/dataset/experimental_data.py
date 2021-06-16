@@ -7,6 +7,7 @@ import collections
 from typing import Sequence, Tuple, Dict, List, Set, \
     FrozenSet, Iterator, NamedTuple, Iterable, Any, Optional, cast
 
+import sqlalchemy as sa
 from PyQt5.QtCore import Qt, QModelIndex, QAbstractItemModel
 from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
 
@@ -65,6 +66,18 @@ class SubjectNode(util.tree_model.Node):
 
     def create_child(self, row: int) -> ChoiceRowNode:
         return ChoiceRowNode(self, row, self.subject.choices[row])
+
+tbl_subject = dataset.tbl_subject('experimental_data_subject',
+    sa.Column('alternatives', sa.String, nullable=False),
+)
+
+tbl_observation = sa.Table('experimental_data_observation', dataset.metadata,
+    sa.Column('id', sa.Integer, nullable=False),
+    sa.Column('subject_id', sa.Integer, sa.ForeignKey(tbl_subject.c.id), nullable=False),
+    sa.Column('menu', sa.String, nullable=False),
+    sa.Column('default', sa.String, nullable=True),
+    sa.Column('choice', sa.String, nullable=False),
+)
 
 def parse_set(s: str) -> FrozenSet[str]:
     s = s.strip()

@@ -109,7 +109,8 @@ DatasetHeaderC = tupleC(strC, listC(strC))
 class Dataset:
     ViewDialog : Any  # to be overridden in subclasses
 
-    def __init__(self, name: str, alternatives: Sequence[str]) -> None:
+    def __init__(self, engine : sa.engine.Engine, name: str, alternatives: Sequence[str]) -> None:
+        self.engine = engine
         self.name = name
         self.alternatives = list(alternatives)
 

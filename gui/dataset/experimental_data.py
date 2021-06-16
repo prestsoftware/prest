@@ -106,11 +106,17 @@ class ExperimentalData(Dataset):
             self.twRows.header().setSectionResizeMode(QHeaderView.ResizeToContents)
             self.twRows.header().setStretchLastSection(False)
 
-    def __init__(self, name: str, alternatives: Sequence[str]) -> None:
-        Dataset.__init__(self, name, alternatives)
-        self.subjects: List[PackedSubject] = []
-        self.observ_count: int = 0
-        
+    def __init__(self, engine : sa.engine.Engine, name: str, alternatives: Sequence[str]) -> None:
+        Dataset.__init__(self, engine, name, alternatives)
+
+    def add_subjects(self, subjects : Iterable[Subject]) -> None:
+        with self.engine.begin() as db:
+            db.execute(
+                sa.insert(tbl_subject),
+                [{
+                ]
+            )
+
     @staticmethod
     def from_csv(name: str, rows: Sequence[Sequence[str]], indices: Tuple[int,int,Optional[int],int]) -> 'ExperimentalData':
         i_s, i_m, i_d, i_c = indices  # CSV column indices: subject, menu, default, choice

@@ -392,6 +392,10 @@ impl<T> Packed<T> {
     pub fn unpack(&self) -> &T {
         &self.0
     }
+
+    pub fn into_unpacked(self) -> T {
+        self.0
+    }
 }
 
 impl<T : Encode> Encode for Packed<T> {

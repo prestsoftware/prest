@@ -277,6 +277,7 @@ class ExperimentalData(Dataset):
                     subjects=self.subjects[i:i+CHUNK_SIZE],
                     models=options.models,
                     disable_parallelism=options.disable_parallelism,
+                    disregard_deferrals=options.disregard_deferrals,
                 )
 
                 responses = core.call(

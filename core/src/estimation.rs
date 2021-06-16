@@ -53,6 +53,7 @@ pub struct Request {
     subjects : Vec<Packed<Subject>>,
     models : Vec<model::Model>,
     disable_parallelism : bool,
+    disregard_deferrals : bool,
 }
 
 impl Decode for Request {
@@ -61,6 +62,7 @@ impl Decode for Request {
             subjects: Decode::decode(f)?,
             models: Decode::decode(f)?,
             disable_parallelism: Decode::decode(f)?,
+            disregard_deferrals: Decode::decode(f)?,
         })
     }
 }
@@ -312,13 +314,13 @@ pub fn run(precomputed : &mut Precomputed, request : &Request) -> Result<Vec<Pac
     let results : Vec<Result<Response>> = if request.disable_parallelism {
         // run estimation sequentially
         request.subjects.iter().map(
-            |subj| run_one(precomputed, subj.unpack(), &request.models)
+            |subj| run_one(precomputed, &subj.unpack().drop_deferrals(request.disregard_deferrals), &request.models)
         ).collect()
     } else {
         // run estimation in parallel
         let mut results = Vec::new();
         request.subjects.par_iter().map(
-            |subj| run_one(precomputed, subj.unpack(), &request.models)
+            |subj| run_one(precomputed, &subj.unpack().drop_deferrals(request.disregard_deferrals), &request.models)
         ).collect_into_vec(&mut results);
         results
     };

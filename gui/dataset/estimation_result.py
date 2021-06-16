@@ -45,8 +45,9 @@ class Request(NamedTuple):
     subjects : List[dataset.PackedSubject]
     models : Sequence[model.Model]
     disable_parallelism : bool
+    disregard_deferrals : bool
 
-RequestC = namedtupleC(Request, listC(dataset.PackedSubjectC), listC(ModelC), boolC)
+RequestC = namedtupleC(Request, listC(dataset.PackedSubjectC), listC(ModelC), boolC, boolC)
 
 InstanceRepr = NewType('InstanceRepr', bytes)
 InstanceReprC = bytesC

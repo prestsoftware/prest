@@ -44,6 +44,22 @@ pub struct Subject {
     pub choices : Vec<ChoiceRow>,
 }
 
+impl Subject {
+    pub fn drop_deferrals(&self, do_drop : bool) -> Self {
+        if !do_drop {
+            self.clone()
+        } else {
+            Subject {
+                name: self.name.clone(),
+                alternatives: self.alternatives.clone(),
+                choices: self.choices.iter().filter(
+                    |cr| cr.choice.view().is_nonempty()
+                ).cloned().collect(),
+            }
+        }
+    }
+}
+
 impl Encode for Subject {
     fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
         (&self.name, &self.alternatives, &self.choices).encode(f)

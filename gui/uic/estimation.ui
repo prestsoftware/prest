@@ -57,11 +57,22 @@
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="cbDisableParallelism">
-     <property name="text">
-      <string>Disable parallelism</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QCheckBox" name="cbDisableParallelism">
+       <property name="text">
+        <string>Disable parallelism</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="cbDisregardDeferrals">
+       <property name="text">
+        <string>Disregard deferrals</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

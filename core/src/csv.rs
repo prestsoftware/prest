@@ -22,6 +22,7 @@ pub trait ToCell {
     fn to_cell(&self, alternatives : &[String]) -> String;
 }
 
+#[derive(Debug)]
 pub enum Void {}
 
 impl FromRow for () {
@@ -68,7 +69,7 @@ pub struct Subject<Sub, Row> {
     pub name : String,
     pub alternatives : Vec<String>,
     pub data : Sub,
-    rows : Vec<Row>,
+    pub rows : Vec<Row>,
 }
 
 #[derive(Debug)]

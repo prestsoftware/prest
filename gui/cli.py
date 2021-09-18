@@ -65,6 +65,7 @@ def estimate(args):
         StatusQuoUndominatedChoice(),
         TopTwo(),
         SequentiallyRationalizableChoice(),
+        Swaps(),
     ]
 
     if not args.models:
@@ -82,6 +83,9 @@ def estimate(args):
             for m in AVAILABLE_MODELS
             if str(m) in args.models
         ]
+
+    if not models:
+        raise Exception('bad model spec')
 
     dsm = ds.analysis_estimation(ProgressWorker(), EstimationOpts(
         models=models,

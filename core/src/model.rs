@@ -73,6 +73,7 @@ pub enum Model {
     Overload(PreorderParams),
     TopTwo,
     SequentiallyRationalizableChoice,
+    Swaps,
 }
 
 impl Encode for Model {
@@ -86,6 +87,7 @@ impl Encode for Model {
             &Model::Overload(p) => (5u8, p).encode(f),
             &Model::TopTwo => 6u8.encode(f),
             &Model::SequentiallyRationalizableChoice => 7u8.encode(f),
+            &Model::Swaps => 8u8.encode(f),
         }
     }
 }
@@ -101,6 +103,7 @@ impl Decode for Model {
             5u8 => Ok(Model::Overload(Decode::decode(f)?)),
             6u8 => Ok(Model::TopTwo),
             7u8 => Ok(Model::SequentiallyRationalizableChoice),
+            8u8 => Ok(Model::Swaps),
             _ => Err(codec::Error::BadEnumTag),
         }
     }
@@ -125,6 +128,7 @@ pub enum Instance {
     },
     TopTwo(Preorder),
     SequentiallyRationalizableChoice(Preorder, Preorder),
+    Swaps(Preorder),
 }
 
 impl Encode for Instance {
@@ -153,6 +157,9 @@ impl Encode for Instance {
 
             &Instance::SequentiallyRationalizableChoice(ref p, ref q)
                 => (7u8, p, q).encode(f),
+
+            &Instance::Swaps(ref p)
+                => (8u8, p).encode(f),
         }
     }
 }
@@ -180,12 +187,13 @@ impl Decode for Instance {
                 Decode::decode(f)?,
                 Decode::decode(f)?,
             )),
+            8u8 => Ok(Instance::Swaps(Decode::decode(f)?)),
             _ => Err(codec::Error::BadEnumTag),
         }
     }
 }
 
-fn preorder_maximization(p : &Preorder, menu : AltSetView) -> AltSet {
+pub fn preorder_maximization(p : &Preorder, menu : AltSetView) -> AltSet {
     let mut result = AltSet::from(menu);
     for i in menu.iter() {
         result &= p.upset(i);
@@ -266,6 +274,9 @@ impl Instance {
 
             &Instance::SequentiallyRationalizableChoice(_,_) =>
                 Model::SequentiallyRationalizableChoice,
+
+            &Instance::Swaps(_) =>
+                Model::Swaps,
         }
     }
 
@@ -309,6 +320,10 @@ impl Instance {
                 } else {
                     result
                 }
+            }
+
+            &Instance::Swaps(ref p) => {
+                preorder_maximization(p, menu)
             }
 
             &Instance::StatusQuoUndominatedChoice(ref p) => {
@@ -367,6 +382,20 @@ impl Instance {
 
     pub fn penalty(&self, crs : &[ChoiceRow]) -> Penalty {
         let upper_bound = crs.iter().map(|cr| {
+            // special case for SWAPS
+            if let &Instance::Swaps(ref p) = self {
+                if let Some(choice) = cr.choice.view().as_singleton() {
+                    // all strictly better options
+                    return p.upset(choice).iter().filter(
+                        |&c|
+                            cr.menu.view().contains(c)
+                            && c != choice
+                    ).count() as u32
+                } else {
+                    panic!("SWAPS model: choices must be exactly singletons");
+                }
+            }
+
             let standard_penalty =
                 if cr.choice == self.choice(cr.menu.view(), cr.default) { 0 } else { 1 };
 
@@ -571,6 +600,14 @@ pub fn traverse_all<F>(
                 PreorderParams{strict: Some(true), total: Some(false)},
                 alt_count,
                 &mut |p| f(Instance::PartiallyDominantChoice{p, fc})
+            ).map_err(&ann)?,
+
+        Model::Swaps
+            => traverse_preorders(
+                precomputed,
+                PreorderParams{strict: Some(true), total: Some(true)},
+                alt_count,
+                &mut |p| f(Instance::Swaps(p))
             ).map_err(&ann)?,
 
         Model::StatusQuoUndominatedChoice

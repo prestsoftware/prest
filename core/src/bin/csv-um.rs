@@ -43,11 +43,17 @@ impl prest::csv::FromRow for ChoiceRow {
 
 fn main() {
     let mut csv_out = csv::Writer::from_writer(std::io::stdout());
-    csv_out.write_record(&["subject", "hm"]).unwrap();
+    csv_out.write_record(&[
+        "subject",
+        "hm",
+    ]).unwrap();
     for subject_r in prest::csv::read_subjects(std::io::stdin(), "subject").unwrap() {
         let subject : prest::csv::Subject<(), ChoiceRow> = subject_r.unwrap();
         assert_eq!(subject.alternatives.len(), 5);
         let hm_score = get_hm_score(&subject);
-        csv_out.write_record(&[subject.name.as_str(), hm_score.to_string().as_str()]).unwrap();
+        csv_out.write_record(&[
+            subject.name.as_str(),
+            hm_score.to_string().as_str()
+        ]).unwrap();
     }
 }

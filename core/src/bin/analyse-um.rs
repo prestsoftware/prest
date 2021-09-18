@@ -92,7 +92,7 @@ fn write_stdout(alternatives : &[String], subjects : &[Subject<OutRow>]) {
     let mut csv_writer = csv::Writer::from_writer(std::io::stdout());
     csv_writer.write_record(&[
         "position", "subject", "menu", "choice",
-        "n_instances", "n_tweaks", "hm_avg", "hm_total",
+        "n_instances", "n_tweaks", "hm_pa", "hm_avg", "hm_total",
         "position_active", "menu_size", "is_active_choice",
         "largest_menu_seen_excl", "largest_menu_seen_incl",
         "alternatives_seen_excl", "alternatives_seen_incl",
@@ -125,6 +125,7 @@ fn write_stdout(alternatives : &[String], subjects : &[Subject<OutRow>]) {
 
                 cr.n_instances.to_string().as_str(),
                 cr.n_tweaks.to_string().as_str(),
+                if cr.n_tweaks > 0 { "1" } else { "0" },
                 (cr.n_tweaks as f32 / cr.n_instances as f32).to_string().as_str(),
                 cr.hm_total.to_string().as_str(),
 

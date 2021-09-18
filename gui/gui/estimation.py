@@ -16,12 +16,15 @@ import platform_specific
 from core import Core
 from gui.progress import Worker, Cancelled
 from model import Model
+from dataclasses import dataclass
 
 log = logging.getLogger(__name__)
 
-class Options(NamedTuple):
+@dataclass
+class Options:
     models : List[Model]
     disable_parallelism : bool
+    disregard_deferrals : bool
 
 class Estimation(QDialog, uic.estimation.Ui_Estimation, gui.ExceptionDialog):
     def __init__(self):
@@ -107,6 +110,7 @@ class Estimation(QDialog, uic.estimation.Ui_Estimation, gui.ExceptionDialog):
         return Options(
             models=[model for cb, model in self.checkboxes if cb.isChecked()],
             disable_parallelism=self.cbDisableParallelism.isChecked(),
+            disregard_deferrals=self.cbDisregardDeferrals.isChecked(),
         )
 
     # override from QDialog

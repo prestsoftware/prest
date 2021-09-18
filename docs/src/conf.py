@@ -40,6 +40,7 @@ extensions = [
     'google_analytics',
 ]
 
+bibtex_bibfiles = ['references.bib']
 googleanalytics_id = 'UA-125271613-1'
 
 #mathjax_path = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'
@@ -126,7 +127,7 @@ html_favicon = '_static/favicon.png'
 
 #TEXT-WIDTH CUSTOMISATION
 def setup(app):
-    app.add_stylesheet('my_theme.css')
+    app.add_css_file('my_theme.css')
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.

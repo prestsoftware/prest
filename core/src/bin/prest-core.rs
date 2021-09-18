@@ -11,7 +11,7 @@ fn rpc_loop(args : &args::Args) {
     use rpc::*;
 
     // core state
-    let mut rng : SmallRng = SeedableRng::from_seed([0;16]);
+    let mut rng : SmallRng = SeedableRng::from_seed([0;32]);
     let mut rpc = IO::from_stdio();
     let mut precomp = Precomputed::new(
         args.fname_precomputed_preorders.as_ref().map(String::as_str)
@@ -54,8 +54,8 @@ fn rpc_loop(args : &args::Args) {
             }
 
             ActionRequest::SetRngSeed(seed) => {
-                if seed.len() == 16 {
-                    let mut xs = [0u8;16];
+                if seed.len() == 32 {
+                    let mut xs = [0;32];
                     for (i, &x) in seed.iter().enumerate() {
                         xs[i] = x;
                     }
@@ -64,7 +64,7 @@ fn rpc_loop(args : &args::Args) {
                     rpc.write_result(Ok::<String, bool>(String::from("OK"))).unwrap();
                 } else {
                     rpc.write_result(Err::<bool, String>(
-                        String::from("rng seed must contain exactly 16 numbers")
+                        String::from("rng seed must contain exactly 32 numbers")
                     )).unwrap();
                 }
             }

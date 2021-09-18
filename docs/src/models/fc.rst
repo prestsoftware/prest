@@ -34,12 +34,12 @@ A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained
 .. tip::  
      When analysing other models that generalize utility maximization/rational choice, 
      Prest |version| only considers instances of the more general models that do not overlap with those covered by the above two variants of utility maximization.
-     It is therefore recommended that both of them always be included in all model-estimation tasks.
+     It is therefore recommended that utility maximization/rational choice always be included in all model-estimation tasks.
 
 .. tip::  
      When "Utility Maximization - Swaps" is selected, Prest |version| computes the "Swaps" index that is analyzed in [apesteguia-ballester15]_.
-     *Note:* This is only possible for forced- and single-valued choice datasets. 
-
+     
+     *Note:* this is only possible for forced- and single-valued choice datasets. 
 |
 
 Top-Two Choice
@@ -50,7 +50,7 @@ A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained
 such that for every menu `A` in `\mathcal{D}`
 
 .. math::
-|C(A)| = 2\;\;\;\;\; \text{and}\;\;\;\;\; C(A)=\{x,y\}\;\; \Longleftrightarrow\;\; x,y\succ z\;\; \text{for all}\;\; z\in A\setminus\{x,y\}
+    |C(A)| = 2\;\;\;\;\; \text{and}\;\;\;\;\; C(A)=\{x,y\}\;\; \Longleftrightarrow\;\; x,y\succ z\;\; \text{for all}\;\; z\in A\setminus\{x,y\}
 
 |
 
@@ -96,19 +96,19 @@ such that for every menu `A` in `\mathcal{D}`
 
 
 .. math::
-\begin{array}{llc}
-C(A)=A & \Longleftrightarrow & x\nsucc y\;\; \text{and}\;\; y\nsucc x\;\;	\text{for all}\;\; x,y\in A\\
-& &\\
-C(A)\subset A & \Longleftrightarrow &  
-C(A)=
-\left\{
-\begin{array}{lll}
-& & \hspace{-12pt} z\nsucc x\qquad \text{for all}\;\; z\in A\\
-x\in A: & & \;\;\;\;\;\;\text{and}\\
-& & \hspace{-12pt} x\succ y\qquad \text{for some}\;\; y\in A
-\end{array}
-\right\}
-\end{array}
+    \begin{array}{llc}
+    C(A)=A & \Longleftrightarrow & x\nsucc y\;\; \text{and}\;\; y\nsucc x\;\;	\text{for all}\;\; x,y\in A\\
+    & &\\
+    C(A)\subset A & \Longleftrightarrow &  
+    C(A)=
+    \left\{
+    \begin{array}{lll}
+    & & \hspace{-12pt} z\nsucc x\qquad \text{for all}\;\; z\in A\\
+    x\in A: & & \;\;\;\;\;\;\text{and}\\
+    & & \hspace{-12pt} x\succ y\qquad \text{for some}\;\; y\in A
+    \end{array}
+    \right\}
+    \end{array}
 
 |
 

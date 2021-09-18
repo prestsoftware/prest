@@ -113,7 +113,10 @@ def test_model_estimation(tmpdir, name, alts, subj_count):
     if all(cr.default is not None for subj in map(SubjectC.decode_from_memory, ds.subjects) for cr in subj.choices):
         models.append(StatusQuoUndominatedChoice())
     
-    dsm = ds.analysis_estimation(MockWorker(), EstimationOpts(models, disable_parallelism=False))
+    dsm = ds.analysis_estimation(
+        MockWorker(),
+        EstimationOpts(models, disable_parallelism=False, disregard_deferrals=False)
+    )
 
     check_export(tmpdir, dsm, 'compact (human-friendly)', 'gui/test/expected/%s-models-compact.csv' % name)
     check_export(tmpdir, dsm, 'detailed (machine-friendly)', 'gui/test/expected/%s-models-detailed.csv' % name)

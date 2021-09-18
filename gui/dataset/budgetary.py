@@ -16,13 +16,13 @@ from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
 
 class Subject(NamedTuple):
     name    : str
-    prices  : np.array
-    amounts : np.array
+    prices  : np.ndarray
+    amounts : np.ndarray
 
 SubjectC = namedtupleC(Subject, strC, numpyC(np.float32), numpyC(np.float32))
 
 class RowNode(util.tree_model.Node):
-    def __init__(self, parent_node, row: int, prices: np.array, amounts: np.array) -> None:
+    def __init__(self, parent_node, row: int, prices: np.ndarray, amounts: np.ndarray) -> None:
         util.tree_model.Node.__init__(
             self, parent_node, row,
             fields=[''] \
@@ -181,7 +181,7 @@ def load_from_csv(fname : str) -> Budgetary:
 
     n_alts = (len(header)-1) // 2
     alternatives = [f'{i+1}' for i in range(n_alts)]
-    subjects : Dict[str,Tuple[List[np.array],List[np.array]]] = dict()  # ordered
+    subjects : Dict[str,Tuple[List[np.ndarray],List[np.ndarray]]] = dict()  # ordered
     for line_no, row in enumerate(rows, start=2):
         if len(row) != len(header):
             raise BudgetaryError(f'{fname}, line {line_no}: incorrect number of columns')

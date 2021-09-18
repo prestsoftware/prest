@@ -86,6 +86,7 @@ def estimate(args):
     dsm = ds.analysis_estimation(ProgressWorker(), EstimationOpts(
         models=models,
         disable_parallelism=args.sequential,
+        disregard_deferrals=args.disregard_deferrals,
     ))
     variant = dsm._get_export_variant(args.export_variant)
     dsm.export(args.fname_out, '*.csv', variant, MockWorker())
@@ -114,6 +115,7 @@ if __name__ == '__main__':
     )
     apE.add_argument('-s', '--sequential', default=False, action='store_true', help='disable paralellism')
     apE.add_argument('-m', dest='models', metavar='MODEL', nargs='+', help='model(s)')
+    apE.add_argument('--disregard-deferrals', default=False, action='store_true')
 
     apC = sub.add_parser('consistency', help='general consistency')
     apC.add_argument('fname_in', metavar='input.csv')

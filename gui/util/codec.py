@@ -347,12 +347,12 @@ def numpyC(dtype : type) -> Codec:
     bytesC_enc, bytesC_dec = bytesC
     l_enc, l_dec = listC(intC)
 
-    def encode(f : FileOut, x : np.array) -> None:
+    def encode(f : FileOut, x : np.ndarray) -> None:
         assert x.dtype == dtype, f"expected array type: {dtype}, received: {x.dtype}"
         l_enc(f, x.shape)
         bytesC_enc(f, x.tobytes())
 
-    def decode(f : FileIn) -> np.array:
+    def decode(f : FileIn) -> np.ndarray:
         shape = tuple(l_dec(f))
         stuff = bytesC_dec(f)
         return np.reshape(

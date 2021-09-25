@@ -97,6 +97,7 @@ jobs:
           toolchain: stable
 
       - name: Make
+        shell: bash
         run: |
           PNAME="prest-${{ runner.os }}-$(git describe --always)"
 
@@ -104,6 +105,7 @@ jobs:
           make
 
       - name: PyInstaller
+        shell: bash
         run: |
           PNAME="prest-${{ runner.os }}-$(git describe --always)"
 

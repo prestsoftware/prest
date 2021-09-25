@@ -43,14 +43,14 @@ jobs:
 
       - name: Make
         run: |
-          PNAME="prest-linux-$(git describe --always)"
+          PNAME="prest-${{ runner.os }}-$(git describe --always)"
 
-          echo "Building ${PNAME} for linux..."
+          echo "Building ${PNAME} for ${{ runner.os }}..."
           make
 
       - name: PyInstaller
         run: |
-          PNAME="prest-linux-$(git describe --always)"
+          PNAME="prest-${{ runner.os }}-$(git describe --always)"
 
           pyinstaller \
               --add-data 'version.txt:.' \
@@ -63,3 +63,11 @@ jobs:
               --name "$PNAME" \
               -i gui/images/prest.ico \
               gui/main.py
+
+          ls dist
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: prest-${{ runner.os }}
+          path: dist/prest

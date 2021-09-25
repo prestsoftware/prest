@@ -16,7 +16,7 @@ $(GUI):
 	make -C gui .typecheck-ts
 
 # build everything there is to build or generate
-build: version.txt preorders-7.bin $(CORE) $(DOCS) $(GUI)
+build: $(GUI) version.txt preorders-7.bin $(CORE) $(DOCS)
 
 preorders-7.bin:
 	(cd core; cargo run --release --bin list-preorders)

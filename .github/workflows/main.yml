@@ -70,4 +70,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: prest-${{ runner.os }}
-          path: dist/prest
+          path: dist/prest-*

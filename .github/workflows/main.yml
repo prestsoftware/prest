@@ -15,8 +15,63 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  windows:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r gui/requirements.txt
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Make
+        run: |
+          PNAME="prest-${{ runner.os }}-$(git describe --always)"
+
+          echo "Building ${PNAME} for ${{ runner.os }}..."
+          make
+
+      - name: PyInstaller
+        run: |
+          PNAME="prest-${{ runner.os }}-$(git describe --always)"
+
+          pyinstaller \
+              --add-data 'version.txt;.' \
+              --add-binary 'core/target/release/prest-core.exe;.' \
+              --add-data 'gui/images;images' \
+              --add-data 'docs/build/html;html' \
+              --add-data 'preorders-7.bin;.' \
+              --osx-bundle-identifier com.prestsoftware.prest \
+              --onefile \
+              --name "${PNAME}.exe" \
+              -i gui/images/prest.ico \
+              gui/main.py
+
+          ls dist
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: prest-${{ runner.os }}
+          path: dist/prest-*.exe
+
+  linux:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 

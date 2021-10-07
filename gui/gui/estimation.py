@@ -26,7 +26,7 @@ class Options:
     disable_parallelism : bool
     disregard_deferrals : bool
 
-class Estimation(QDialog, uic.estimation.Ui_Estimation, gui.ExceptionDialog):
+class Estimation(uic.estimation.Ui_Estimation, gui.ExceptionDialog):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
@@ -48,7 +48,7 @@ class Estimation(QDialog, uic.estimation.Ui_Estimation, gui.ExceptionDialog):
 
         def add_item(parent, item):
             if isinstance(item, model.Category):
-                twi = QTreeWidgetItem(parent, [item.name, None, None])
+                twi = QTreeWidgetItem(parent, [item.name, '', ''])
                 twi.setFirstColumnSpanned(True)
                 for child in item.children:
                     add_item(twi, child)
@@ -86,7 +86,7 @@ class Estimation(QDialog, uic.estimation.Ui_Estimation, gui.ExceptionDialog):
 
                     cb = QCheckBox()
                     label = QLabel(name_html)
-                    label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+                    label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)  # type: ignore
 
                     cell = QWidget()
                     layout = QHBoxLayout(cell)

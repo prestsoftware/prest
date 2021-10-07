@@ -20,6 +20,7 @@ import dataset.experimental_data
 import dataset.budgetary
 from core import Core
 from gui.progress import Worker, Cancelled
+from typing import Optional, List, Tuple, Any, Set, Dict, Iterator, Iterable, Callable
 
 import gui
 import gui.about
@@ -121,7 +122,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
     def context_menu(self, pos) -> None:
         item = self.tblDataSets.itemAt(pos)
         if item is None:
-            log.debug('context menu requested but no item selected')
+            log.debug('context menu requested but no item selected')  # type: ignore
             return
 
         ds = self.workspace.datasets[
@@ -148,6 +149,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
             a_analyses.setStatusTip('Run various analyses on the dataset.')
             menu.addAction(a_analyses)
 
+            icon : Optional[QIcon]
             for analysis in analyses:
                 if analysis.is_hidden:
                     if self.hidden_features_enabled:
@@ -174,7 +176,8 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
                 a_analysis = QAction(analysis_name, m_analyses)
                 if icon:
                     a_analysis.setIcon(icon)
-                a_analysis.analyse = mkanalyse(analysis)  # create and save the closure
+
+                a_analysis.analyse = mkanalyse(analysis)  # type: ignore
                 a_analysis.triggered.connect(self.catch_exc(a_analysis.analyse))
                 m_analyses.addAction(a_analysis)
 
@@ -209,8 +212,8 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
                     return export
 
                 a_export = QAction(export_variant.name + '...', m_exports)
-                a_export.export = mkexport(export_variant)  # create and save the closure
-                a_export.triggered.connect(self.catch_exc(a_export.export))
+                export = mkexport(export_variant)
+                a_export.triggered.connect(self.catch_exc(export))
                 m_exports.addAction(a_export)
 
         menu.addSeparator()
@@ -227,7 +230,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
                 self.delete_dataset(ds)
 
         a_delete = QAction("Delete", menu)
-        a_delete.delete = delete
+        a_delete.delete = delete  # type: ignore
         a_delete.triggered.connect(self.catch_exc(a_delete.delete))
         a_delete.setStatusTip('Remove the dataset from the workspace. Asks for confirmation.')
         menu.addAction(a_delete)
@@ -282,7 +285,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
 
         self.workspace.datasets = []
         self.setWindowModified(False)
-        self.setWindowFilePath(None)
+        self.setWindowFilePath('')
         self.refresh_datasets()
 
     def dlg_workspace_load(self, _flag) -> None:

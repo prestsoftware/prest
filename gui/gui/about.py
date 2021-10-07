@@ -13,7 +13,7 @@ import platform_specific
 
 log = logging.getLogger(__name__)
 
-class About(QDialog, uic.about.Ui_About, gui.ExceptionDialog):
+class About(uic.about.Ui_About, gui.ExceptionDialog):
     def __init__(self) -> None:
         QDialog.__init__(self)
         self.setupUi(self)

@@ -160,7 +160,7 @@ class EstimationResult(Dataset):
                 fields=(code, '', ''),
             )
 
-    class ViewDialog(QDialog, uic.view_estimated.Ui_ViewEstimated, gui.ExceptionDialog):
+    class ViewDialog(uic.view_estimated.Ui_ViewEstimated, gui.ExceptionDialog):
         def __init__(self, ds: 'EstimationResult') -> None:
             QDialog.__init__(self)
             self.setupUi(self)

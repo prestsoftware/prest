@@ -20,7 +20,7 @@ class Options(NamedTuple):
     gen_choices : 'simulation.GenChoices'
     preserve_deferrals : bool
 
-class CopycatSimulation(QDialog, uic.copycat_simulation.Ui_CopycatSimulation, gui.ExceptionDialog):
+class CopycatSimulation(uic.copycat_simulation.Ui_CopycatSimulation, gui.ExceptionDialog):
     def __init__(self, ds) -> None:
         QDialog.__init__(self)
         self.setupUi(self)

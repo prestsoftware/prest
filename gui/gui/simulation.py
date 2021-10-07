@@ -22,7 +22,7 @@ class Options(NamedTuple):
     gen_menus : simulation.GenMenus
     gen_choices : simulation.GenChoices
 
-class Simulation(QDialog, uic.simulation.Ui_Simulation, gui.ExceptionDialog):
+class Simulation(uic.simulation.Ui_Simulation, gui.ExceptionDialog):
     def __init__(self) -> None:
         QDialog.__init__(self)
         self.setupUi(self)

@@ -12,7 +12,7 @@ from dataset import SubjectC
 
 log = logging.getLogger(__name__)
 
-class ImportCsv(QDialog, uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
+class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
     def __init__(self, main_win):
         QDialog.__init__(self)
         self.setupUi(self)

@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 
 ZOMBIES : List[QThread] = []
 
-class ProgressDialog(QDialog, uic.progress.Ui_Progress, gui.ExceptionDialog):
+class ProgressDialog(uic.progress.Ui_Progress, gui.ExceptionDialog):
     def __init__(self, main_win, label_text: str) -> None:
         QDialog.__init__(self, main_win)
         self.setupUi(self)

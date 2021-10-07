@@ -76,8 +76,9 @@ class Node:
 
         return child
 
-    def parent_idx(self, model) -> QModelIndex:
+    def parent_idx(self, model : QAbstractItemModel) -> QModelIndex:
         if self.parent_node:
+            assert self.row is not None
             return model.createIndex(self.row, 0, self.parent_node)
         else:
             return QModelIndex()
@@ -98,7 +99,7 @@ class TreeModel(QAbstractItemModel):
         self.root = root
         self.headers : List[Field] = parse_fields(headers)
 
-    def headerData(self, nr: int, orientation: Qt.Orientation, role) -> Optional[str]:
+    def headerData(self, nr: int, orientation: Qt.Orientation, role : int = Qt.DisplayRole) -> Optional[str]:
         if orientation == Qt.Horizontal:
             try:
                 return cast(
@@ -116,7 +117,7 @@ class TreeModel(QAbstractItemModel):
         else:
             return self.root
 
-    def index(self, row: int, col: int, idx: QModelIndex) -> QModelIndex:
+    def index(self, row: int, col: int, idx: QModelIndex = QModelIndex()) -> QModelIndex:
         try:
             child = self.get_node(idx).child(row)
         except IndexError:
@@ -124,16 +125,16 @@ class TreeModel(QAbstractItemModel):
 
         return self.createIndex(row, col, child)
 
-    def parent(self, idx: QModelIndex) -> Node:
+    def parent(self, idx: QModelIndex) -> Node:  # type: ignore
         return cast(Node, self.get_node(idx).parent_idx(self))
 
-    def rowCount(self, idx: QModelIndex) -> int:
+    def rowCount(self, idx: QModelIndex = QModelIndex()) -> int:
         return self.get_node(idx).child_count
 
-    def columnCount(self, idx: QModelIndex) -> int:
+    def columnCount(self, idx: QModelIndex = QModelIndex()) -> int:
         return len(self.headers)
 
-    def data(self, idx: QModelIndex, role) -> Optional[str]:
+    def data(self, idx: QModelIndex = QModelIndex(), role : int = Qt.DisplayRole) -> Optional[str]:
         try:
             return cast(Optional[str], self.get_node(idx).field(idx.column()).data(role))
         except IndexError:

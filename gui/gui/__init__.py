@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 class ValidationError(Exception):
     pass
 
-class ExceptionDialog:
+class ExceptionDialog(QDialog):
     def catch_exc(self, f):
         @functools.wraps(f)
         def wrapper(*args, **kwargs):

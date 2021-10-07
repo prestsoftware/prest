@@ -50,6 +50,9 @@ class TopTwo(NamedTuple):
 class SequentiallyRationalizableChoice(NamedTuple):
     tag : int = 7
 
+class Swaps(NamedTuple):
+    tag : int = 8
+
 Model = Union[
     PreorderMaximization,
     Unattractiveness,
@@ -59,6 +62,7 @@ Model = Union[
     Overload,
     TopTwo,
     SequentiallyRationalizableChoice,
+    Swaps,
 ]
 
 ModelC = enumC('Model', {
@@ -70,6 +74,7 @@ ModelC = enumC('Model', {
     Overload: (PreorderParamsC,),
     TopTwo: (),
     SequentiallyRationalizableChoice: (),
+    Swaps: (),
 })
 
 # dicts are ordered from python 3.5 onwards
@@ -104,6 +109,8 @@ SPECIAL_NAMES = {
         'Top-Two Choice',
     SequentiallyRationalizableChoice():
         'Sequentially Rationalizable Choice',
+    Swaps():
+        'SWAPS',
 }
 
 ORDERING_INDICES = (
@@ -159,6 +166,11 @@ MODELS = [
                 'models/fc.html#utility-maximization',
                 ('Strict', preorder(strict=True, total=True)),
                 ('Non-strict', preorder(strict=False, total=True)),
+            ),
+            mgroup('Utility Maximization - Swaps',
+                'models/fc.html#swaps',
+                ('Strict', Swaps()),
+                None,
             ),
             mgroup('Top-Two Choice',
                 'models/fc.html#top-two-choice',

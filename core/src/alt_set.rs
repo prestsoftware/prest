@@ -148,6 +148,14 @@ impl<'a> AltSetView<'a> {
         self.size() == 1
     }
 
+    pub fn as_singleton(&self) -> Option<Alt> {
+        if self.size() == 1 {
+            self.iter().last()
+        } else {
+            None
+        }
+    }
+
     pub fn iter(&self) -> Iter<'a> {
         Iter {
             head: 0,

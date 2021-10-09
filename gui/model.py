@@ -110,7 +110,7 @@ SPECIAL_NAMES = {
     SequentiallyRationalizableChoice():
         'Sequentially Rationalizable Choice',
     Swaps():
-        'SWAPS',
+        'Utility Maximization - Swaps',
 }
 
 ORDERING_INDICES = (

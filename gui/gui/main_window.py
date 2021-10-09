@@ -120,9 +120,9 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
         doc.open_in_browser('index.html')
 
     def context_menu(self, pos) -> None:
-        item = self.tblDataSets.itemAt(pos)
+        item : Optional[int] = self.tblDataSets.itemAt(pos)
         if item is None:
-            log.debug('context menu requested but no item selected')  # type: ignore
+            log.debug('context menu requested but no item selected')
             return
 
         ds = self.workspace.datasets[

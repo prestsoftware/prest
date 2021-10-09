@@ -40,7 +40,7 @@ jobs:
         with:
           toolchain: stable
 
-      - name: Make
+      - name: Build
         shell: bash
         run: |
           PNAME="prest-${{ runner.os }}-$(git describe --always)"
@@ -106,7 +106,7 @@ jobs:
         with:
           toolchain: stable
 
-      - name: Make
+      - name: Build
         run: |
           PNAME="prest-${{ runner.os }}-$(git describe --always)"
 
@@ -170,7 +170,7 @@ jobs:
         with:
           toolchain: stable
 
-      - name: Make
+      - name: Build
         run: |
           PNAME="prest-${{ runner.os }}-$(git describe --always)"
 

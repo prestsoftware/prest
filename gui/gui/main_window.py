@@ -120,7 +120,10 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
         doc.open_in_browser('index.html')
 
     def context_menu(self, pos) -> None:
-        item : Optional[int] = self.tblDataSets.itemAt(pos)
+        # item is Optional[int] in some versions of PyQt
+        # but non-optional QTableWidgetItem in other versions of PyQt
+        # so we do this to make it work anywhere
+        item : Optional[Any] = self.tblDataSets.itemAt(pos)
         if item is None:
             log.debug('context menu requested but no item selected')
             return

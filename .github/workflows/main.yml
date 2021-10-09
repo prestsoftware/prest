@@ -48,6 +48,14 @@ jobs:
           echo "Building ${PNAME} for ${{ runner.os }}..."
           make
 
+      - name: Short tests
+        shell: bash
+        run: make test
+
+      - name: Long tests
+        shell: bash
+        run: make longtest
+
       - name: PyInstaller
         shell: bash
         run: |
@@ -105,6 +113,14 @@ jobs:
           echo "Building ${PNAME} for ${{ runner.os }}..."
           make
 
+      - name: Short tests
+        shell: bash
+        run: make test
+
+      - name: Long tests
+        shell: bash
+        run: make longtest
+
       - name: PyInstaller
         run: |
           PNAME="prest-${{ runner.os }}-$(git describe --always)"
@@ -160,6 +176,14 @@ jobs:
 
           echo "Building ${PNAME} for ${{ runner.os }}..."
           make
+
+      - name: Short tests
+        shell: bash
+        run: make test
+
+      - name: Long tests
+        shell: bash
+        run: make longtest
 
       - name: PyInstaller
         run: |

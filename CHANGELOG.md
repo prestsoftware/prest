@@ -1,3 +1,10 @@
+## 1.0.3
+
+- New checkbox in model estimation: Disregard deferrals
+- New model: Utility Maximization - SWAPS
+- Switch CI from Travis to GitHub Actions
+- Add a CLI utility for Position-Adjusted Houtman-Maks
+
 ## 1.0.2
 
 - Fix XLSX export.

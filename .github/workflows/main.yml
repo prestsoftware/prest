@@ -25,6 +25,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: Unshallow
+        run: git fetch --prune --unshallow
+
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
@@ -91,6 +94,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: Unshallow
+        run: git fetch --prune --unshallow
+
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
@@ -154,6 +160,9 @@ jobs:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+
+      - name: Unshallow
+        run: git fetch --prune --unshallow
 
       - name: Set up Python 3.9
         uses: actions/setup-python@v2

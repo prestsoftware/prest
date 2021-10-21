@@ -20,8 +20,8 @@ fn fmt_digraph(p : &Preorder, alt_names : &[String], unattr : &[Alt]) -> String 
     for &(i, j) in &p.simple_digraph() {
         result += &format!(
             "  \"{}\" -> \"{}\"{};\n",
+            alt_names[j.index() as usize],  // make the arrow go the other way
             alt_names[i.index() as usize],
-            alt_names[j.index() as usize],
             if unattr.contains(&i) || unattr.contains(&j) {
                 " [color=\"gray\"]"
             } else {

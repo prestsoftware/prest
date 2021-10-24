@@ -26,7 +26,14 @@ tbl_dataset = sa.Table('dataset', metadata,
     sa.Column('id', sa.Integer, primary_key=True),
     sa.Column('name', sa.String, nullable=False, unique=True),
     sa.Column('type', sa.String, nullable=False),
-    sa.Column('alternatives', sa.String, nullable=False),  # comma-separated
+)
+
+tbl_alternative = sa.Table('dataset_alternatives', metadata,
+    sa.Column('id', sa.Integer, primary_key=True),
+    sa.Column('dataset_id', sa.Integer, sa.ForeignKey(tbl_dataset.c.id), nullable=False),
+    sa.Column('index', sa.Integer, nullable=False, unique=True),
+    sa.Column('name', sa.String, nullable=False),
+    sa.UniqueConstraint('dataset_id', 'index'),
 )
 
 def tbl_subject(tbl_name : str, *columns : sa.Column) -> sa.Table:
@@ -109,10 +116,35 @@ DatasetHeaderC = tupleC(strC, listC(strC))
 class Dataset:
     ViewDialog : Any  # to be overridden in subclasses
 
-    def __init__(self, engine : sa.engine.Engine, name: str, alternatives: Sequence[str]) -> None:
+    def __init__(self, engine : sa.engine.Engine, name: str, alternatives: Sequence[str], db_id : Optional[int]) -> None:
         self.engine = engine
         self.name = name
         self.alternatives = list(alternatives)
+
+        self.db_id : int
+        if db_id is not None:
+            # just use the given ID
+            self.db_id = db_id
+        else:
+            # atomically
+            with self.engine.begin() as db:
+                # create the dataset row
+                r = db.execute(
+                    tbl_dataset.insert(),
+                    name=name,
+                    type=self.__class__.__name__
+                )
+                self.db_id = r.inserted_primary_key
+
+                # create the alternatives
+                db.execute(
+                    tbl_alternative.insert(),
+                    [{
+                        'dataset_id': self.db_id,
+                        'index': i,
+                        'name': alt,
+                    } for i, alt in enumerate(alternatives)]
+                )
 
     def __str__(self):
         return self.label_name()

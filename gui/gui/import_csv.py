@@ -138,7 +138,7 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
         def work():
             assert fname is not None
             ds = self.make_dataset(engine=engine, name=os.path.basename(fname))
-            self.main_win.add_dataset(ds)
+            self.main_win.refresh_datasets()
             
         fname, _something = QFileDialog.getOpenFileName(self, "Import CSV", filter="CSV files (*.csv)")
         if not fname:

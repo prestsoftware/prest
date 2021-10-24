@@ -2,6 +2,7 @@ import sys
 import logging
 import functools
 import os.path
+import sqlalchemy as sa
 
 from PyQt5.QtCore import Qt, pyqtSlot
 from PyQt5.QtGui import QIcon, QKeySequence
@@ -114,7 +115,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
             return
 
         ds = dataset.budgetary.load_from_csv(fname)
-        self.add_dataset(ds)
+        self.refresh_datasets()
 
     def dlg_help_show(self, _flag) -> None:
         doc.open_in_browser('index.html')
@@ -442,49 +443,22 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
         dlg = gui.import_csv.ImportCsv(self)
         dlg.run(self.workspace.engine)
 
-    def add_dataset(self, ds : dataset.Dataset):
-        assert len(self.workspace.datasets) == self.tblDataSets.rowCount()
-
-        # insert into datasets
-        self.workspace.datasets.append(ds)
-        self.setWindowModified(True)
-
-        self.add_dataset_to_table(ds)
-
-    def delete_dataset(self, ds : dataset.Dataset):
-        assert len(self.workspace.datasets) == self.tblDataSets.rowCount()
-
-        idx = self.workspace.datasets.index(ds)
-        self.tblDataSets.removeRow(idx)
-        self.workspace.datasets.pop(idx)
-        self.setWindowModified(True)
-
-    def add_dataset_to_table(self, ds : dataset.Dataset):
-        # insert into the table widget
-        tbl = self.tblDataSets
-        j = tbl.rowCount()
-        tbl.insertRow(j)
-        tbl.setItem(j, 0, QTableWidgetItem(ds.label_name()))
-        #tbl.setItem(j, 1, QTableWidgetItem(ds.label_type()))
-        item_alts = QTableWidgetItem(ds.label_alts())
-        item_alts.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        tbl.setItem(j, 1, item_alts)
-        tbl.setItem(j, 2, QTableWidgetItem(ds.label_size()))
-
-        tbl.setCurrentCell(j, 0)
-
     def refresh_datasets(self):
-        self.tblDataSets.setRowCount(0)
-        for ds in self.workspace.datasets:
-            self.add_dataset_to_table(ds)
+        n = 0
+        tbl = self.tblDataSets
+
+        for i, ds in enumerate(self.workspace.iter_dataset_summaries()):
+            tbl.setItem(i, 0, QTableWidgetItem(ds.name))
+            tbl.setItem(i, 1, QTableWidgetItem(','.join(ds.alternatives)))  # alternatives
+            tbl.setItem(i, 2, QTableWidgetItem(ds.size))  # size
+            n += 1
+
+        tbl.setRowCount(n)
 
     def selected_dataset(self):
-        if not self.workspace.datasets:
-            return None
-
         idx = self.tblDataSets.currentRow()
 
         try:
-            return self.workspace.datasets[idx]
+            return self.workspace.get_dataset_by_index(idx)
         except IndexError as e:
             raise MainWindowError('Internal error: selecting non-existent dataset #%d' % idx) from e

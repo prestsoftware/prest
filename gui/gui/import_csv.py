@@ -2,6 +2,7 @@ import os
 import logging
 from typing import Set, Sequence, List, Optional
 
+import sqlalchemy as sa
 from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView, QDialog, QFileDialog, QMessageBox
 
 import gui
@@ -42,8 +43,12 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
                 cb.addItem('(none)')
 
         def preview(_arg=None):
+            tmp_engine = sa.create_engine(f'sqlite://', future=True)
+            with tmp_engine.connect() as db:
+                dataset.metadata.create_all(db)
+
             try:
-                ds = self.make_dataset()
+                ds = self.make_dataset(tmp_engine)
             except Exception as e:
                 QMessageBox.warning(self, 'Bad CSV format', str(e))
                 self.lwAlternatives.clear()
@@ -66,16 +71,17 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
 
             i = 0
             self.tblPreview.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)  # autoresize is **SLOW**
-            for subj in map(SubjectC.decode_from_memory, ds.subjects):
-                for cr in subj.choices:
-                    self.tblPreview.setItem(i, 0, QTableWidgetItem(subj.name))
-                    self.tblPreview.setItem(i, 1, QTableWidgetItem(subj.csv_set(cr.menu)))
-                    self.tblPreview.setItem(i, 2, QTableWidgetItem(subj.csv_alt(cr.default)))
-                    self.tblPreview.setItem(i, 3, QTableWidgetItem(subj.csv_set(cr.choice)))
+            with tmp_engine.begin() as db:
+                for subj in ds.iter_subjects(db):
+                    for cr in subj.choices:
+                        self.tblPreview.setItem(i, 0, QTableWidgetItem(subj.name))
+                        self.tblPreview.setItem(i, 1, QTableWidgetItem(subj.csv_set(cr.menu)))
+                        self.tblPreview.setItem(i, 2, QTableWidgetItem(subj.csv_alt(cr.default) or ''))
+                        self.tblPreview.setItem(i, 3, QTableWidgetItem(subj.csv_set(cr.choice)))
 
-                    i += 1
-                    if i == MAX_ROWS:
-                        break  # too many rows for preview
+                        i += 1
+                        if i == MAX_ROWS:
+                            break  # too many rows for preview
 
             self.tblPreview.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
 
@@ -103,7 +109,7 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
 
         preview()
 
-    def make_dataset(self, name='CSV preview') -> dataset.experimental_data.ExperimentalData:
+    def make_dataset(self, engine : sa.engine.Engine, name='CSV preview') -> dataset.experimental_data.ExperimentalData:
         assert self.column_names is not None
         assert self.rows is not None
 
@@ -115,6 +121,7 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
         )
         
         ds = dataset.experimental_data.ExperimentalData.from_csv(
+            engine=engine,
             name=name,
             rows=self.rows,
             indices=indices,
@@ -125,21 +132,12 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
 
         return ds
 
-    # override
-    def accept(self) -> None:
-        try:
-            ds = self.make_dataset()
-        except Exception as e:
-            QMessageBox.warning(self, 'Bad CSV format', str(e))
-        else:
-            QDialog.accept(self)
-
-    def run(self):
+    def run(self, engine : sa.engine.Engine):
         fname : Optional[str] = None
 
         def work():
             assert fname is not None
-            ds = self.make_dataset(name=os.path.basename(fname))
+            ds = self.make_dataset(engine=engine, name=os.path.basename(fname))
             self.main_win.add_dataset(ds)
             
         fname, _something = QFileDialog.getOpenFileName(self, "Import CSV", filter="CSV files (*.csv)")

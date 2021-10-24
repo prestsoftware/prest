@@ -440,7 +440,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
         
     def dlg_dataset_import(self, _flag):
         dlg = gui.import_csv.ImportCsv(self)
-        dlg.run()
+        dlg.run(self.workspace.engine)
 
     def add_dataset(self, ds : dataset.Dataset):
         assert len(self.workspace.datasets) == self.tblDataSets.rowCount()

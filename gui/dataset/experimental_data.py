@@ -72,9 +72,9 @@ tbl_subject = dataset.tbl_subject('experimental_data_subject')
 tbl_observation = sa.Table('experimental_data_observation', dataset.metadata,
     sa.Column('id', sa.Integer, primary_key=True),
     sa.Column('subject_id', sa.Integer, sa.ForeignKey(tbl_subject.c.id), nullable=False),
-    sa.Column('menu', sa.String, nullable=False),  # comma-separated integers
+    sa.Column('menu', dataset.IntSet, nullable=False),
     sa.Column('default', sa.Integer, nullable=True),
-    sa.Column('choice', sa.Integer, nullable=True),
+    sa.Column('choice', dataset.IntSet, nullable=False),
 )
 
 def parse_set(s: str) -> FrozenSet[str]:
@@ -107,15 +107,56 @@ class ExperimentalData(Dataset):
     def __init__(self, engine : sa.engine.Engine, name: str, alternatives: Sequence[str], db_id : Optional[int]) -> None:
         Dataset.__init__(self, engine, name, alternatives, db_id)
 
-    def add_subject(self, db : sa.engine.Engine, subject : Subject) -> None:
+    def add_subject(self, db : sa.engine.Connection, subject : Subject) -> None:
         db.execute(
             sa.insert(tbl_subject),
-            dataset_id=self.db_id,
-            name=subject.name,
+            {'dataset_id': self.db_id, 'name': subject.name},
         )
 
+    def get_alternatives(self, db : sa.engine.Connection) -> List[str]:
+        return [
+            alt.name
+            for alt in db.execute(
+                sa.select([dataset.tbl_alternative.c.name])
+                .where(dataset.tbl_alternative.c.dataset_id == self.db_id)
+            ).all()
+        ]
+
+    def iter_subjects(self, db : sa.engine.Connection) -> Iterable[Subject]:
+        alternatives = self.get_alternatives(db)
+
+        # cache the list of all subjects in memory because we'll have to run sub-selects
+        subjects = db.execute(
+            sa.select((
+                tbl_subject.c.id,
+                tbl_subject.c.name
+            ))
+            .where(tbl_subject.c.dataset_id == self.db_id)
+            .order_by(tbl_subject.c.id)
+        ).all()
+
+        for subj in subjects:
+            rows = db.execute(
+                sa.select((
+                    tbl_observation.c.menu,
+                    tbl_observation.c.default,
+                    tbl_observation.c.choice
+                ))
+                .where(tbl_observation.c.subject_id == subj.id)
+                .order_by(tbl_observation.c.id)
+            ).all()
+
+            yield Subject(
+                name=subj.name,
+                alternatives=alternatives,
+                choices=[
+                    ChoiceRow(row.menu, row.default, row.choice)
+                    for row in rows
+                ]
+            )
+
     @staticmethod
-    def from_csv(name: str, rows: Sequence[Sequence[str]], indices: Tuple[int,int,Optional[int],int]) -> 'ExperimentalData':
+    def from_csv(engine : sa.engine.Engine, name: str, rows: Sequence[Sequence[str]], indices: Tuple[int,int,Optional[int],int]) -> 'ExperimentalData':
         i_s, i_m, i_d, i_c = indices  # CSV column indices: subject, menu, default, choice
 
         subjects_raw: Dict[str,List[ChoiceRow_str]] = collections.defaultdict(list)
@@ -134,7 +175,7 @@ class ExperimentalData(Dataset):
 
             subjects_raw[row[i_s]].append(cr)
 
-        subjects: List[PackedSubject] = []
+        subjects: List[Subject] = []
         alternatives_dataset: Set[str] = set()
         observ_count = 0
 
@@ -151,7 +192,7 @@ class ExperimentalData(Dataset):
             for i, alt in enumerate(alternatives):
                 alt_map[alt] = i
 
-            subject = Subject(
+            subjects.append(Subject(
                 name=subject_name,
                 alternatives=alternatives,
                 choices=[
@@ -162,13 +203,12 @@ class ExperimentalData(Dataset):
                     )
                     for cr in choices
                 ]
-            )
-            observ_count += len(subject.choices)
-            subjects.append(PackedSubject(SubjectC.encode_to_memory(subject)))
+            ))
 
-        ds = ExperimentalData(name, sorted(alternatives_dataset))
-        ds.subjects = subjects
-        ds.observ_count = observ_count
+        ds = ExperimentalData(engine, name, sorted(alternatives_dataset), db_id=None)
+        with engine.begin() as db:
+            for subject in subjects:
+                ds.add_subject(db, subject)
         return ds
 
     def clear_subjects(self):

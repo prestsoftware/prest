@@ -22,6 +22,21 @@ from util.codec_progress import CodecProgress
 log = logging.getLogger(__name__)
 metadata = sa.MetaData()
 
+class IntSet(sa.TypeDecorator):
+    impl = sa.String
+
+    def process_bind_param(self, value : Optional[FrozenSet[int]], dialect) -> Optional[str]:
+        if value is None:
+            return None
+        else:
+            return ','.join(str(x) for x in sorted(value))
+
+    def process_result_value(self, value : Optional[str], dialect) -> Optional[FrozenSet[int]]:
+        if value is None:
+            return None
+        else:
+            return frozenset(int(x.strip()) for x in value.split(','))
+
 tbl_dataset = sa.Table('dataset', metadata,
     sa.Column('id', sa.Integer, primary_key=True),
     sa.Column('name', sa.String, nullable=False, unique=True),
@@ -131,10 +146,9 @@ class Dataset:
                 # create the dataset row
                 r = db.execute(
                     tbl_dataset.insert(),
-                    name=name,
-                    type=self.__class__.__name__
+                    {'name': name, 'type': self.__class__.__name__},
                 )
-                self.db_id = r.inserted_primary_key
+                (self.db_id,) = r.inserted_primary_key
 
                 # create the alternatives
                 db.execute(

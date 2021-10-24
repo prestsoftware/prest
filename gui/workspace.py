@@ -35,7 +35,8 @@ class DatasetSummary:
 
 class Workspace:
     def __init__(self):
-        self.engine = sa.create_engine('sqlite://', future=True)  # in-memory DB
+        # use a named in-memory database so that it's visible from multiple threads
+        self.engine = sa.create_engine('sqlite:///file:memdb?mode=memory&cache=shared&uri=true', future=True)  # in-memory DB
         with self.engine.connect() as db:
             dataset.metadata.create_all(db)
 

@@ -446,14 +446,16 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
     def refresh_datasets(self):
         n = 0
         tbl = self.tblDataSets
+        datasets = list(
+            self.workspace.iter_dataset_summaries()
+        )
 
-        for i, ds in enumerate(self.workspace.iter_dataset_summaries()):
+        tbl.setRowCount(len(datasets))
+        for i, ds in enumerate(datasets):
             tbl.setItem(i, 0, QTableWidgetItem(ds.name))
             tbl.setItem(i, 1, QTableWidgetItem(','.join(ds.alternatives)))  # alternatives
             tbl.setItem(i, 2, QTableWidgetItem(ds.size))  # size
             n += 1
-
-        tbl.setRowCount(n)
 
     def selected_dataset(self):
         idx = self.tblDataSets.currentRow()

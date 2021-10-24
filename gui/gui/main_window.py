@@ -386,11 +386,10 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
         class MyWorker(Worker):
             def work(self) -> None:
                 self.set_work_size(options.subject_count)
-                ds = dataset.experimental_data.ExperimentalData(
+                ds = dataset.experimental_data.ExperimentalData.create(
                     engine=engine,
                     name=options.dataset_name,
                     alternatives=options.alternatives,
-                    db_id=None,  # generate a fresh ID
                 )
 
                 with Core() as core:

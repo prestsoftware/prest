@@ -79,12 +79,7 @@ class Workspace:
             alternatives = [alt for alt, in alternatives_db]
 
             if ds_db.type == 'ExperimentalData':
-                return dataset.experimental_data.ExperimentalData(
-                    engine=self.engine,
-                    name=ds_db.name,
-                    alternatives=alternatives,
-                    db_id=ds_db.id,
-                )
+                return dataset.experimental_data.ExperimentalData(ds_db.id)
             else:
                 raise ValueError('unknown dataset type: ' + ds_db.type)
 

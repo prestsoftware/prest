@@ -108,6 +108,10 @@ class ExperimentalData(Dataset):
         Dataset.__init__(self, db_id)
 
     @classmethod
+    def load(cls, engine : sa.engine.Engine, db_id : int) -> 'ExperimentalData':
+        # Dataset.load(...)
+
+    @classmethod
     def create(cls, engine : sa.engine.Engine, name : str, alternatives : Sequence[str]) -> 'ExperimentalData':
         db_id = dataset.Dataset.create_fresh(engine, name, cls.__name__, alternatives)
         return ExperimentalData(db_id)

@@ -108,9 +108,20 @@ class ExperimentalData(Dataset):
         Dataset.__init__(self, engine, name, alternatives, db_id)
 
     def add_subject(self, db : sa.engine.Connection, subject : Subject) -> None:
-        db.execute(
+        r = db.execute(
             sa.insert(tbl_subject),
             {'dataset_id': self.db_id, 'name': subject.name},
+        )
+        (subject_id,) = r.inserted_primary_key
+
+        db.execute(
+            sa.insert(tbl_observation),
+            [{
+                'subject_id': subject_id,
+                'menu': row.menu,
+                'default': row.default,
+                'choice': row.choice,
+            } for row in subject.choices]
         )
 
     def get_alternatives(self, db : sa.engine.Connection) -> List[str]:

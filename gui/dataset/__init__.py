@@ -24,6 +24,7 @@ metadata = sa.MetaData()
 
 class IntSet(sa.TypeDecorator):
     impl = sa.String
+    cache_ok = True
 
     def process_bind_param(self, value : Optional[FrozenSet[int]], dialect) -> Optional[str]:
         if value is None:
@@ -35,6 +36,9 @@ class IntSet(sa.TypeDecorator):
         if value is None:
             return None
         else:
+            if not value.strip():
+                return frozenset()
+
             return frozenset(int(x.strip()) for x in value.split(','))
 
 tbl_dataset = sa.Table('dataset', metadata,

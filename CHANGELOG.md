@@ -1,3 +1,7 @@
+## 1.0.4
+
+- Fix codec for model estimation results
+
 ## 1.0.3
 
 - New checkbox in model estimation: Disregard deferrals

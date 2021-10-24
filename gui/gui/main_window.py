@@ -50,6 +50,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
 
         # instance attributes
         self.workspace = workspace.Workspace()
+        self.refresh_datasets()
 
         # main menu
         self.actionGenerate_random_subjects.triggered.connect(self.catch_exc(self.dlg_simulation))
@@ -129,9 +130,9 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
             log.debug('context menu requested but no item selected')
             return
 
-        ds = self.workspace.datasets[
+        ds = self.workspace.get_dataset_by_index(
             self.tblDataSets.row(item)
-        ]
+        )
 
 
         menu = QMenu(self)
@@ -380,36 +381,38 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
             return
 
         options = dlg.value()
+        engine = self.workspace.engine
 
         class MyWorker(Worker):
-            def work(self) -> dataset.experimental_data.ExperimentalData:
+            def work(self) -> None:
                 self.set_work_size(options.subject_count)
-                ds = dataset.experimental_data.ExperimentalData(options.dataset_name, [])
-                ds.alternatives = options.alternatives
-                ds.observ_count = 0
+                ds = dataset.experimental_data.ExperimentalData(
+                    engine=engine,
+                    name=options.dataset_name,
+                    alternatives=options.alternatives,
+                    db_id=None,  # generate a fresh ID
+                )
 
                 with Core() as core:
-                    self.interrupt = lambda: core.shutdown()
+                    with engine.begin() as db:
+                        self.interrupt = lambda: core.shutdown()
 
-                    for subj_nr in range(1, options.subject_count+1):
-                        response = simulation.run(core, simulation.Request(
-                            name='random%d' % subj_nr,
-                            alternatives=options.alternatives,
-                            gen_menus=options.gen_menus,
-                            gen_choices=options.gen_choices,
-                            preserve_deferrals=False,
-                        ))
+                        for subj_nr in range(1, options.subject_count+1):
+                            response = simulation.run(core, simulation.Request(
+                                name='random%d' % subj_nr,
+                                alternatives=options.alternatives,
+                                gen_menus=options.gen_menus,
+                                gen_choices=options.gen_choices,
+                                preserve_deferrals=False,
+                            ))
 
-                        ds.subjects.append(response.subject_packed)
-                        ds.observ_count += response.observation_count
+                            ds.add_subject(db, response.subject)
 
-                        self.set_progress(subj_nr)
-
-                return ds
+                            self.set_progress(subj_nr)
 
         try:
-            new_ds = MyWorker().run_with_progress(self, 'Generating subjects...')
-            self.add_dataset(new_ds)
+            MyWorker().run_with_progress(self, 'Generating subjects...')
+            self.refresh_datasets()
         except Cancelled:
             log.debug('simulation cancelled')
 

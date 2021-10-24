@@ -189,7 +189,7 @@ impl Decode for Request {
 }
 
 pub struct Response {
-    subject : Packed<Subject>,
+    subject : Subject,
     observation_count : u32,
 }
 
@@ -255,10 +255,10 @@ pub fn run<R : Rng>(rng : &mut R, request : Request) -> Result<Response> {
 
     Ok(Response {
         observation_count: choices.len() as u32,
-        subject: Packed(Subject {
+        subject: Subject {
             name,
             alternatives: request.alternatives,
             choices,
-        })
+        }
     })
 }

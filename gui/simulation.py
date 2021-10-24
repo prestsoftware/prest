@@ -68,10 +68,10 @@ class Request(NamedTuple):
 RequestC = namedtupleC(Request, strC, listC(strC), GenMenusC, GenChoicesC, boolC)
 
 class Response(NamedTuple):
-    subject_packed : PackedSubject
+    subject : Subject
     observation_count : int
 
-ResponseC = namedtupleC(Response, PackedSubjectC, intC)
+ResponseC = namedtupleC(Response, SubjectC, intC)
 
 def run(core : Core, request : Request) -> Response:
     return cast(

@@ -43,14 +43,14 @@ class IntSet(sa.TypeDecorator):
 
 tbl_dataset = sa.Table('dataset', metadata,
     sa.Column('id', sa.Integer, primary_key=True),
-    sa.Column('name', sa.String, nullable=False, unique=True),
+    sa.Column('name', sa.String, nullable=False),
     sa.Column('type', sa.String, nullable=False),
 )
 
 tbl_alternative = sa.Table('dataset_alternatives', metadata,
     sa.Column('id', sa.Integer, primary_key=True),
     sa.Column('dataset_id', sa.Integer, sa.ForeignKey(tbl_dataset.c.id), nullable=False),
-    sa.Column('index', sa.Integer, nullable=False, unique=True),
+    sa.Column('index', sa.Integer, nullable=False),
     sa.Column('name', sa.String, nullable=False),
     sa.UniqueConstraint('dataset_id', 'index'),
 )

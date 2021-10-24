@@ -2,6 +2,7 @@ import time
 import random
 import logging
 import collections
+from dataclasses import dataclass
 from typing import List, FrozenSet, Set, NamedTuple
 
 from PyQt5.QtCore import Qt, QCoreApplication
@@ -15,7 +16,8 @@ from gui.progress import Worker, Cancelled
 
 log = logging.getLogger(__name__)
 
-class Options(NamedTuple):
+@dataclass
+class Options:
     dataset_name : str
     alternatives : List[str]
     subject_count : int

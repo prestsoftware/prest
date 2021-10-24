@@ -58,8 +58,10 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
             assert self.rows is not None
 
             self.lwAlternatives.clear()
-            for alt in ds.alternatives:
-                self.lwAlternatives.addItem(alt)
+
+            with tmp_engine.connect() as db:
+                for alt in ds.get_alternatives(db):
+                    self.lwAlternatives.addItem(alt)
 
             # then grid preview
             MAX_ROWS = 256
@@ -127,8 +129,9 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
             indices=indices,
         )
 
-        if '' in ds.alternatives:
-            raise Exception('dataset contains an alternative with an empty name')
+        with engine.connect() as db:
+            if '' in ds.get_alternatives(db):
+                raise Exception('dataset contains an alternative with an empty name')
 
         return ds
 

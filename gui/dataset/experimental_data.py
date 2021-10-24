@@ -104,8 +104,13 @@ class ExperimentalData(Dataset):
             self.twRows.header().setSectionResizeMode(QHeaderView.ResizeToContents)
             self.twRows.header().setStretchLastSection(False)
 
-    def __init__(self, engine : sa.engine.Engine, name: str, alternatives: Sequence[str], db_id : Optional[int]) -> None:
-        Dataset.__init__(self, engine, name, alternatives, db_id)
+    def __init__(self, db_id : int) -> None:
+        Dataset.__init__(self, db_id)
+
+    @classmethod
+    def create(cls, engine : sa.engine.Engine, name : str, alternatives : Sequence[str]) -> 'ExperimentalData':
+        db_id = dataset.Dataset.create_fresh(engine, name, cls.__name__, alternatives)
+        return ExperimentalData(db_id)
 
     def add_subject(self, db : sa.engine.Connection, subject : Subject) -> None:
         r = db.execute(
@@ -216,7 +221,7 @@ class ExperimentalData(Dataset):
                 ]
             ))
 
-        ds = ExperimentalData(engine, name, sorted(alternatives_dataset), db_id=None)
+        ds = ExperimentalData.create(engine, name, sorted(alternatives_dataset))
         with engine.begin() as db:
             for subject in subjects:
                 ds.add_subject(db, subject)
@@ -270,7 +275,7 @@ class ExperimentalData(Dataset):
                     if position % 1024 == 0:
                         worker.set_progress(position)
 
-        ds = ExperimentalData(name=options.name, alternatives=self.alternatives)
+        ds = ExperimentalData.create(None, name=options.name, alternatives=self.alternatives)  # TODO
         ds.subjects = subjects
         ds.observ_count = options.multiplicity * self.observ_count
         return ds

@@ -135,34 +135,30 @@ DatasetHeaderC = tupleC(strC, listC(strC))
 class Dataset:
     ViewDialog : Any  # to be overridden in subclasses
 
-    def __init__(self, engine : sa.engine.Engine, name: str, alternatives: Sequence[str], db_id : Optional[int]) -> None:
-        self.engine = engine
-        self.name = name
-        self.alternatives = list(alternatives)
+    def __init__(self, db_id : int) -> None:
+        self.db_id = db_id
 
-        self.db_id : int
-        if db_id is not None:
-            # just use the given ID
-            self.db_id = db_id
-        else:
-            # atomically
-            with self.engine.begin() as db:
-                # create the dataset row
-                r = db.execute(
-                    tbl_dataset.insert(),
-                    {'name': name, 'type': self.__class__.__name__},
-                )
-                (self.db_id,) = r.inserted_primary_key
+    @staticmethod
+    def create_fresh(engine : sa.engine.Engine, name: str, type_name : str, alternatives: Sequence[str]) -> int:
+        with engine.begin() as db:
+            # create the dataset row
+            r = db.execute(
+                tbl_dataset.insert(),
+                {'name': name, 'type': type_name},
+            )
+            (db_id,) = r.inserted_primary_key
 
-                # create the alternatives
-                db.execute(
-                    tbl_alternative.insert(),
-                    [{
-                        'dataset_id': self.db_id,
-                        'index': i,
-                        'name': alt,
-                    } for i, alt in enumerate(alternatives)]
-                )
+            # create the alternatives
+            db.execute(
+                tbl_alternative.insert(),
+                [{
+                    'dataset_id': db_id,
+                    'index': i,
+                    'name': alt,
+                } for i, alt in enumerate(alternatives)]
+            )
+
+            return db_id
 
     def __str__(self):
         return self.label_name()

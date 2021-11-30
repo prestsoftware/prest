@@ -47,6 +47,49 @@ impl Decode for Preorder {
     }
 }
 
+pub fn simplify_edges(edges : &[(Alt, Alt)]) -> Vec<(Alt, Alt)> {
+    fn is_redundant(edges : &HashSet<(Alt, Alt)>, from : Alt, to : Alt) -> bool {
+        let mut reach : HashSet<Alt> = HashSet::new();
+        reach.insert(from);
+
+        loop {
+            let new_alts : HashSet<Alt> = edges.iter().filter_map(
+                |&(u,v)| if reach.contains(&u) && !reach.contains(&v) && (u != from || v != to) {
+                    Some(v)
+                } else {
+                    None
+                }
+            ).collect();
+
+            if new_alts.is_empty() {
+                return false;
+            }
+
+            if new_alts.contains(&to) {
+                return true;
+            }
+
+            reach.extend(new_alts);
+        }
+    }
+
+    let mut edges : HashSet<(Alt, Alt)> = edges.iter().cloned().collect();
+    let mut changing = true;
+
+    while changing {
+        changing = false;
+
+        for (i, j) in edges.clone() {
+            if is_redundant(&edges, i, j) {
+                edges.remove(&(i, j));
+                changing = true;
+            }
+        }
+    }
+
+    edges.into_iter().collect()
+}
+
 impl Preorder {
     pub fn to_poset_graph(&self) -> Graph<Vec<Alt>> {
         // representative for every cluster
@@ -72,17 +115,34 @@ impl Preorder {
         }
 
         let clusters : Vec<(Alt, Vec<Alt>)> = clusters.into_iter().collect();
+        let representatives : AltSet = clusters.iter().map(|(k,_)| *k).collect();
+        let relevant_edges : Vec<(Alt, Alt)>= self.edges().into_iter().filter(
+            |&(i,j)| representatives.view().contains(i) || representatives.view().contains(j)
+        ).collect();
+        let indices : HashMap<Alt, usize> = clusters.iter().enumerate().map(|(i, (k,_))| (*k, i)).collect();
         Graph{
             vertices: clusters.iter().map(|(_, alts)| alts.clone()).collect(),
-            edges: clusters.iter().enumerate().flat_map(
-                |(i_a, (repr_a, _))| clusters.iter().enumerate().filter_map(
-                    move |(i_b, (repr_b, _))| if self.leq(*repr_a, *repr_b) {
-                        Some((i_a, i_b))
-                    } else {
-                        None
-                    }
-                )
-            ).collect(),
+            edges: simplify_edges(&relevant_edges).into_iter().map(
+                |(p,q)| (*indices.get(&p).unwrap(), *indices.get(&q).unwrap())
+            ).collect()
+        }
+    }
+
+    pub fn restrict(&mut self, alts : AltSetView) {
+        let block_size = 8 * mem::size_of::<Block>() as u32;  // in bits
+        let stride = (self.size + block_size - 1) / block_size;  // round upwards
+        for i in 0..self.size {
+            let i_alt = Alt(i as u32);
+            if alts.contains(i_alt) {
+                for j in 0..stride {
+                    self.blocks[(i*stride + j) as usize] &= alts.blocks[j as usize];
+                }
+            } else {
+                for j in 0..stride {
+                    self.blocks[(i*stride + j) as usize] = 0;
+                    self.set_leq(i_alt, i_alt, true);
+                }
+            }
         }
     }
 
@@ -93,46 +153,7 @@ impl Preorder {
     }
 
     pub fn simple_digraph(&self) -> Vec<(Alt, Alt)> {
-        fn is_redundant(edges : &HashSet<(Alt, Alt)>, from : Alt, to : Alt) -> bool {
-            let mut reach : HashSet<Alt> = HashSet::new();
-            reach.insert(from);
-
-            loop {
-                let new_alts : HashSet<Alt> = edges.iter().filter_map(
-                    |&(u,v)| if reach.contains(&u) && !reach.contains(&v) && (u != from || v != to) {
-                        Some(v)
-                    } else {
-                        None
-                    }
-                ).collect();
-
-                if new_alts.is_empty() {
-                    return false;
-                }
-
-                if new_alts.contains(&to) {
-                    return true;
-                }
-
-                reach.extend(new_alts);
-            }
-        }
-
-        let mut edges : HashSet<_> = self.edges().into_iter().collect();
-        let mut changing = true;
-
-        while changing {
-            changing = false;
-
-            for (i, j) in edges.clone() {
-                if is_redundant(&edges, i, j) {
-                    edges.remove(&(i, j));
-                    changing = true;
-                }
-            }
-        }
-
-        edges.into_iter().collect()
+        simplify_edges(&self.edges())
     }
 
     pub fn diagonal(size : u32) -> Preorder {

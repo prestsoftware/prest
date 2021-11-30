@@ -117,7 +117,7 @@ impl Preorder {
         let clusters : Vec<(Alt, Vec<Alt>)> = clusters.into_iter().collect();
         let representatives : AltSet = clusters.iter().map(|(k,_)| *k).collect();
         let relevant_edges : Vec<(Alt, Alt)>= self.edges().into_iter().filter(
-            |&(i,j)| representatives.view().contains(i) || representatives.view().contains(j)
+            |&(i,j)| representatives.view().contains(i) && representatives.view().contains(j)
         ).collect();
         let indices : HashMap<Alt, usize> = clusters.iter().enumerate().map(|(i, (k,_))| (*k, i)).collect();
         Graph{

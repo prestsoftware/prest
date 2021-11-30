@@ -36,3 +36,4 @@ pub mod matrix;
 pub mod set_cover;
 pub mod integrity;
 pub mod csv;
+pub mod graph;

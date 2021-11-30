@@ -1,10 +1,11 @@
 use fast_preorder::FastPreorder;
-use alt_set::{Block,AltSetView};
+use alt_set::{Block,AltSetView,AltSet};
+use graph::Graph;
 use std::mem;
 use std::iter;
 use std::io::{Read,Write};
 use codec::{self,Encode,Decode};
-use std::collections::HashSet;
+use std::collections::{HashMap,HashSet};
 use alt::Alt;
 
 #[derive(PartialEq,Eq,PartialOrd,Ord,Clone,Hash,Debug)]
@@ -47,6 +48,44 @@ impl Decode for Preorder {
 }
 
 impl Preorder {
+    pub fn to_poset_graph(&self) -> Graph<Vec<Alt>> {
+        // representative for every cluster
+        let mut clusters : HashMap<Alt, Vec<Alt>> = HashMap::new();
+        for alt in Alt::all(self.size) {
+            let matches : Vec<&Alt> = clusters.keys().filter(
+                |&&representative| self.eq(alt, representative)
+            ).collect();
+
+            match matches[..] {
+                [] => {
+                    clusters.insert(alt, vec![alt]);
+                }
+
+                [&representative] => {
+                    clusters.get_mut(&representative).unwrap().push(alt);
+                }
+
+                _ => {
+                    panic!("impossible: too many representatives");
+                }
+            }
+        }
+
+        let clusters : Vec<(Alt, Vec<Alt>)> = clusters.into_iter().collect();
+        Graph{
+            vertices: clusters.iter().map(|(_, alts)| alts.clone()).collect(),
+            edges: clusters.iter().enumerate().flat_map(
+                |(i_a, (repr_a, _))| clusters.iter().enumerate().filter_map(
+                    move |(i_b, (repr_b, _))| if self.leq(*repr_a, *repr_b) {
+                        Some((i_a, i_b))
+                    } else {
+                        None
+                    }
+                )
+            ).collect(),
+        }
+    }
+
     pub fn edges(&self) -> Vec<(Alt, Alt)> {
         Alt::all(self.size).flat_map(
             |i| iter::repeat(i).zip(self.upset(i))
@@ -155,6 +194,11 @@ impl Preorder {
     #[inline]
     pub fn lt(&self, i : Alt, j : Alt) -> bool {
         self.leq(i,j) && !self.leq(j, i)
+    }
+
+    #[inline]
+    pub fn eq(&self, i : Alt, j : Alt) -> bool {
+        self.leq(i,j) && self.leq(j,i)
     }
 
     pub fn is_strict(&self) -> bool {

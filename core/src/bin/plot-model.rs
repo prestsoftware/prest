@@ -9,6 +9,8 @@ use preorder::Preorder;
 
 fn fmt_digraph(p : &Preorder, alt_names : &[String], unattr : &[Alt]) -> String {
     let mut result = String::from("digraph G {\n");
+    result += "  margin=0;\n";
+
     let graph = p.to_poset_graph();
 
     for &i in unattr {

@@ -31,7 +31,9 @@ fn fmt_digraph(p : &Preorder, alt_names : &[String], unattr : &[Alt]) -> String 
     }
 
     for &(i, j) in &graph.edges {
-        result += &format!("  v{} -> v{};\n", i, j);
+        // draw the edges in the opposite direction,
+        // as requested by Yorgos
+        result += &format!("  v{} -> v{};\n", j, i);
     }
 
     result += "}\n";

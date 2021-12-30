@@ -1,7 +1,7 @@
 .. _estimation:
 
-Preference Estimation
-=====================
+Non-Parametric Preference Estimation
+====================================
 
 
 For **general/non-budgetary datasets**, Prest |version| can estimate non-parametrically which model (or models) in its 

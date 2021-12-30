@@ -43,7 +43,7 @@ extensions = [
 bibtex_bibfiles = ['references.bib']
 googleanalytics_id = 'UA-125271613-1'
 
-bibtex_encoding = 'utf-8-sig'
+bibtex_encoding = 'latin'
 bibtex_default_style = 'unsrt'
 
 #mathjax_path = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'

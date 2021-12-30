@@ -184,9 +184,7 @@ is the (possibly empty) set of the weakly most preferred alternatives in `A` acc
 |
 
 Incomplete-Preference Maximization: Partially Dominant Choice (non-forced)
---------------------------------------------------------------------------
-
-[:cite:authors:`gerasimou18`, :cite:year:`gerasimou16a`]
+----------------------------------------------------------------------------
 
 A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained by 
 **partially dominant choice (non-forced)** if there exists a strict partial order `\succ` on `X`

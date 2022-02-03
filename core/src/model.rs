@@ -311,8 +311,8 @@ impl Instance {
 
             &Instance::HybridUndominatedChoice(ref p) => {
                 let choice = undominated_choice(p, menu);
-                if menu.size() > 1 && choice.view().is_empty() {
-                    AltSet::from(menu)
+                if menu.size() > 1 && choice.view() == menu {
+                    AltSet::empty()
                 } else {
                     choice
                 }

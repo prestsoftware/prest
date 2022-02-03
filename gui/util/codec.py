@@ -356,7 +356,7 @@ def numpyC(dtype : type) -> Codec:
         shape = tuple(l_dec(f))
         stuff = bytesC_dec(f)
         return np.reshape(
-            np.fromstring(stuff, dtype=dtype),
+            np.frombuffer(stuff, dtype=dtype),
             newshape=shape,
         )
     

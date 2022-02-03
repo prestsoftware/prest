@@ -9,6 +9,9 @@ use preorder::Preorder;
 
 fn fmt_digraph(p : &Preorder, alt_names : &[String], unattr : &[Alt]) -> String {
     let mut result = String::from("digraph G {\n");
+    result += "  margin=0;\n";
+
+    let graph = p.to_poset_graph();
 
     for &i in unattr {
         result += &format!(
@@ -17,17 +20,20 @@ fn fmt_digraph(p : &Preorder, alt_names : &[String], unattr : &[Alt]) -> String 
         );
     }
 
-    for &(i, j) in &p.simple_digraph() {
+    for (i, alts) in graph.vertices.iter().enumerate() {
         result += &format!(
-            "  \"{}\" -> \"{}\"{};\n",
-            alt_names[j.index() as usize],  // make the arrow go the other way
-            alt_names[i.index() as usize],
-            if unattr.contains(&i) || unattr.contains(&j) {
-                " [color=\"gray\"]"
-            } else {
-                ""
-            }
+            "  v{} [label=\"{}\"];\n",
+            i,
+            alts.iter().map(
+                |&alt| alt_names[alt.index() as usize].as_str()
+            ).collect::<Vec<&str>>().join(" ~ ")
         );
+    }
+
+    for &(i, j) in &graph.edges {
+        // draw the edges in the opposite direction,
+        // as requested by Yorgos
+        result += &format!("  v{} -> v{};\n", j, i);
     }
 
     result += "}\n";

@@ -74,6 +74,7 @@ pub enum Model {
     TopTwo,
     SequentiallyRationalizableChoice,
     Swaps,
+    HybridUndominatedChoice{ strict : bool },
 }
 
 impl Encode for Model {
@@ -88,6 +89,7 @@ impl Encode for Model {
             &Model::TopTwo => 6u8.encode(f),
             &Model::SequentiallyRationalizableChoice => 7u8.encode(f),
             &Model::Swaps => 8u8.encode(f),
+            &Model::HybridUndominatedChoice{strict} => (9u8,strict).encode(f),
         }
     }
 }
@@ -104,6 +106,7 @@ impl Decode for Model {
             6u8 => Ok(Model::TopTwo),
             7u8 => Ok(Model::SequentiallyRationalizableChoice),
             8u8 => Ok(Model::Swaps),
+            9u8 => Ok(Model::HybridUndominatedChoice{strict: Decode::decode(f)?}),
             _ => Err(codec::Error::BadEnumTag),
         }
     }
@@ -129,6 +132,7 @@ pub enum Instance {
     TopTwo(Preorder),
     SequentiallyRationalizableChoice(Preorder, Preorder),
     Swaps(Preorder),
+    HybridUndominatedChoice(Preorder),
 }
 
 impl Encode for Instance {
@@ -160,6 +164,9 @@ impl Encode for Instance {
 
             &Instance::Swaps(ref p)
                 => (8u8, p).encode(f),
+
+            &Instance::HybridUndominatedChoice(ref p)
+                => (9u8, p).encode(f),
         }
     }
 }
@@ -188,6 +195,7 @@ impl Decode for Instance {
                 Decode::decode(f)?,
             )),
             8u8 => Ok(Instance::Swaps(Decode::decode(f)?)),
+            9u8 => Ok(Instance::HybridUndominatedChoice(Decode::decode(f)?)),
             _ => Err(codec::Error::BadEnumTag),
         }
     }
@@ -277,6 +285,9 @@ impl Instance {
 
             &Instance::Swaps(_) =>
                 Model::Swaps,
+
+            &Instance::HybridUndominatedChoice(ref p) =>
+                Model::HybridUndominatedChoice{strict: p.is_strict()},
         }
     }
 
@@ -296,6 +307,15 @@ impl Instance {
 
             &Instance::UndominatedChoice(ref p) => {
                 undominated_choice(p, menu)
+            }
+
+            &Instance::HybridUndominatedChoice(ref p) => {
+                let choice = undominated_choice(p, menu);
+                if menu.size() > 1 && choice.view().is_empty() {
+                    AltSet::from(menu)
+                } else {
+                    choice
+                }
             }
 
             &Instance::PartiallyDominantChoice{ref p, fc} => {
@@ -592,6 +612,14 @@ pub fn traverse_all<F>(
                 PreorderParams{strict: Some(strict), total: Some(false)},
                 alt_count,
                 &mut |p| f(Instance::UndominatedChoice(p))
+            ).map_err(&ann)?,
+
+        Model::HybridUndominatedChoice{strict}
+            => traverse_preorders(
+                precomputed,
+                PreorderParams{strict: Some(strict), total: Some(false)},
+                alt_count,
+                &mut |p| f(Instance::HybridUndominatedChoice(p))
             ).map_err(&ann)?,
 
         Model::PartiallyDominantChoice{fc}

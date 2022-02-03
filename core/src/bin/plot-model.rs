@@ -91,6 +91,17 @@ fn main() {
             println!("{}", fmt_digraph(p, &alt_names, &[]));
         }
 
+        Instance::HybridUndominatedChoice(ref p) => {
+            assert_eq!(
+                p.size,
+                alt_names.len() as u32,
+                "preorder size ({}) does not match the number of alternatives ({})",
+                p.size,
+                alt_names.len()
+            );
+            println!("{}", fmt_digraph(p, &alt_names, &[]));
+        }
+
         Instance::PartiallyDominantChoice{ref p, fc:_} => {
             assert_eq!(p.size, alt_names.len() as u32, "preorder size ({}) does not match the number of alternatives ({})", p.size, alt_names.len());
             assert!(p.is_strict());  // if this does not hold, something's gone very wrong

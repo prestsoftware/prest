@@ -52,6 +52,9 @@ class SequentiallyRationalizableChoice(NamedTuple):
 
 class Swaps(NamedTuple):
     tag : int = 8
+class HybridUndominatedChoice(NamedTuple):
+    strict : bool
+    tag : int = 9
 
 Model = Union[
     PreorderMaximization,
@@ -63,6 +66,7 @@ Model = Union[
     TopTwo,
     SequentiallyRationalizableChoice,
     Swaps,
+    HybridUndominatedChoice,
 ]
 
 ModelC = enumC('Model', {
@@ -75,6 +79,7 @@ ModelC = enumC('Model', {
     TopTwo: (),
     SequentiallyRationalizableChoice: (),
     Swaps: (),
+    HybridUndominatedChoice: (boolC,),
 })
 
 # dicts are ordered from python 3.5 onwards
@@ -111,6 +116,10 @@ SPECIAL_NAMES = {
         'Sequentially Rationalizable Choice',
     Swaps():
         'Utility Maximization - Swaps',
+    HybridUndominatedChoice(strict=True):
+        'Undominated Choice (Hybrid, Strict)',
+    HybridUndominatedChoice(strict=False):
+        'Undominated Choice (Hybrid, Non-strict)',
 }
 
 ORDERING_INDICES = (
@@ -194,6 +203,11 @@ MODELS = [
                 'models/fc.html#sequentially-rationalizable-choice',
                 ('Strict', SequentiallyRationalizableChoice()),
                 None,
+            ),
+            mgroup('Incomplete-Preference Maximization: Undominated Choice (Hybrid)',
+                'models/fc.html#incomplete-preference-maximization-undominated-choice-hybrid',
+                ('Strict', HybridUndominatedChoice(strict=True)),
+                ('Non-strict', HybridUndominatedChoice(strict=False)),
             ),
             # mgroup('Choice with limited attention'),
         )),

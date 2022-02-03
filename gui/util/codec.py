@@ -5,6 +5,7 @@ import base64
 import typing
 from io import BytesIO
 import numpy as np
+from numpy.typing import DTypeLike
 from typing import Union, Any, BinaryIO, Type, NewType, NamedTuple, List, \
     Tuple, Callable, TypeVar, Optional, Dict, Sequence, Generic, cast
 
@@ -343,7 +344,7 @@ def newtypeC(codec : Codec, ctor, proj) -> Codec:
 
     return Codec(encode, decode)
 
-def numpyC(dtype : type) -> Codec:
+def numpyC(dtype : DTypeLike) -> Codec:
     bytesC_enc, bytesC_dec = bytesC
     l_enc, l_dec = listC(intC)
 
@@ -353,11 +354,11 @@ def numpyC(dtype : type) -> Codec:
         bytesC_enc(f, x.tobytes())
 
     def decode(f : FileIn) -> np.ndarray:
-        shape = tuple(l_dec(f))
-        stuff = bytesC_dec(f)
+        shape : Tuple[int] = cast(Tuple[int], tuple(l_dec(f)))
+        stuff : bytes = bytesC_dec(f)
         return np.reshape(
-            np.fromstring(stuff, dtype=dtype),
+            np.frombuffer(stuff, dtype=dtype),
             newshape=shape,
         )
-    
+
     return Codec(encode, decode)

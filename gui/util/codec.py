@@ -359,5 +359,5 @@ def numpyC(dtype : type) -> Codec:
             np.frombuffer(stuff, dtype=dtype),
             newshape=shape,
         )
-    
+
     return Codec(encode, decode)

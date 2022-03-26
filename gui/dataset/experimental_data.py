@@ -110,6 +110,7 @@ class ExperimentalData(Dataset):
     @classmethod
     def load(cls, engine : sa.engine.Engine, db_id : int) -> 'ExperimentalData':
         # Dataset.load(...)
+        pass
 
     @classmethod
     def create(cls, engine : sa.engine.Engine, name : str, alternatives : Sequence[str]) -> 'ExperimentalData':
@@ -429,7 +430,7 @@ class ExperimentalData(Dataset):
                 name='Detailed',
                 column_names=('subject', 'menu', 'default', 'choice'),
                 get_rows=self.export_detailed,
-                size=len(self.subjects),
+                size=0,
             ),
         )
 

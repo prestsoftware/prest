@@ -66,7 +66,7 @@ def tbl_subject(tbl_name : str, *columns : sa.Column) -> sa.Table:
 def load_raw_csv(fname):
     with open(fname) as f:
         return list(csv.reader(line.strip() for line in f))
-    
+
 class ExportVariant(NamedTuple):
     name : str
     column_names : Sequence[str]
@@ -293,3 +293,6 @@ class Dataset:
 
         else:
             raise Exception('unknown file export format: %s' % fformat)
+
+    def get_row_count(self) -> int:
+        raise NotImplementedError()  # to be overridden

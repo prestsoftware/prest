@@ -46,8 +46,8 @@ googleanalytics_id = 'UA-125271613-1'
 bibtex_encoding = 'utf-8-sig'
 bibtex_default_style = 'unsrt'
 
-#mathjax_path = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'
-mathjax_path = 'https://prestsoftware.com/_static/mathjax/MathJax.js?config=TeX-MML-AM_CHTML'
+mathjax_path = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'
+#mathjax_path = 'https://prestsoftware.com/_static/mathjax/MathJax.js?config=TeX-MML-AM_CHTML'
 
 # For DOI external links
 
@@ -109,10 +109,8 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 
-import sphinx_rtd_theme
-html_theme = 'sphinx_rtd_theme'
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-#html_theme = 'sphinxdoc'
+extensions.append("sphinxjp.themes.basicstrap")
+html_theme = 'basicstrap'
 
 
 # Theme options are theme-specific and customize the look and feel of a theme

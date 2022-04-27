@@ -11,3 +11,4 @@ version.txt
 preorders-7.bin
 prest.env/
 .mypy_cache/
+venv/

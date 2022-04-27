@@ -1,5 +1,5 @@
-Forced-Choice Models (non-feasible outside option)
-==================================================
+Forced-Choice Models (no outside option)
+========================================
 
 Utility Maximization / Rational Choice
 --------------------------------------
@@ -29,17 +29,19 @@ A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained
 
 .. centered:: and
 
+
 .. math::
     x\sim y\;\; \text{for distinct}\; x,y\; \text{in}\; X.
+    
 |
 
 .. tip::  
      When analysing other models that generalize utility maximization/rational choice, 
-     Prest |version| only considers instances of the more general models that do not overlap with those covered by the above two variants of utility maximization.
+     Prest only considers instances of the more general models that do not overlap with those covered by the above two variants of utility maximization.
      It is therefore recommended that utility maximization/rational choice always be included in all model-estimation tasks.
 
 .. tip::  
-     When "Utility Maximization - Swaps" is selected, Prest |version| computes the "Swaps" index 
+     When "Utility Maximization - Swaps" is selected, Prest computes the "Swaps" index 
      that is analyzed in :cite:authors:`apesteguia-ballester15` :cite:yearpar:`apesteguia-ballester15`.
      
      *Note:* this is only possible for forced- and single-valued choice datasets.
@@ -50,8 +52,10 @@ Incomplete-Preference Maximization: Undominated Choice
 
 [:cite:authors:`schwartz76`, :cite:year:`schwartz76`; :cite:authors:`bossert-sprumont-suzumura05`, :cite:year:`bossert-sprumont-suzumura05`; :cite:authors:`eliaz-ok06`, :cite:year:`eliaz-ok06`]
 
+
 Strict
 ......
+
 
 A general choice dataset on a set of alternatives `X` is explained by
 **(strict) undominated choice** if there is a strict
@@ -60,8 +64,10 @@ partial order `\succ` on `X` such that for every menu `A` in `\mathcal{D}`
 .. math::
 	C(A) = \{x\in A: y\not\succ x\;\; \text{for all $y\in A$}\} \text{.}
 
+
 Non-strict
 ..........
+
 
 A general choice dataset on a set of alternatives `X` is explained by
 **(non-strict) undominated choice** if there is an incomplete preorder `\succsim` on `X` such
@@ -139,5 +145,5 @@ where, for any `A\subseteq X`,
 
    
 .. tip::   
-     Prest |version| supports only a **Pass/Fail** test for this model, with the corresponding output being "0" and ">0", respectively.
+     Prest currently supports only a **Pass/Fail** test for this model, with the output being "0" and ">0", respectively.
 	

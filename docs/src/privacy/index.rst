@@ -29,7 +29,7 @@ collected by www.webhosting.uk.com and cpanel.net.
 
 The standard Internet log data are stored in the servers of Google Analytics.
 The additional data that include your IP addresses are stored in a text file 
-on the servers of this website's webhost (currently www.webhosting.uk.com and cpanel.net). 
+on the servers of this website's host (currently www.webhosting.uk.com and cpanel.net). 
 All data will be deleted automatically after a period of four years.
 
 

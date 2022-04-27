@@ -2,12 +2,12 @@ Consistency Criteria for General Datasets
 =========================================
 
 
-For every subject whose choices are in the dataset, Prest |version| can compute, view and export the 
+For every subject whose choices are in the dataset Prest can compute, view and export the 
 total number of violations for each of the axioms/criteria of choice consistency that are listed below.
 
-**Note:** *much of the terminology and notation that follows is introduced and explained in the* 
-:ref:`Datasets <general-datasets>` *and* :ref:`Revealed Preference Relations <revealed>` *sections*.
-
+.. note::
+     Much of the terminology and notation that follows is introduced and explained in the 
+     :ref:`Datasets <general-datasets>` and :ref:`Revealed Preference Relations <revealed>` sections.
 
 Weak Axiom of Revealed Preference - WARP
 ----------------------------------------
@@ -19,7 +19,7 @@ For any two distinct alternatives `x,y` in `X`
 
 	
 .. note::
-     Prest |version| reports two WARP counts for general datasets: **WARP (pairs)** and **WARP (all)**.
+     Prest reports two WARP counts for general datasets: **WARP (pairs)** and **WARP (all)**.
 	 
      **WARP (pairs)** is the number of *pairs of menus* that are implicated in a WARP violation.
      
@@ -39,7 +39,7 @@ For any two distinct alternatives `x,y` in `X`
 	x\succ^R y\;\; \Longrightarrow\;\; y\not\succsim^{\widehat{R}} x
 
 .. note::
-     In Prest |version|, Congruence violations of length 2 coincide with the **WARP (all)** count.
+     In Prest, Congruence violations of length 2 coincide with the **WARP (all)** count.
 	
 	
 Strict Choice Consistency

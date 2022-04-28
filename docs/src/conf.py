@@ -40,13 +40,13 @@ extensions = [
     'google_analytics',
 ]
 
-bibtex_bibliography_header = ".. rubric:: References"
-bibtex_footbibliography_header = bibtex_bibliography_header
+#bibtex_bibliography_header = ".. rubric:: References"
+#bibtex_footbibliography_header = ""
 bibtex_bibfiles = ['references.bib']
 googleanalytics_id = 'UA-125271613-1'
 
 bibtex_encoding = 'utf-8-sig'
-bibtex_default_style = 'plain'
+#bibtex_default_style = 'plain'
 
 mathjax_path = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'
 #mathjax_path = 'https://prestsoftware.com/_static/mathjax/MathJax.js?config=TeX-MML-AM_CHTML'

@@ -210,7 +210,7 @@ html_css_files = ['my_theme.css']
 html_sidebars = {
     '**': [
         'globaltoc.html',
-#        'localtoc.html',
+        'localtoc.html',
 #        'relations.html',  # needs 'show_related': True theme option to display
 #        'searchbox.html',
     ]

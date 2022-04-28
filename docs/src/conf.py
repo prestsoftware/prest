@@ -40,6 +40,8 @@ extensions = [
     'google_analytics',
 ]
 
+bibtex_bibliography_header = ".. rubric:: References"
+bibtex_footbibliography_header = bibtex_bibliography_header
 bibtex_bibfiles = ['references.bib']
 googleanalytics_id = 'UA-125271613-1'
 

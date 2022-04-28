@@ -2,5 +2,6 @@ References
 ==========
 
 .. bibliography:: references.bib
-   :list: enumerated
    :all:
+   :style: plain
+   :list: enumerated

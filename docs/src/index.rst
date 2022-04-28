@@ -68,12 +68,11 @@ define the terms used in the graphical user interface, and explain relevant back
    privacy/index
 
 
-Prest Developers
-----------------
+Current Prest Developers
+------------------------
 
-`Georgios Gerasimou <https:georgiosgerasimou.com/>`_ (project coordinator) 
-
-`Matúš Tejiščák <https://ziman.functor.sk/>`_ (lead programmer)
+`Georgios Gerasimou <https:georgiosgerasimou.com/>`_ & `Matúš Tejiščák <https://ziman.functor.sk/>`_  
+[GG is the project co-ordinator & MT the lead programmer]
 
 If you use Prest in your work, please cite it as follows: 
 

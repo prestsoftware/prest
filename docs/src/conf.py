@@ -44,7 +44,7 @@ bibtex_bibfiles = ['references.bib']
 googleanalytics_id = 'UA-125271613-1'
 
 bibtex_encoding = 'utf-8-sig'
-bibtex_default_style = 'unsrt'
+bibtex_default_style = 'plain'
 
 mathjax_path = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'
 #mathjax_path = 'https://prestsoftware.com/_static/mathjax/MathJax.js?config=TeX-MML-AM_CHTML'
@@ -81,7 +81,8 @@ try:
     with open('../doc-version.txt') as f:
         version = f.read().strip()
 except OSError:
-    version = '(no version)'
+#    version = '(no version)'
+    version = ''
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -123,7 +124,7 @@ html_theme_options = {
     'lang': 'en',
     # Disable showing the sidebar. Defaults to 'false'
     'nosidebar': False,
-    # Show header searchbox. Defaults to false. works only "nosidber=True",
+    # Show header searchbox. Defaults to false. works only "nosidebar=True",
     'header_searchbox': False,
 
     # Put the sidebar on the right side. Defaults to false.
@@ -136,13 +137,13 @@ html_theme_options = {
     # Fix the width of the sidebar. Defaults to false
     'nav_fixed': False,
     # Set the width of the sidebar. Defaults to '900px'
-    'nav_width': '0px',
+    'nav_width': '900px',
     # Fix the width of the content area. Defaults to false
     'content_fixed': False,
     # Set the width of the content area. Defaults to '900px'
-    'content_width': '2650px',
+    'content_width': '900px',
     # Fix the width of the row. Defaults to false
-    'row_fixed': True,
+    'row_fixed': False,
 
     # Disable the responsive design. Defaults to false
     'noresponsive': False,
@@ -175,7 +176,7 @@ html_theme_options = {
     'bootstrap_version': '3',
 
     # Show "theme preview" button in header navbar. Defaults to false.
-    'theme_preview': True,
+    'theme_preview': False,
 
     # Set the Size of Heading text. Defaults to None
      #'h1_size': '3.0em',
@@ -205,9 +206,9 @@ html_favicon = '_static/favicon.png'
 html_sidebars = {
     '**': [
         'globaltoc.html',
-        'localtoc.html',
+#        'localtoc.html',
 #        'relations.html',  # needs 'show_related': True theme option to display
-        'searchbox.html',
+#        'searchbox.html',
     ]
 }
 

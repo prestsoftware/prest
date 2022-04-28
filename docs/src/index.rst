@@ -3,7 +3,7 @@
 Introduction
 ------------
 
-Prest is an open-source and user-friendly Windows & macOS desktop application. 
+Prest is an open-source and user-friendly **desktop application for Windows & macOS** computers. 
 
 It can be used to analyze choice datasets created by economists, psychologists and marketing researchers. 
 

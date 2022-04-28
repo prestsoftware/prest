@@ -172,7 +172,8 @@ html_theme_options = {
     # Enable inner theme by Bootswatch. Defaults to false
     'inner_theme': True,
     # Set the name of innner theme. Defaults to 'bootswatch-simplex'
-    'inner_theme_name': 'bootswatch-flatly',
+    #'inner_theme_name': 'bootswatch-flatly',
+    'inner_theme_name': 'bootswatch-cerulean',
 
     # Select Twitter bootstrap version 2 or 3. Defaults to '3'
     'bootstrap_version': '3',

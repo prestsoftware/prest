@@ -1,12 +1,18 @@
+/* hide the navbar */
 div#navbar-top {
 	display: none;
 }
 
+/* replace the subTOC heading */
 div#sidebar-wrapper > div.sidebar > div > h3::before {
 	content: 'On this page';
 	color: #2fa4e7;
 }
-
 div#sidebar-wrapper > div.sidebar > div > h3 > a {
 	display: none;
+}
+
+/* make bibliography respect body width */
+div.docutils {
+	width: auto !important;
 }

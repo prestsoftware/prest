@@ -22,6 +22,30 @@ These model- and preference-estimation features allow you to analyse the availab
 not only with utility maximization but also with several models of general choice that explain well-documented behavioural phenomena 
 such as **context-dependent choices**, **cyclic choices**, **status-quo biased choices**, **choice deferral** and **choice overload**.
 
+|
+
+.. image:: ../_static/images/models1.png
+  :width: 87.21%
+  :target: ../build/html/workspace/index.html
+
+| 
+
+.. image:: ../_static/images/models2.png
+  :width: 87.21%
+  :target: ../build/html/workspace/index.html
+
+| 
+
+.. note::  
+     Prest's core program is designed to utilise all of your computer's CPU power by simultaneously engaging all its cores, by default.
+     You can change that by checking the *"Disable parallelism"* box at the bottom of the *"Model estimation"* window.
+
+.. note::  
+     If your dataset includes observations where the deferral/outside option was chosen and you wish to ignore
+     these observations, you can do so by checking the *"Disregard deferrals"* box at the bottom of the *"Model estimation"* window.
+
+|
+
 .. toctree::
     fc
     nfc

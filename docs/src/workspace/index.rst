@@ -16,6 +16,12 @@ Workspace area
 
 |
 
+.. image:: ../_static/images/workspace3.png
+  :width: 87.21%
+  :target: ../build/html/workspace/index.html
+
+| 
+
 .. image:: ../_static/images/workspace4.png
   :width: 87.21%
   :target: ../build/html/workspace/index.html
@@ -28,17 +34,41 @@ Workspace area
 
 | 
 
-.. image:: ../_static/images/workspace3.png
-  :width: 87.21%
-  :target: ../build/html/workspace/index.html
-
-| 
-
 .. image:: ../_static/images/workspace6.png
   :width: 87.21%
   :target: ../build/html/workspace/index.html
 
+|
+
+.. image:: ../_static/images/workspace7.png
+  :width: 87.21%
+  :target: ../build/html/workspace/index.html
+
 | 
+
+.. image:: ../_static/images/workspace8.png
+  :width: 87.21%
+  :target: ../build/html/workspace/index.html
+
+| 
+
+.. image:: ../_static/images/workspace9.png
+  :width: 87.21%
+  :target: ../build/html/workspace/index.html
+
+| 
+
+.. image:: ../_static/images/workspace10.png
+  :width: 87.21%
+  :target: ../build/html/workspace/index.html
+
+|
+
+.. image:: ../_static/images/workspace11.png
+  :width: 87.21%
+  :target: ../build/html/workspace/index.html
+
+|
 
 Prest's **workspace** is the area where imported/Prest-generated datasets
 are available for analysis and exporting.
@@ -85,7 +115,11 @@ the selected dataset is :ref:`general <general-datasets>` or :ref:`budgetary <bu
 
 | 8. *"Generate similar random dataset"*. Details :ref:`here <similar-random-dataset>`.
        	 
-					 
+.. tip::  
+     When importing a general-dataset .csv file, you will be prompted to match the column headers in the file 
+     with the relevant Prest headers from *"Subject"*, *"Menu"*, *"Default"* and *"Choice"*. 
+     See screenshots above for an illustration.
+
 **Budgetary datasets** 
 
 | 1. *"Consistency analysis"*. Details :ref:`here <budgetary-consistency-tip>`.

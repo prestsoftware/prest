@@ -5,7 +5,7 @@ div#navbar-top {
 
 /* replace the subTOC heading */
 div#sidebar-wrapper > div.sidebar > div > h3::before {
-	content: 'On this page';
+	content: 'On this Page';
 	color: #2fa4e7;
 }
 div#sidebar-wrapper > div.sidebar > div > h3 > a {

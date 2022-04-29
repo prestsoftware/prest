@@ -194,8 +194,7 @@ Generating random choices based on an *existing* dataset
 | In addition:
 |
 |       If the existing dataset contains some observations with default alternatives and others without 
-|       (see, for example, :ref:`the hybrid dataset  <dataset-examples>`),  then you can configure 
-|       the simulation for each mode of analysis.
+|       (see, for example, :ref:`the hybrid dataset  <dataset-examples>`),  then you can configure the simulation for each mode of analysis.
 |
 |       If the existing dataset contains some observations where the deferral/outside option was chosen, 
 |       then you can check the *"Preserve deferrals"* box to ensure that the simulated datasets 

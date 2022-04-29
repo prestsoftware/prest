@@ -1,5 +1,5 @@
-/* hide the navbar */
-div#navbar-top {
+/* hide the bottom navbar */
+div#navbar-related {
 	display: none;
 }
 
@@ -15,4 +15,8 @@ div#sidebar-wrapper > div.sidebar > div > h3 > a {
 /* make bibliography respect body width */
 div.docutils {
 	width: auto !important;
+}
+
+a[title="General Index"] {
+	display: none !important;
 }

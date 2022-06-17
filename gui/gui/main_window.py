@@ -181,7 +181,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
                     a_analysis.setIcon(icon)
 
                 a_analysis.analyse = mkanalyse(analysis)  # type: ignore
-                a_analysis.triggered.connect(self.catch_exc(a_analysis.analyse))
+                a_analysis.triggered.connect(self.catch_exc(a_analysis.analyse))  # type: ignore
                 m_analyses.addAction(a_analysis)
 
         export_variants = ds.get_export_variants()
@@ -234,7 +234,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
 
         a_delete = QAction("Delete", menu)
         a_delete.delete = delete  # type: ignore
-        a_delete.triggered.connect(self.catch_exc(a_delete.delete))
+        a_delete.triggered.connect(self.catch_exc(a_delete.delete))  # type: ignore
         a_delete.setStatusTip('Remove the dataset from the workspace. Asks for confirmation.')
         menu.addAction(a_delete)
 
@@ -467,7 +467,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
         tbl.setItem(j, 0, QTableWidgetItem(ds.label_name()))
         #tbl.setItem(j, 1, QTableWidgetItem(ds.label_type()))
         item_alts = QTableWidgetItem(ds.label_alts())
-        item_alts.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        item_alts.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)  # type: ignore
         tbl.setItem(j, 1, item_alts)
         tbl.setItem(j, 2, QTableWidgetItem(ds.label_size()))
 

@@ -11,7 +11,7 @@ class Field:
         text  : Optional[str]=None,
         icon  : Optional[QIcon]=None,
         user_data : Any=None,
-        align : Optional[int]=None,
+        align : Optional[Qt.Alignment]=None,
     ) -> None:
         self.text = text
         self.icon = icon

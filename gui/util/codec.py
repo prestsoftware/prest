@@ -354,9 +354,9 @@ def numpyC(dtype : type) -> Codec:
 
     def decode(f : FileIn) -> np.ndarray:
         shape = tuple(l_dec(f))
-        stuff = bytesC_dec(f)
+        stuff = cast(bytes, bytesC_dec(f))
         return np.reshape(
-            np.fromstring(stuff, dtype=dtype),
+            np.fromstring(stuff, dtype=dtype),  # type:ignore
             newshape=shape,
         )
     

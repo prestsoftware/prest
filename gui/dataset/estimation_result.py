@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView, QToolTip
 import gui
 import model
 import dataset
+import subprocess
 import platform_specific
 from gui.progress import Worker
 from model import get_name as model_get_name
@@ -153,11 +154,11 @@ class EstimationResult(Dataset):
         def __init__(self, parent_node: 'EstimationResult.Model', row: int, instance: InstanceRepr) -> None:
             code = base64.b64encode(instance).decode('ascii')
             subject = parent_node.subject
-            #help_icon = QIcon(platform_specific.get_embedded_file_path('images/qm-16.png'))
+            help_icon = QIcon(platform_specific.get_embedded_file_path('images/qm-16.png'))
             Node.__init__(
                 self, parent_node, row,
-                #fields=(code, Field(icon=help_icon, user_data=code), ''),
-                fields=(code, '', ''),
+                fields=(code, Field(icon=help_icon, user_data=code), ''),
+                #fields=(code, '', ''),
             )
 
     class ViewDialog(uic.view_estimated.Ui_ViewEstimated, gui.ExceptionDialog):
@@ -180,10 +181,37 @@ class EstimationResult(Dataset):
 
             self.twSubjects.clicked.connect(self.catch_exc(self.dlg_item_clicked))
 
+        def get_b64_url(self, instance_code : str) -> str:
+            dot_exe = platform_specific.get_embedded_file_path(
+                'dot.exe',  # deployment Windows
+                'dot',      # deployment elsewhere (?)
+                '/usr/bin/dot',  # dev
+            )
+
+            dot_src = '''
+                digraph G {
+                    A -> B;
+                    B -> C;
+                    C -> A;
+                    A -> D;
+                }
+            '''
+
+            dot = subprocess.run(
+                [dot_exe, '-Tpng'],
+                capture_output=True,
+                input=dot_src.encode('ascii'),
+            )
+
+            return 'data:image/png;base64,' + base64.b64encode(dot.stdout).decode('ascii')
+
         def dlg_item_clicked(self, idx):
-            code = self.model.data(idx, Qt.UserRole)
-            if code:
-                QToolTip.showText(QCursor.pos(), "This popup will show a visualisation of instance %s once it's implemented." % code)
+            instance_code = cast(str, self.model.data(idx, Qt.UserRole))
+            if instance_code:
+                QToolTip.showText(
+                    QCursor.pos(),
+                    "<img src=\"%s\" />" % self.get_b64_url(instance_code),
+                )
 
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:
         Dataset.__init__(self, name, alternatives)

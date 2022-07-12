@@ -10,9 +10,11 @@ use simulation;
 use experiment_stats;
 use budgetary;
 use integrity;
+use instviz;
 
 #[derive(Debug)]
 pub enum ActionRequest {
+    InstViz(instviz::Request),
     IntegrityCheck(integrity::Request),
     BudgetaryConsistency(budgetary::consistency::Request),
     Summary(experiment_stats::Request),
@@ -34,6 +36,7 @@ impl Decode for ActionRequest {
 
         let tag : String = Decode::decode(f)?;
         match tag.as_str() {
+            "instviz" => Ok(InstViz(Decode::decode(f)?)),
             "budgetary-consistency" => Ok(BudgetaryConsistency(Decode::decode(f)?)),
             "summary" => Ok(Summary(Decode::decode(f)?)),
             "set-rng-seed" => Ok(SetRngSeed(Decode::decode(f)?)),

@@ -85,6 +85,10 @@ fn rpc_loop(args : &args::Args) {
             ActionRequest::IntegrityCheck(req) => {
                 rpc.write_result(integrity::run(req)).unwrap();
             }
+
+            ActionRequest::InstViz(req) => {
+                rpc.write_result(instviz::run(req)).unwrap();
+            }
         }
     }
 }

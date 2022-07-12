@@ -190,6 +190,7 @@ class EstimationResult(Dataset):
 
             dot_src = '''
                 digraph G {
+                    bgcolor="transparent"
                     A -> B;
                     B -> C;
                     C -> A;
@@ -210,7 +211,7 @@ class EstimationResult(Dataset):
             if instance_code:
                 QToolTip.showText(
                     QCursor.pos(),
-                    "<img src=\"%s\" />" % self.get_b64_url(instance_code),
+                    "<img src=\"%s\"><br>Overload threshold: 5<br>Foo bar: Ca, Hi, Pa<br>Fnord: test 1 2 3" % self.get_b64_url(instance_code),
                 )
 
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:

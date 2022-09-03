@@ -1,6 +1,8 @@
 use std::io::{Read,Write};
 use codec;
 use codec::{Decode,Encode};
+use std::fmt;
+use std::result::Result;
 
 #[derive(Debug)]
 pub struct Request {
@@ -25,8 +27,24 @@ impl Encode for Response {
     }
 }
 
-pub fn run(req : Request) -> Response {
-    return Response{
-        edges: vec![(0,1),(1,2),(1,3)],
+pub enum Error {
+}
+
+impl Encode for Error {
+    fn encode<W : Write>(&self, _f : &mut W) -> codec::Result<()> {
+        match *self {
+        }
     }
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, _f : &mut fmt::Formatter) -> fmt::Result {
+        match *self { }
+    }
+}
+
+pub fn run(_req : Request) -> Result<Response, Error> {
+    return Ok(Response{
+        edges: vec![(0,1),(1,2),(1,3)],
+    })
 }

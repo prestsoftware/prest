@@ -14,6 +14,7 @@ import model
 import dataset
 import subprocess
 import platform_specific
+from core import Core
 from gui.progress import Worker
 from model import get_name as model_get_name
 from model import Model as ModelRepr
@@ -71,6 +72,16 @@ ResponsesC = listC(ResponseC)
 PackedResponse = NewType('PackedResponse', bytes)
 PackedResponseC = bytesC
 PackedResponsesC = listC(PackedResponseC)
+
+class InstVizRequest(NamedTuple):
+    instance_code : str
+
+InstVizRequestC = namedtupleC(InstVizRequest, strC)
+
+class InstVizResponse(NamedTuple):
+    edges : list[tuple[int, int]]
+
+InstVizResponseC = namedtupleC(InstVizResponse, listC(tupleC(intC, intC)))
 
 class Instance(NamedTuple):
     model: str
@@ -166,6 +177,7 @@ class EstimationResult(Dataset):
             QDialog.__init__(self)
             self.setupUi(self)
 
+            self.alternatives = ds.alternatives
             self.model = TreeModel(
                 PackedRootNode(
                     EstimationResult.Subject,
@@ -182,21 +194,29 @@ class EstimationResult(Dataset):
             self.twSubjects.clicked.connect(self.catch_exc(self.dlg_item_clicked))
 
         def get_b64_url(self, instance_code : str) -> str:
+            with Core() as core:
+                response = core.call(
+                    'instviz',
+                    InstVizRequestC,
+                    InstVizResponseC,
+                    InstVizRequest(instance_code=instance_code),
+                )
+
+            alts = self.alternatives
+            dot_src = (
+                'digraph G {\n bgcolor="transparent" \n'
+                + ''.join(
+                        f'"{alts[src]}" -> "{alts[dst]}";\n'
+                        for src, dst in response.edges
+                    )
+                + '}'
+            )
+
             dot_exe = platform_specific.get_embedded_file_path(
                 'dot.exe',  # deployment Windows
                 'dot',      # deployment elsewhere (?)
                 '/usr/bin/dot',  # dev
             )
-
-            dot_src = '''
-                digraph G {
-                    bgcolor="transparent"
-                    A -> B;
-                    B -> C;
-                    C -> A;
-                    A -> D;
-                }
-            '''
 
             dot = subprocess.run(
                 [dot_exe, '-Tpng'],
@@ -209,9 +229,12 @@ class EstimationResult(Dataset):
         def dlg_item_clicked(self, idx):
             instance_code = cast(str, self.model.data(idx, Qt.UserRole))
             if instance_code:
+                b64_url = self.get_b64_url(instance_code)
                 QToolTip.showText(
                     QCursor.pos(),
-                    "<img src=\"%s\"><br>Overload threshold: 5<br>Foo bar: Ca, Hi, Pa<br>Fnord: test 1 2 3" % self.get_b64_url(instance_code),
+                    f'<img src="{b64_url}">',
+                    # TODO: add extra information
+                    #"<br>Overload threshold: 5<br>Foo bar: Ca, Hi, Pa<br>Fnord: test 1 2 3" % self.get_b64_url(instance_code),
                 )
 
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:

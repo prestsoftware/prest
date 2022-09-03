@@ -3,7 +3,7 @@ extern crate rand;
 
 use rand::SeedableRng;
 use rand::rngs::SmallRng;
-use prest::{rpc,precomputed,estimation,args,consistency,simulation};
+use prest::{rpc,precomputed,estimation,args,consistency,simulation,instviz};
 use prest::{experiment_stats,budgetary,integrity};
 use precomputed::Precomputed;
 

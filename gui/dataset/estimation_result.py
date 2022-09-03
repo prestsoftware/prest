@@ -80,8 +80,9 @@ InstVizRequestC = namedtupleC(InstVizRequest, strC)
 
 class InstVizResponse(NamedTuple):
     edges : list[tuple[int, int]]
+    extra_info : list[tuple[str, str]]
 
-InstVizResponseC = namedtupleC(InstVizResponse, listC(tupleC(intC, intC)))
+InstVizResponseC = namedtupleC(InstVizResponse, listC(tupleC(intC, intC)), listC(tupleC(strC, strC)))
 
 class Instance(NamedTuple):
     model: str
@@ -193,7 +194,7 @@ class EstimationResult(Dataset):
 
             self.twSubjects.clicked.connect(self.catch_exc(self.dlg_item_clicked))
 
-        def get_b64_url(self, instance_code : str) -> str:
+        def get_b64_url(self, instance_code : str) -> tuple[str, list[tuple[str, str]]]:
             with Core() as core:
                 response = core.call(
                     'instviz',
@@ -224,18 +225,18 @@ class EstimationResult(Dataset):
                 input=dot_src.encode('ascii'),
             )
 
-            return 'data:image/png;base64,' + base64.b64encode(dot.stdout).decode('ascii')
+            url = 'data:image/png;base64,' + base64.b64encode(dot.stdout).decode('ascii')
+
+            return url, response.extra_info
 
         def dlg_item_clicked(self, idx):
             instance_code = cast(str, self.model.data(idx, Qt.UserRole))
             if instance_code:
-                b64_url = self.get_b64_url(instance_code)
-                QToolTip.showText(
-                    QCursor.pos(),
-                    f'<img src="{b64_url}">',
-                    # TODO: add extra information
-                    #"<br>Overload threshold: 5<br>Foo bar: Ca, Hi, Pa<br>Fnord: test 1 2 3" % self.get_b64_url(instance_code),
-                )
+                b64_url, extra_info = self.get_b64_url(instance_code)
+                html = f'<img src="{b64_url}">'
+                if extra_info:
+                    html += ''.join(f'<br>\n{key}: {val}' for key, val in extra_info)
+                QToolTip.showText(QCursor.pos(), html)
 
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:
         Dataset.__init__(self, name, alternatives)

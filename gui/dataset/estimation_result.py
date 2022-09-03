@@ -14,6 +14,7 @@ import model
 import dataset
 import subprocess
 import platform_specific
+from dataclasses import dataclass
 from core import Core
 from gui.progress import Worker
 from model import get_name as model_get_name
@@ -132,6 +133,12 @@ def subject_from_response_bytes(response_bytes : PackedResponse) -> Subject:
         ],
     )
 
+@dataclass
+class RenderedInstance:
+    png_url : Optional[str]
+    edges : list[tuple[int, int]]
+    extra_info : list[tuple[str, str]]
+
 class EstimationResult(Dataset):
     class Subject(Node):
         def __init__(self, parent_node, row: int, subject: Subject) -> None:
@@ -194,7 +201,7 @@ class EstimationResult(Dataset):
 
             self.twSubjects.clicked.connect(self.catch_exc(self.dlg_item_clicked))
 
-        def get_b64_url(self, instance_code : str) -> tuple[str, list[tuple[str, str]]]:
+        def render_instance(self, instance_code : str) -> RenderedInstance:
             with Core() as core:
                 response = core.call(
                     'instviz',
@@ -207,35 +214,54 @@ class EstimationResult(Dataset):
             dot_src = (
                 'digraph G {\n bgcolor="transparent" \n'
                 + ''.join(
-                        f'"{alts[src]}" -> "{alts[dst]}";\n'
-                        for src, dst in response.edges
+                        f'"{alts[greater]}" -> "{alts[lesser]}";\n'
+                        for lesser, greater in response.edges
                     )
                 + '}'
             )
 
-            dot_exe = platform_specific.get_embedded_file_path(
-                'dot.exe',  # deployment Windows
-                'dot',      # deployment elsewhere (?)
-                '/usr/bin/dot',  # dev
+            try:
+                dot_exe = platform_specific.get_embedded_file_path(
+                    'dot.exe',  # deployment Windows
+                    'dot',      # deployment elsewhere (?)
+                    '/usr/bin/dot',  # dev
+                )
+            except platform_specific.FileNotFound:
+                png_url = None
+            else:
+                dot = subprocess.run(
+                    [dot_exe, '-Tpng'],
+                    capture_output=True,
+                    input=dot_src.encode('ascii'),
+                )
+
+                png_url = 'data:image/png;base64,' + base64.b64encode(dot.stdout).decode('ascii')
+
+            return RenderedInstance(
+                png_url=png_url,
+                edges=response.edges,
+                extra_info=response.extra_info,
             )
-
-            dot = subprocess.run(
-                [dot_exe, '-Tpng'],
-                capture_output=True,
-                input=dot_src.encode('ascii'),
-            )
-
-            url = 'data:image/png;base64,' + base64.b64encode(dot.stdout).decode('ascii')
-
-            return url, response.extra_info
 
         def dlg_item_clicked(self, idx):
             instance_code = cast(str, self.model.data(idx, Qt.UserRole))
             if instance_code:
-                b64_url, extra_info = self.get_b64_url(instance_code)
-                html = f'<img src="{b64_url}">'
-                if extra_info:
-                    html += ''.join(f'<br>\n{key}: {val}' for key, val in extra_info)
+                info = self.render_instance(instance_code)
+                if info.png_url:
+                    html = f'<img src="{info.png_url}">'
+                else:
+                    alts = self.alternatives
+                    html = (
+                        '(please install GraphViz to visualise graphs)<br>\n'
+                        + ''.join(
+                            f'{alts[greater]} ≥ {alts[lesser]}<br>\n'
+                            for lesser, greater in info.edges
+                        )
+                    )
+
+                if info.extra_info:
+                    html += ''.join(f'<br>\n{key}: {val}' for key, val in info.extra_info)
+
                 QToolTip.showText(QCursor.pos(), html)
 
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:

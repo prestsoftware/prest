@@ -490,9 +490,9 @@ class ExperimentalData(Dataset):
 
     @staticmethod
     def get_codec_progress() -> CodecProgress:
-        DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC
-        subjects_size, subjects_encode, subjects_decode = listCP(oneCP(PackedSubjectC))
-        intC_encode, intC_decode = intC
+        DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC.enc_dec()
+        subjects_size, subjects_encode, subjects_decode = listCP(oneCP(PackedSubjectC)).enc_dec()
+        intC_encode, intC_decode = intC.enc_dec()
 
         def get_size(x : 'ExperimentalData') -> int:
             return cast(int, subjects_size(x.subjects))

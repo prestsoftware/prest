@@ -49,7 +49,7 @@ class PackedList(Generic[T]):
             raise ValueError('bad index: %s' % idx)
 
 def PackedListC(codec : Codec) -> Codec:
-    enc, dec = listC(bytesC)
+    enc, dec = listC(bytesC).enc_dec()
 
     def encode(f : FileOut, xs : PackedList) -> None:
         enc(f, xs.blocks)

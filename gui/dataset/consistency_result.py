@@ -280,9 +280,9 @@ class ConsistencyResult(Dataset):
 
     @staticmethod
     def get_codec_progress() -> CodecProgress:
-        DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC
-        subjects_size, subjects_encode, subjects_decode = listCP(oneCP(SubjectC))
-        intC_encode, intC_decode = intC
+        DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC.enc_dec()
+        subjects_size, subjects_encode, subjects_decode = listCP(oneCP(SubjectC)).enc_dec()
+        intC_encode, intC_decode = intC.enc_dec()
 
         def get_size(x : 'ConsistencyResult') -> int:
             return cast(int, subjects_size(x.subjects))

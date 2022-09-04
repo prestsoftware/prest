@@ -164,8 +164,8 @@ class BudgetaryConsistency(Dataset):
 
     @staticmethod
     def get_codec_progress() -> CodecProgress:
-        DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC
-        subjects_get_size, subjects_encode, subjects_decode = listCP(oneCP(SubjectC))
+        DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC.enc_dec()
+        subjects_get_size, subjects_encode, subjects_decode = listCP(oneCP(SubjectC)).enc_dec()
 
         def get_size(x : 'BudgetaryConsistency') -> int:
             return cast(int, subjects_get_size(x.subjects))

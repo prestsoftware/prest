@@ -72,7 +72,7 @@ ResponseC = namedtupleC(Response, strC, PenaltyC, listC(InstanceInfoC))
 ResponsesC = listC(ResponseC)
 
 PackedResponse = NewType('PackedResponse', bytes)
-PackedResponseC = bytesC
+PackedResponseC = cast(Codec[PackedResponse], bytesC)
 PackedResponsesC = listC(PackedResponseC)
 
 class InstVizRequest(NamedTuple):
@@ -395,9 +395,9 @@ class EstimationResult(Dataset):
         subjects_encode : Callable[[Worker, FileOut, List[PackedResponse]], None]
         subjects_decode : Callable[[Worker, FileIn], List[PackedResponse]]
 
-        DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC
-        subjects_size, subjects_encode, subjects_decode = listCP(oneCP(PackedResponseC))
-        intC_encode, intC_decode = intC
+        DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC.enc_dec()
+        subjects_size, subjects_encode, subjects_decode = listCP(oneCP(PackedResponseC)).enc_dec()
+        intC_encode, intC_decode = intC.enc_dec()
 
         def get_size(x : 'EstimationResult') -> int:
             return cast(int, subjects_size(x.subjects))

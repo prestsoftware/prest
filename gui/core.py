@@ -7,7 +7,7 @@ import threading
 import subprocess
 import collections
 import typing
-from typing import Sequence, Any, Type, Optional, NamedTuple, Union, BinaryIO, cast
+from typing import Sequence, Any, Type, Optional, NamedTuple, Union, BinaryIO, cast, TypeVar
 
 import model
 import platform_specific
@@ -17,6 +17,9 @@ from util.codec import Codec, CodecError, EOF, FileIn, FileOut, namedtupleC, \
     strC, intC, frozensetC, listC, bytesC, tupleC, enumC
 
 log = logging.getLogger(__name__)
+
+Req = TypeVar('Req')
+Resp = TypeVar('Resp')
 
 class CoreError(Exception):
     pass
@@ -142,7 +145,7 @@ class Core:
     def __exit__(self, *_exc_info):
         self.shutdown()
 
-    def call(self, name : str, codec_req : Codec, codec_resp : Codec, request : Any) -> Any:
+    def call(self, name : str, codec_req : Codec[Req], codec_resp : Codec[Resp], request : Req) -> Resp:
         strC.encode(self.stdin, name)
         codec_req.encode(self.stdin, request)
         self.stdin.flush()

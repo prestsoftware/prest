@@ -3,6 +3,7 @@ import struct
 import logging
 import base64
 import typing
+import dataclasses
 from io import BytesIO
 import numpy as np
 from dataclasses import dataclass
@@ -187,6 +188,30 @@ def namedtupleC(cls : type[NT], *codecs : Codec) -> Codec[NT]:
             encode(f, x)
 
     def decode(f : FileIn) -> NT:
+        return cls(*[decode(f) for decode in decodes])
+
+    return Codec(encode, decode)
+
+DC = TypeVar('DC')
+def dataclassC(cls : type[DC], *codecs : Codec) -> Codec[DC]:
+    encodes = [c.encode for c in codecs]
+    decodes = [c.decode for c in codecs]
+
+    if len(codecs) != len(dataclasses.fields(cls)):
+        raise CodecError('dataclassC: %d codecs provided for dataclass %s' % (
+            len(codecs),
+            cls,
+        ))
+
+    def encode(f : FileOut, xs : DC) -> None:
+        xs_tuple = dataclasses.astuple(xs)
+        if len(encodes) != len(xs_tuple):
+            raise CodecError('tuple length mismatch')
+
+        for encode, x in zip(encodes, xs_tuple):
+            encode(f, x)
+
+    def decode(f : FileIn) -> DC:
         return cls(*[decode(f) for decode in decodes])
 
     return Codec(encode, decode)

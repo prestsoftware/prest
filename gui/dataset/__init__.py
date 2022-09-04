@@ -72,12 +72,10 @@ class Subject(NamedTuple):
         return ','.join(self.alternatives[i] for i in sorted(alt_set))
 
     @overload
-    def csv_alt(self, index : None) -> None:
-        pass
+    def csv_alt(self, index : None) -> None: ...
 
     @overload
-    def csv_alt(self, index : int) -> str:
-        pass
+    def csv_alt(self, index : int) -> str: ...
 
     def csv_alt(self, index : Optional[int]) -> Optional[str]:
         if index is None:

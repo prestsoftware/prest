@@ -19,11 +19,10 @@ that need to be removed from a subject's data in order for the remaining observa
 Prest also provides information about the compatible *instances* of every model that is optimal in this sense.
 
 .. note::
-     Since the release of Prest 1.2 users can also visualize this preference-estimation output and save it in .png format.
-	 This service builds on `GraphViz <https://graphviz.org>`_ and requires GraphViz to be installed and the 'dot' binary file
-	 to be available in Prest's root directory. Users can then view and save the directed preference graph that corresponds to some instance
-	 of a model used in estimation by right-clicking and viewing the relevant model-estimation dataset in the workspace, locating the subject, model
-	 and instance of interest from the relevant list, and clicking on the question mark icon that appears next to the code label of that instance.
+     Since the release of Prest 1.2 users can also visualize this preference-estimation output and save it in .png format. This service builds on `GraphViz <https://graphviz.org>`_ and requires GraphViz to be installed and its 'dot' binary file
+     to be available in Prest's root directory. Users can then view and save the directed preference graph that corresponds to some instance
+     of a model used in estimation by right-clicking and viewing the relevant model-estimation dataset in the workspace, locating the subject, model
+     and instance of interest from the relevant list, and clicking on the question mark icon that appears next to the code label of that instance.
 
 These model- and preference-estimation features allow you to analyse the available data to test for the proximity of choice behaviour 
 not only with utility maximization but also with several models of general choice that explain well-documented behavioural phenomena 

@@ -25,7 +25,7 @@ class Field:
             else:
                 self.alignment = Qt.AlignLeft | Qt.AlignVCenter
 
-    def data(self, role):
+    def data(self, role : Qt.ItemDataRole) -> Any:
         if role == Qt.DisplayRole:
             return self.text
         elif role == Qt.DecorationRole:
@@ -104,7 +104,7 @@ class TreeModel(QAbstractItemModel):
             try:
                 return cast(
                     Optional[str],
-                    self.headers[nr].data(role),
+                    self.headers[nr].data(cast(Qt.ItemDataRole, role)),
                 )
             except IndexError:
                 return None
@@ -136,7 +136,7 @@ class TreeModel(QAbstractItemModel):
 
     def data(self, idx: QModelIndex = QModelIndex(), role : int = Qt.DisplayRole) -> Optional[str]:
         try:
-            return cast(Optional[str], self.get_node(idx).field(idx.column()).data(role))
+            return cast(Optional[str], self.get_node(idx).field(idx.column()).data(cast(Qt.ItemDataRole, role)))
         except IndexError:
             return None
 

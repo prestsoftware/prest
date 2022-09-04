@@ -332,7 +332,7 @@ def maybe(codec : Codec) -> Codec:
 
     return Codec(encode, decode)
 
-def newtypeC(codec : Codec, ctor, proj) -> Codec:
+def newtypeC(codec : Codec, ctor : Callable, proj : Callable) -> Codec:
     enc, dec = codec
 
     def encode(f : FileOut, x : Any) -> None:

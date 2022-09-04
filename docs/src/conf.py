@@ -38,6 +38,7 @@ extensions = [
     'sphinxcontrib.bibtex',
     'sphinx.ext.autosectionlabel',
     'google_analytics',
+    'sphinx-mathjax-offline',
 ]
 
 #bibtex_bibliography_header = ".. rubric:: References"
@@ -50,7 +51,7 @@ bibtex_encoding = 'utf-8-sig'
 
 #mathjax_path = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'
 #mathjax_path = 'https://prestsoftware.com/_static/mathjax/MathJax.js?config=TeX-MML-AM_CHTML'
-mathjax_path = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'
+#mathjax_path = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'
 
 # For DOI external links
 
@@ -291,3 +292,5 @@ imgmath_latex_preamble = r'''
 \parindent=0pt
 \parskip=2pt
 '''
+
+language = 'en'

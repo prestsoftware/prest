@@ -1,3 +1,4 @@
+pip
 mypy
 hypothesis
 numpy
@@ -11,4 +12,5 @@ sphinx-rtd-theme
 sphinxcontrib-bibtex
 sphinxcontrib-websupport
 sphinxjp-themes-basicstrap
+sphinx-mathjax-offline
 pyinstaller

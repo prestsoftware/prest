@@ -7,7 +7,8 @@ from typing import NamedTuple, Sequence, List, Iterator, Tuple, Dict, \
 
 from PyQt5.QtGui import QIcon, QCursor
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView, QToolTip, QMessageBox
+from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView, \
+    QToolTip, QMessageBox, QFileDialog
 
 import gui
 import model
@@ -136,6 +137,7 @@ def subject_from_response_bytes(response_bytes : PackedResponse) -> Subject:
 @dataclass
 class RenderedInstance:
     png_url : Optional[str]
+    png_bytes : Optional[bytes]
     edges : list[tuple[int, int]]
     extra_info : list[tuple[str, str]]
 
@@ -227,6 +229,7 @@ class EstimationResult(Dataset):
                     '/usr/bin/dot',  # dev
                 )
             except platform_specific.FileNotFound:
+                png_bytes = None
                 png_url = None
             else:
                 dot = subprocess.run(
@@ -235,10 +238,12 @@ class EstimationResult(Dataset):
                     input=dot_src.encode('ascii'),
                 )
 
-                png_url = 'data:image/png;base64,' + base64.b64encode(dot.stdout).decode('ascii')
+                png_bytes = dot.stdout
+                png_url = 'data:image/png;base64,' + base64.b64encode(png_bytes).decode('ascii')
 
             return RenderedInstance(
                 png_url=png_url,
+                png_bytes=png_bytes,
                 edges=response.edges,
                 extra_info=response.extra_info,
             )
@@ -275,9 +280,26 @@ class EstimationResult(Dataset):
                 #)
 
                 mb = QMessageBox()
+                mb.setStandardButtons(
+                    QMessageBox.Save | QMessageBox.Close
+                    if info.png_bytes else
+                    QMessageBox.Close
+                )
                 mb.setWindowTitle(f'Instance information: {instance_code}')
                 mb.setText(html)
-                mb.exec()
+                btn = mb.exec()
+
+                if btn == QMessageBox.Save:
+                    assert info.png_bytes  # button disabled otherwise
+                    fname, _ = QFileDialog.getSaveFileName(
+                        self,
+                        "Save instance visualisation",
+                        f'{instance_code.strip("=")}.png',
+                        filter="PNG files (*.png)",
+                    )
+                    if fname:
+                        with open(fname, 'wb') as f:
+                            f.write(info.png_bytes)
 
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:
         Dataset.__init__(self, name, alternatives)

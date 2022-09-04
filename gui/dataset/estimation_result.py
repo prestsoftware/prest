@@ -7,7 +7,7 @@ from typing import NamedTuple, Sequence, List, Iterator, Tuple, Dict, \
 
 from PyQt5.QtGui import QIcon, QCursor
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView, QToolTip
+from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView, QToolTip, QMessageBox
 
 import gui
 import model
@@ -262,7 +262,18 @@ class EstimationResult(Dataset):
                 if info.extra_info:
                     html += ''.join(f'<br>\n{key}: {val}' for key, val in info.extra_info)
 
-                QToolTip.showText(QCursor.pos(), html)
+                #QToolTip.showText(QCursor.pos(), html)
+
+                mb = QMessageBox()
+                mb.setWindowTitle(f'Instance information: {instance_code}')
+                mb.setText(html)
+                mb.exec()
+
+                #QMessageBox.information(
+                #    self,
+                #    f'Instance information: {instance_code}',
+                #    html,
+                #)
 
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:
         Dataset.__init__(self, name, alternatives)

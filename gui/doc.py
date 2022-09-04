@@ -2,13 +2,13 @@ from urllib.parse import urljoin
 import threading
 import webbrowser
 import http.server
-from typing import Tuple
+from typing import Tuple, Any
 
 ADDRESS : Tuple[str, int] = ('127.0.0.1', 8137)
 
 def start_daemon(doc_root : str) -> None:
     class Handler(http.server.SimpleHTTPRequestHandler):
-        def __init__(self, *args, **kwargs) -> None:
+        def __init__(self, *args : Any, **kwargs : Any) -> None:
             kwargs['directory'] = doc_root
             http.server.SimpleHTTPRequestHandler.__init__(self, *args, **kwargs)
 

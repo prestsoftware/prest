@@ -1,7 +1,7 @@
 import re
 import logging
 import functools
-from typing import Any
+from typing import Any, Callable
 
 from PyQt5.QtWidgets import QMessageBox, QApplication, QDialog
 
@@ -13,9 +13,9 @@ class ValidationError(Exception):
     pass
 
 class ExceptionDialog(QDialog):
-    def catch_exc(self, f):
+    def catch_exc(self, f : Callable) -> Callable:
         @functools.wraps(f)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args : Any, **kwargs : Any) -> Any:
             try:
                 return f(*args, **kwargs)
 
@@ -63,7 +63,7 @@ class ExceptionDialog(QDialog):
     def value(self) -> Any:
         return None
 
-    def accept(self):
+    def accept(self) -> None:
         try:
             _ = self.value()
         except ValidationError as e:

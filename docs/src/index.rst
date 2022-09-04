@@ -39,6 +39,8 @@ Downloads
   in `Rust <https://www.rust-lang.org/>`_ (core) and `Python
   <https://www.python.org/>`_ (graphical user interface).
 
+* New feature since Prest 1.1: visualization of preference-estimation output using `GraphViz <https://graphviz.org>`_ 
+
 * Previous downloadable versions of Prest are available in :ref:`the archive <history>`.
 
 Documentation

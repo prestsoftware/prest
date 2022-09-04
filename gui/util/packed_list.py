@@ -1,4 +1,4 @@
-from typing import Iterable, TypeVar, Generic, Iterator, Callable, Optional, cast, overload
+from typing import Iterable, TypeVar, Generic, Iterator, Callable, Optional, cast, overload, Union
 from util.codec import Codec, List, FileIn, FileOut, EOF, listC, bytesC
 
 T = TypeVar('T')
@@ -40,7 +40,7 @@ class PackedList(Generic[T]):
     def __getitem__(self, idx : slice) -> Iterable[T]:
         pass
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx : Union[int, slice]) -> Union[T, Iterable[T]]:
         if isinstance(idx, int):
             return self.dec(self.blocks[idx])
         elif isinstance(idx, slice):

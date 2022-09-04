@@ -167,7 +167,9 @@ def tupleC(*codecs : Codec) -> Codec[tuple]:
 
     return Codec(encode, decode)
 
-def namedtupleC(cls : Type, *codecs : Codec) -> Codec:
+NT = TypeVar('NT', bound=NamedTuple)
+
+def namedtupleC(cls : type[NT], *codecs : Codec) -> Codec[NT]:
     encodes = [c.encode for c in codecs]
     decodes = [c.decode for c in codecs]
 
@@ -177,15 +179,15 @@ def namedtupleC(cls : Type, *codecs : Codec) -> Codec:
             cls._fields,
         ))
 
-    def encode(f : FileOut, xs : tuple) -> None:
+    def encode(f : FileOut, xs : NT) -> None:
         if len(encodes) != len(xs):
             raise CodecError('tuple length mismatch')
 
         for encode, x in zip(encodes, xs):
             encode(f, x)
 
-    def decode(f : FileIn) -> tuple:
-        return cast(tuple, cls(*[decode(f) for decode in decodes]))
+    def decode(f : FileIn) -> NT:
+        return cls(*[decode(f) for decode in decodes])
 
     return Codec(encode, decode)
 

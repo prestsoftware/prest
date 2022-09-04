@@ -4,7 +4,9 @@ use codec::{Decode,Encode};
 use std::fmt;
 use std::result::Result;
 
+use alt_set::AltSet;
 use model::Instance;
+use preorder::Preorder;
 
 #[derive(Debug)]
 pub struct Request {
@@ -19,14 +21,25 @@ impl Decode for Request {
     }
 }
 
+pub struct GraphRepr {
+    vertices : Vec<AltSet>,  // classes of equivalence
+    edges : Vec<(AltSet, AltSet)>,  // (P, Q) such that P ≥ Q
+}
+
+impl Encode for GraphRepr {
+    fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
+        (&self.vertices, &self.edges).encode(f)
+    }
+}
+
 pub struct Response {
-    edges : Vec<(usize, usize)>,
+    graphs : Vec<GraphRepr>,
     extra_info : Vec<(String, String)>,
 }
 
 impl Encode for Response {
     fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
-        (&self.edges, &self.extra_info).encode(f)
+        (&self.graphs, &self.extra_info).encode(f)
     }
 }
 
@@ -67,74 +80,87 @@ impl fmt::Display for Error {
     }
 }
 
+pub fn graph_repr(p : &Preorder) -> GraphRepr {
+    let g = p.to_poset_graph();
+    GraphRepr{
+        edges: g.edges.iter().map(
+                |&(p, q)| (
+                    g.vertices[p].clone(),
+                    g.vertices[q].clone(),
+                )
+            ).collect(),
+        vertices: g.vertices,
+    }
+}
+
+pub fn graph_response(p : &Preorder) -> Response {
+    Response{
+        graphs: vec![graph_repr(p)],
+        extra_info: vec![],
+    }
+}
+
 pub fn run(req : Request) -> Result<Response, Error> {
     let bytes = base64::decode(&req.instance_code)?;
     let instance = codec::decode_from_memory(&bytes)?;
 
     match instance {
-        Instance::PreorderMaximization(ref p) => {
+        Instance::PreorderMaximization(ref p) =>
             Ok(Response{
-                edges: p.to_poset_graph().edges,
+                graphs: vec![graph_repr(p)],
                 extra_info: vec![],
-            })
-        }
+            }),
 
-        Instance::Unattractiveness{ref p, mask: ref _mask} => {
+        Instance::Unattractiveness{ref p, mask:_} =>
             Ok(Response{
-                edges: p.to_poset_graph().edges,
+                graphs: vec![graph_repr(p)],
                 extra_info: vec![],
-            })
-        }
+                // TODO show mask in extras
+            }),
 
-        Instance::UndominatedChoice(ref p) => {
+        Instance::UndominatedChoice(ref p) =>
             Ok(Response{
-                edges: p.to_poset_graph().edges,
+                graphs: vec![graph_repr(p)],
                 extra_info: vec![],
-            })
-        }
+            }),
 
-        Instance::PartiallyDominantChoice{ref p, fc:_} => {
+        Instance::PartiallyDominantChoice{ref p, fc:_} =>
             Ok(Response{
-                edges: p.to_poset_graph().edges,
+                graphs: vec![graph_repr(p)],
                 extra_info: vec![],
-            })
-        }
+                // TODO show FC in extras
+            }),
 
-        Instance::Swaps(ref p) => {
+        Instance::Swaps(ref p) =>
             Ok(Response{
-                edges: p.to_poset_graph().edges,
+                graphs: vec![graph_repr(p)],
                 extra_info: vec![],
-            })
-        }
+            }),
 
-        Instance::StatusQuoUndominatedChoice(ref p) => {
+        Instance::StatusQuoUndominatedChoice(ref p) =>
             Ok(Response{
-                edges: p.to_poset_graph().edges,
+                graphs: vec![graph_repr(p)],
                 extra_info: vec![],
-            })
-        }
+            }),
 
-        Instance::Overload{ref p, limit} => {
+        Instance::Overload{ref p, limit} =>
             Ok(Response{
-                edges: p.to_poset_graph().edges,
+                graphs: vec![graph_repr(p)],
                 extra_info: vec![
                     ("Threshold".to_string(), limit.to_string()),
                 ],
-            })
-        }
+            }),
 
-        Instance::TopTwo(ref p) => {
+        Instance::TopTwo(ref p) =>
             Ok(Response{
-                edges: p.to_poset_graph().edges,
+                graphs: vec![graph_repr(p)],
                 extra_info: vec![],
-            })
-        }
+            }),
 
-        Instance::SequentiallyRationalizableChoice(ref p, ref _q) => {
+        Instance::SequentiallyRationalizableChoice(ref p, ref q) =>
             Ok(Response{
-                edges: p.to_poset_graph().edges,
+                graphs: vec![graph_repr(p), graph_repr(q)],
                 extra_info: vec![],
-            })
-        }
+            }),
     }
 }

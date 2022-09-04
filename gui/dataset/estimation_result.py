@@ -262,18 +262,22 @@ class EstimationResult(Dataset):
                 if info.extra_info:
                     html += ''.join(f'<br>\n{key}: {val}' for key, val in info.extra_info)
 
+                # seems to disappear too quickly on windows
+                #
                 #QToolTip.showText(QCursor.pos(), html)
 
-                mb = QMessageBox()
-                mb.setWindowTitle(f'Instance information: {instance_code}')
-                mb.setText(html)
-                mb.exec()
-
+                # shows an information icon, which disrupts the message
+                #
                 #QMessageBox.information(
                 #    self,
                 #    f'Instance information: {instance_code}',
                 #    html,
                 #)
+
+                mb = QMessageBox()
+                mb.setWindowTitle(f'Instance information: {instance_code}')
+                mb.setText(html)
+                mb.exec()
 
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:
         Dataset.__init__(self, name, alternatives)

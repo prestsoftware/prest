@@ -62,7 +62,7 @@ MessageC = enumC('Message', {
 })
 
 class Failure(CoreError):
-    def __init__(self, message, error):
+    def __init__(self, message : str, error : bytes) -> None:
         CoreError.__init__(self, message)
         self.error = error
 
@@ -142,7 +142,7 @@ class Core:
     def __enter__(self) -> 'Core':
         return self
 
-    def __exit__(self, *_exc_info):
+    def __exit__(self, *_exc_info : Any) -> None:
         self.shutdown()
 
     def call(self, name : str, codec_req : Codec[Req], codec_resp : Codec[Resp], request : Req) -> Resp:

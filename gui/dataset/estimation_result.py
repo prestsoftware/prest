@@ -80,11 +80,17 @@ class InstVizRequest(NamedTuple):
 
 InstVizRequestC = namedtupleC(InstVizRequest, strC)
 
+class GraphRepr(NamedTuple):
+    vertices : list[frozenset[int]]
+    edges : list[tuple[frozenset[int], frozenset[int]]]
+
+GraphReprC = namedtupleC(GraphRepr, listC(frozensetC(intC)), listC(tupleC(frozensetC(intC), frozensetC(intC))))
+
 class InstVizResponse(NamedTuple):
-    edges : list[tuple[int, int]]
+    graphs : list[GraphRepr]
     extra_info : list[tuple[str, str]]
 
-InstVizResponseC = namedtupleC(InstVizResponse, listC(tupleC(intC, intC)), listC(tupleC(strC, strC)))
+InstVizResponseC = namedtupleC(InstVizResponse, listC(GraphReprC), listC(tupleC(strC, strC)))
 
 class Instance(NamedTuple):
     model: str
@@ -135,10 +141,19 @@ def subject_from_response_bytes(response_bytes : PackedResponse) -> Subject:
     )
 
 @dataclass
-class RenderedInstance:
+class RenderedGraph:
+    # available only if graphviz could be run
     png_url : Optional[str]
     png_bytes : Optional[bytes]
-    edges : list[tuple[int, int]]
+
+    # available always, for text-based representations
+    vertices : list[frozenset[str]]
+    edges : list[tuple[frozenset[str], frozenset[str]]]
+
+@dataclass
+class RenderedInstance:
+    graphviz_missing : bool
+    graphs : list[RenderedGraph]
     extra_info : list[tuple[str, str]]
 
 class EstimationResult(Dataset):
@@ -205,7 +220,7 @@ class EstimationResult(Dataset):
 
         def render_instance(self, instance_code : str) -> RenderedInstance:
             with Core() as core:
-                response = core.call(
+                response : InstVizResponse = core.call(
                     'instviz',
                     InstVizRequestC,
                     InstVizResponseC,
@@ -213,38 +228,54 @@ class EstimationResult(Dataset):
                 )
 
             alts = self.alternatives
-            dot_src = (
-                'digraph G {\n bgcolor="transparent" \n'
-                + ''.join(
-                        f'"{alts[greater]}" -> "{alts[lesser]}";\n'
-                        for lesser, greater in response.edges
+            def vstr(xs : frozenset[int]) -> str:
+                return '"' + ', '.join(sorted(alts[i] for i in xs)) + '"'
+            def vset(xs : frozenset[int]) -> frozenset[str]:
+                return frozenset(alts[i] for i in xs)
+
+            graphs : list[RenderedGraph] = []
+            graphviz_missing = False
+            for graph in response.graphs:
+                dot_src = (
+                    'digraph G {\n bgcolor="transparent" \n'
+                    + ''.join(f'{vstr(vs)};\n' for vs in graph.vertices)
+                    + ''.join(
+                            f'{vstr(greater)} -> {vstr(lesser)};\n'
+                            for lesser, greater in graph.edges
+                        )
+                    + '}'
+                )
+
+                try:
+                    dot_exe = platform_specific.get_embedded_file_path(
+                        'dot.exe',  # deployment Windows
+                        'dot',      # deployment elsewhere (?)
+                        '/usr/bin/dot',  # dev
                     )
-                + '}'
-            )
+                except platform_specific.FileNotFound:
+                    png_bytes = None
+                    png_url = None
+                    graphviz_missing = True
+                else:
+                    dot = subprocess.run(
+                        [dot_exe, '-Tpng'],
+                        capture_output=True,
+                        input=dot_src.encode('ascii'),
+                    )
 
-            try:
-                dot_exe = platform_specific.get_embedded_file_path(
-                    'dot.exe',  # deployment Windows
-                    'dot',      # deployment elsewhere (?)
-                    '/usr/bin/dot',  # dev
-                )
-            except platform_specific.FileNotFound:
-                png_bytes = None
-                png_url = None
-            else:
-                dot = subprocess.run(
-                    [dot_exe, '-Tpng'],
-                    capture_output=True,
-                    input=dot_src.encode('ascii'),
-                )
+                    png_bytes = dot.stdout
+                    png_url = 'data:image/png;base64,' + base64.b64encode(png_bytes).decode('ascii')
 
-                png_bytes = dot.stdout
-                png_url = 'data:image/png;base64,' + base64.b64encode(png_bytes).decode('ascii')
+                graphs.append(RenderedGraph(
+                    png_url=png_url,
+                    png_bytes=png_bytes,
+                    vertices=[vset(xs) for xs in graph.vertices],
+                    edges=[(vset(xs), vset(ys)) for xs, ys in graph.edges],
+                ))
 
             return RenderedInstance(
-                png_url=png_url,
-                png_bytes=png_bytes,
-                edges=response.edges,
+                graphviz_missing=graphviz_missing,
+                graphs=graphs,
                 extra_info=response.extra_info,
             )
 
@@ -252,17 +283,23 @@ class EstimationResult(Dataset):
             instance_code = cast(str, self.model.data(idx, Qt.UserRole))
             if instance_code:
                 info = self.render_instance(instance_code)
-                if info.png_url:
-                    html = f'<img src="{info.png_url}">'
-                else:
-                    alts = self.alternatives
-                    html = (
-                        '(please install GraphViz to visualise graphs)<br>\n'
-                        + ''.join(
-                            f'{alts[greater]} ≥ {alts[lesser]}<br>\n'
-                            for lesser, greater in info.edges
+                html = ''
+
+                if info.graphviz_missing:
+                    html += '(please install GraphViz to visualise graphs)<br>\n'
+                    def vset(xs : frozenset[str]) -> str:
+                        return '{' + ','.join(sorted(xs)) + '}'
+                    for graph in info.graphs:
+                        html += ''.join(
+                            f'{vset(greater)} ≥ {vset(lesser)}<br>\n'
+                            for lesser, greater in graph.edges
                         )
-                    )
+                        html += '<hr>\n'
+                else:
+                    for graph in info.graphs:
+                        assert graph.png_url
+                        html += f'<img src="{graph.png_url}">'
+                    html += '<br>\n'
 
                 if info.extra_info:
                     html += ''.join(f'<br>\n{key}: {val}' for key, val in info.extra_info)
@@ -281,16 +318,19 @@ class EstimationResult(Dataset):
 
                 mb = QMessageBox()
                 mb.setStandardButtons(
-                    QMessageBox.Save | QMessageBox.Close
-                    if info.png_bytes else
                     QMessageBox.Close
+                    if info.graphviz_missing else
+                    QMessageBox.Save | QMessageBox.Close
                 )
                 mb.setWindowTitle(f'Instance information: {instance_code}')
                 mb.setText(html)
                 btn = mb.exec()
 
                 if btn == QMessageBox.Save:
-                    assert info.png_bytes  # button disabled otherwise
+                    if len(info.graphs) != 1:
+                        raise Exception('Saving multiple graphs is not supported yet.')
+
+                    assert info.graphs[0].png_bytes  # button disabled otherwise
                     fname, _ = QFileDialog.getSaveFileName(
                         self,
                         "Save instance visualisation",
@@ -299,7 +339,7 @@ class EstimationResult(Dataset):
                     )
                     if fname:
                         with open(fname, 'wb') as f:
-                            f.write(info.png_bytes)
+                            f.write(info.graphs[0].png_bytes)
 
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:
         Dataset.__init__(self, name, alternatives)

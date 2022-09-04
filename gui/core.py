@@ -7,7 +7,7 @@ import threading
 import subprocess
 import collections
 import typing
-from typing import Sequence, Any, Type, Optional, NamedTuple, Union
+from typing import Sequence, Any, Type, Optional, NamedTuple, Union, BinaryIO, cast
 
 import model
 import platform_specific
@@ -115,8 +115,10 @@ class Core:
 
             if f_tee:
                 f_in, f_out = f_tee
-                self.stdin = typing.cast(FileOut, Tee(self.core.stdin, f_in))
-                self.stdout = typing.cast(FileIn, Tee(self.core.stdout, f_out))
+                assert self.core.stdin
+                assert self.core.stdout
+                self.stdin = cast(FileOut, Tee(self.core.stdin, f_in))
+                self.stdout = cast(FileIn, Tee(self.core.stdout, f_out))
             else:
                 self.stdin = typing.cast(FileOut, self.core.stdin)
 

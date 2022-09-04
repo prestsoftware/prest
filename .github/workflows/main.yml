@@ -208,7 +208,6 @@ jobs:
               --add-data 'preorders-7.bin:.' \
               --osx-bundle-identifier com.prestsoftware.prest \
               --onefile \
-              --windowed \
               --name "$PNAME" \
               -i gui/images/prest.ico \
               gui/main.py

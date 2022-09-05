@@ -11,7 +11,7 @@ class CodecProgress(NamedTuple):
     decode : Callable[[Worker, FileIn], Any]
 
 def oneCP(codec : Codec) -> CodecProgress:
-    enc, dec = codec
+    enc, dec = codec.enc_dec()
 
     def get_size(x : Any) -> int:
         return 1
@@ -29,7 +29,7 @@ def oneCP(codec : Codec) -> CodecProgress:
 
 def listCP(codec : CodecProgress):
     get_sz, enc, dec = codec
-    intC_enc, intC_dec = intC
+    intC_enc, intC_dec = intC.enc_dec()
 
     def get_size(xs : List[Any]) -> int:
         return sum(get_sz(x) for x in xs)
@@ -64,7 +64,7 @@ def enum_by_typenameCP(name : str, alts : Sequence[Tuple[type, CodecProgress]]) 
         for ty, codec in alts
     }.get
 
-    strC_encode, strC_decode = strC
+    strC_encode, strC_decode = strC.enc_dec()
 
     def get_size(x : tuple) -> int:
         get_sz = codecs_sz_get(type(x).__name__)

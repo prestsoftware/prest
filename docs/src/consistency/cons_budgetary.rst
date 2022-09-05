@@ -1,11 +1,12 @@
 Consistency Criteria for Budgetary Datasets
 ===========================================
 
-For every subject whose choices are in the dataset, Prest |version| can find and count the 
+For every subject whose choices are in the dataset, Prest can find and count the 
 total number of violations (resp. score) for each of the axioms/criteria (resp. choice consistency index) listed below.
 
-**Note:** *much of the terminology and notation that follows is introduced and explained in the* 
-:ref:`Datasets <general-datasets>` *and* :ref:`Revealed Preference Relations <revealed>` *sections*.
+.. note::
+     Much of the terminology and notation that follows is introduced and explained in the 
+     :ref:`Datasets <general-datasets>` and :ref:`Revealed Preference Relations <revealed>` sections.
 
 
 Weak Axiom of Revealed Preference - WARP
@@ -45,10 +46,10 @@ Houtman-Maks index - HM
 This corresponds to the smallest number of observations that need to be removed from a given subject's data
 in order for the remaining choices to satisfy GARP, SARP, WARP (strict) or WARP (non-strict). 
 
-Prest |version| computes each of these four HM indices for budgetary data by finding both 
+Prest computes each of these four HM indices for budgetary data by finding both 
 their **upper and lower bounds**. 
 
-If the two bounds coincide, Prest reports the exact HM index for the axiom in question. If they differ, Prest |version| reports
+If the two bounds coincide, Prest reports the exact HM index for the axiom in question. If they differ, Prest reports
 the range `m\leq HM \leq n` of possible values.
 
 

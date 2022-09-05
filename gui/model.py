@@ -14,7 +14,7 @@ class PreorderParams(NamedTuple):
     total : Optional[bool]
 
 SIGN = {True: '', False: '¬', None: '?'}
-def strPP(p) -> str:
+def strPP(p : PreorderParams) -> str:
     return '({0}S, {1}T)'.format(
         SIGN[p.strict], SIGN[p.total]
     )
@@ -230,7 +230,7 @@ MODELS = [
 ]
 
 def names_in_order() -> Iterator[str]:
-    def traverse(item):
+    def traverse(item : Union[Category, ModelGroup]) -> Iterator[str]:
         if isinstance(item, Category):
             for child in item.children:
                 for name in traverse(child):
@@ -239,5 +239,4 @@ def names_in_order() -> Iterator[str]:
             yield item.name
 
     for item in MODELS:
-        for name in traverse(item):
-            yield name
+        yield from traverse(item)

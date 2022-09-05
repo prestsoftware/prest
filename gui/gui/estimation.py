@@ -86,7 +86,7 @@ class Estimation(uic.estimation.Ui_Estimation, gui.ExceptionDialog):
 
                     cb = QCheckBox()
                     label = QLabel(name_html)
-                    label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)  # type: ignore
+                    label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
                     cell = QWidget()
                     layout = QHBoxLayout(cell)

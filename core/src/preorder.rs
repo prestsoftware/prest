@@ -91,9 +91,9 @@ pub fn simplify_edges(edges : &[(Alt, Alt)]) -> Vec<(Alt, Alt)> {
 }
 
 impl Preorder {
-    pub fn to_poset_graph(&self) -> Graph<Vec<Alt>> {
+    pub fn to_poset_graph(&self) -> Graph<AltSet> {
         // representative for every cluster
-        let mut clusters : HashMap<Alt, Vec<Alt>> = HashMap::new();
+        let mut clusters : HashMap<Alt, AltSet> = HashMap::new();
         for alt in Alt::all(self.size) {
             let matches : Vec<&Alt> = clusters.keys().filter(
                 |&&representative| self.eq(alt, representative)
@@ -101,11 +101,11 @@ impl Preorder {
 
             match matches[..] {
                 [] => {
-                    clusters.insert(alt, vec![alt]);
+                    clusters.insert(alt, AltSet::singleton(alt));
                 }
 
                 [&representative] => {
-                    clusters.get_mut(&representative).unwrap().push(alt);
+                    *clusters.get_mut(&representative).unwrap() |= &AltSet::singleton(alt);
                 }
 
                 _ => {
@@ -114,7 +114,7 @@ impl Preorder {
             }
         }
 
-        let clusters : Vec<(Alt, Vec<Alt>)> = clusters.into_iter().collect();
+        let clusters : Vec<(Alt, AltSet)> = clusters.into_iter().collect();
         let representatives : AltSet = clusters.iter().map(|(k,_)| *k).collect();
         let relevant_edges : Vec<(Alt, Alt)>= self.edges().into_iter().filter(
             |&(i,j)| representatives.view().contains(i) && representatives.view().contains(j)

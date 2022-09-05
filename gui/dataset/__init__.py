@@ -3,7 +3,7 @@ import openpyxl
 import csv
 import logging
 from typing import Sequence, Any, List, Type, NamedTuple, Callable, Iterator, \
-    Optional, FrozenSet, Iterable, NewType, Union, cast
+    Optional, FrozenSet, Iterable, NewType, Union, cast, overload
 
 import openpyxl.utils.cell
 from PyQt5.QtWidgets import QDialog, QMessageBox
@@ -71,6 +71,12 @@ class Subject(NamedTuple):
     def csv_set(self, alt_set: Iterable[int]) -> str:
         return ','.join(self.alternatives[i] for i in sorted(alt_set))
 
+    @overload
+    def csv_alt(self, index : None) -> None: ...
+
+    @overload
+    def csv_alt(self, index : int) -> str: ...
+
     def csv_alt(self, index : Optional[int]) -> Optional[str]:
         if index is None:
             return None
@@ -82,7 +88,7 @@ class Subject(NamedTuple):
 
     @staticmethod
     def unpack(packed : PackedSubject) -> 'Subject':
-        return cast(Subject, SubjectC.decode_from_memory(packed))
+        return SubjectC.decode_from_memory(packed)
 
 SubjectC = namedtupleC(Subject, strC, listC(strC), listC(ChoiceRowC))
 

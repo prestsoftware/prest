@@ -236,6 +236,20 @@ impl AltSet {
         }
     }
 
+    pub fn full(alt_count : u32) -> AltSet {
+        let block_size : u32 = Block::BITS;
+        let nblocks = (alt_count + block_size - 1) / block_size;  // round up
+
+        // generate random blocks
+        let mut blocks : Vec<_> = (0..nblocks).map(|_| Block::MAX).collect();
+
+        // zero out the appropriate number of bits in the last block
+        let last_block_bits = alt_count % block_size;
+        blocks[nblocks as usize - 1] &= (1 << last_block_bits) - 1;
+
+        AltSet{ blocks }
+    }
+
     /// will never generate an empty set
     pub fn rand_nonempty<R : Rng>(rng : &mut R, alt_count : u32) -> AltSet {
         loop {

@@ -6,9 +6,11 @@ Datasets
 General Datasets
 ----------------
 
-Here, the choice set of interest `X=\{x_1,\ldots,x_m\}` consists of finitely many general/unstructured alternatives, and 
+In general datasets the choice set of interest `X=\{x_1,\ldots,x_m\}` consists of finitely many general/unstructured alternatives and 
 the available data is a collection of **menus** of such alternatives and the **observed choices** at these menus. 
-Formally, a menu is a set `A\subseteq X`, and the observed choice(s) at this menu is (are) captured by the set `C(A)`, where `\emptyset\subseteq C(A)\subseteq A`. 
+
+| Formally, a menu is a set `A\subseteq X`, and the observed choice(s) at this menu is captured by the set `C(A)`, 
+| where `\emptyset\subseteq C(A)\subseteq A`. 
 
 A **general dataset** 
 
@@ -16,14 +18,18 @@ A **general dataset**
 	\mathcal{D}=\left\{\big(A_i,C(A_i)\bigr)\right\}_{i=1}^k
 
 is a collection of `k` observations, with each of them a pair of a menu and the alternative(s) chosen from it (if any). 
+
 In particular, if `C(A)` contains more than one alternative for some menu `A` in `\mathcal{D}`, 
 it is understood that the decision maker has chosen (or may be thought of as having chosen)
-any or all these alternatives at `A`, possibly over different instances where `A` was presented in `\mathcal{D}` (see also :ref:`merging <merging-tip>`). 
-If `C(A)=\emptyset`, then it is understood that the decision maker has chosen the **no-choice/outside option**, hence
-to **avoid** or **defer** choice at menu `A`.
+any or all these alternatives at `A`, possibly over different instances where `A` was presented in `\mathcal{D}` 
+(see also :ref:`merging <merging-tip>`). 
+
+If `C(A)=\emptyset`, then it is understood that the decision maker has chosen the **deferral/outside option**, i.e.
+to **avoid** or **delay** choice at menu `A`.
 
 
-It is also possible that the data available to the analyst features a **default/status quo option**, reflecting situations where the decision 
+It is also possible that the data available to the analyst features a **default/status quo option**, 
+reflecting situations where the decision 
 maker was initially endowed with some alternative `s\in A` before asked to choose from menu `A`.
 
 A **general dataset with default/status quo alternatives** 
@@ -38,7 +44,7 @@ while `\emptyset\neq C(A_i,s_i)\subseteq A_i` is required to hold for all `i\leq
 .. _dataset-examples:
 
 .. tip::
-     To be analyzable by Prest |version|, a general dataset must be a .csv file.
+     To be analyzable by Prest, a general dataset must be a .csv file.
 
      An  `example general dataset </_static/examples/general-no-defaults.csv>`_.
 
@@ -60,7 +66,7 @@ while `\emptyset\neq C(A_i,s_i)\subseteq A_i` is required to hold for all `i\leq
 Budgetary Datasets
 ------------------
 
-Here, consumer behavior with respect to `n` commodities is analyzed when data is available on 
+In budgetary datasets consumer behaviour with respect to `n` commodities is analyzed when information is available on 
 the **prices** of these commodities, captured by a vector `p\in\mathbb{R}^n_{+}`, and also on consumer **demand** at these prices, 
 captured by a vector/**consumption bundle** `x\in\mathbb{R}^n_+`.
  
@@ -73,7 +79,7 @@ is a collection of `k` observations, with each of them a pair `(p^i,x^i)` compri
 
 
 .. tip::
-     To be analyzable by Prest |version|, a budgetary dataset must be a .csv file.
+     To be analyzable by Prest, a budgetary dataset must be a .csv file.
 
      An `example budgetary dataset </_static/examples/budgetary.csv>`_.
      

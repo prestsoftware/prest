@@ -30,4 +30,21 @@ impl<V> Graph<V> {
             edges,
         }
     }
+
+    pub fn iter_isolated_vertices(self : &Self) -> impl Iterator<Item=&V> {
+        let mut boolmap = vec![true; self.vertices.len()];  // make all vertices isolated at first
+        for &(p, q) in &self.edges {
+            // mark these vertices as not isolated
+            boolmap[p] = false;
+            boolmap[q] = false;
+        }
+
+        boolmap.into_iter().zip(&self.vertices).filter_map(
+            |(is_isolated, v_ref)| if is_isolated {
+                Some(v_ref)
+            } else {
+                None
+            }
+        )
+    }
 }

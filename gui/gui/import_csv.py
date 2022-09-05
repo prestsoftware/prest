@@ -70,7 +70,7 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
                 for cr in subj.choices:
                     self.tblPreview.setItem(i, 0, QTableWidgetItem(subj.name))
                     self.tblPreview.setItem(i, 1, QTableWidgetItem(subj.csv_set(cr.menu)))
-                    self.tblPreview.setItem(i, 2, QTableWidgetItem(subj.csv_alt(cr.default)))
+                    self.tblPreview.setItem(i, 2, QTableWidgetItem(subj.csv_alt(cr.default) or ''))
                     self.tblPreview.setItem(i, 3, QTableWidgetItem(subj.csv_set(cr.choice)))
 
                     i += 1

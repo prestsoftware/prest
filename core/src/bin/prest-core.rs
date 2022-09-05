@@ -3,7 +3,7 @@ extern crate rand;
 
 use rand::SeedableRng;
 use rand::rngs::SmallRng;
-use prest::{rpc,precomputed,estimation,args,consistency,simulation};
+use prest::{rpc,precomputed,estimation,args,consistency,simulation,instviz};
 use prest::{experiment_stats,budgetary,integrity};
 use precomputed::Precomputed;
 
@@ -84,6 +84,10 @@ fn rpc_loop(args : &args::Args) {
 
             ActionRequest::IntegrityCheck(req) => {
                 rpc.write_result(integrity::run(req)).unwrap();
+            }
+
+            ActionRequest::InstViz(req) => {
+                rpc.write_result(instviz::run(req)).unwrap();
             }
         }
     }

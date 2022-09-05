@@ -24,8 +24,8 @@ fn fmt_digraph(p : &Preorder, alt_names : &[String], unattr : &[Alt]) -> String 
         result += &format!(
             "  v{} [label=\"{}\"];\n",
             i,
-            alts.iter().map(
-                |&alt| alt_names[alt.index() as usize].as_str()
+            alts.view().iter().map(
+                |alt| alt_names[alt.index() as usize].as_str()
             ).collect::<Vec<&str>>().join(" ~ ")
         );
     }

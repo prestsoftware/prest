@@ -1,3 +1,9 @@
+## 1.1.0
+
+- Add GraphViz-based visualisation of model instances
+- Use offline MathJax
+- Significant update of documentation
+
 ## 1.0.4
 
 - Fix codec for model estimation results

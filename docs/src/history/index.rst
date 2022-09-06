@@ -3,8 +3,8 @@ Prest Releases
 
 .. _history:
 
-| 2022-Sep-05: `Prest 1.1 for Windows </_static/prest-win-v1.1.exe>`_ (latest version)
-| 2022-Sep-05: `Prest 1.1 for macOS </_static/prest-osx-v1.1.zip>`_ (latest version)
+| 2022-Sep-05: `Prest 1.1 for Windows </_static/prest-win-v1.1.0.exe>`_ (latest version)
+| 2022-Sep-05: `Prest 1.1 for macOS </_static/prest-osx-v1.1.0.zip>`_ (latest version)
 | *Main release notes*: Allow visualization of preference-estimation output (requires `GraphViz <https://graphviz.org>`_) and saving in .png format. Updated documentation (also with screenshots).
 
 | 2021-Oct-23: `Prest 1.0.4 for Windows </_static/prest-win-v1.0.4.exe>`_

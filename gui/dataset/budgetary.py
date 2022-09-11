@@ -113,13 +113,13 @@ class Budgetary(Dataset):
             ),
         )
 
-    @staticmethod
-    def get_codec_progress() -> CodecProgress:
+    @classmethod
+    def get_codec_progress(_cls) -> CodecProgress['Budgetary']:
         DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC.enc_dec()
         subjects_get_size, subjects_encode, subjects_decode = listCP(oneCP(SubjectC)).enc_dec()
 
         def get_size(x : 'Budgetary') -> int:
-            return cast(int, subjects_get_size(x.subjects))
+            return subjects_get_size(x.subjects)
 
         def encode(worker : Worker, f : FileOut, x : 'Budgetary') -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))

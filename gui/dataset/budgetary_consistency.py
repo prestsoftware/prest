@@ -162,13 +162,13 @@ class BudgetaryConsistency(Dataset):
     def get_analyses(self) -> Sequence[Analysis]:
         return []
 
-    @staticmethod
-    def get_codec_progress() -> CodecProgress:
+    @classmethod
+    def get_codec_progress(_cls) -> CodecProgress['BudgetaryConsistency']:
         DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC.enc_dec()
         subjects_get_size, subjects_encode, subjects_decode = listCP(oneCP(SubjectC)).enc_dec()
 
         def get_size(x : 'BudgetaryConsistency') -> int:
-            return cast(int, subjects_get_size(x.subjects))
+            return subjects_get_size(x.subjects)
 
         def encode(worker : Worker, f : FileOut, x : 'BudgetaryConsistency') -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))
@@ -176,7 +176,7 @@ class BudgetaryConsistency(Dataset):
 
         def decode(worker : Worker, f : FileIn) -> 'BudgetaryConsistency':
             name, alts = DatasetHeaderC_decode(f)
-            subjects = subjects_decode(f)
+            subjects = subjects_decode(worker, f)
             return BudgetaryConsistency(name, alts, subjects)
 
         return CodecProgress(get_size, encode, decode)

@@ -3,7 +3,7 @@ import openpyxl
 import csv
 import logging
 from typing import Sequence, Any, List, Type, NamedTuple, Callable, Iterator, \
-    Optional, FrozenSet, Iterable, NewType, Union, cast, overload
+    Optional, FrozenSet, Iterable, NewType, Union, cast, overload, TypeVar
 
 import openpyxl.utils.cell
 from PyQt5.QtWidgets import QDialog, QMessageBox
@@ -61,7 +61,7 @@ class ChoiceRow(NamedTuple):
 ChoiceRowC = namedtupleC(ChoiceRow, MenuC, maybe(intC), AltSetC)
 
 PackedSubject = NewType('PackedSubject', bytes)
-PackedSubjectC = bytesC
+PackedSubjectC = cast(Codec[PackedSubject], bytesC)
 
 class Subject(NamedTuple):
     name : str
@@ -94,6 +94,8 @@ SubjectC = namedtupleC(Subject, strC, listC(strC), listC(ChoiceRowC))
 
 DatasetHeaderC = tupleC(strC, listC(strC))
 
+T = TypeVar("T")
+
 class Dataset:
     ViewDialog : Any  # to be overridden in subclasses
 
@@ -123,8 +125,8 @@ class Dataset:
     def get_analyses(self) -> Sequence[Analysis]:
         raise NotImplementedError()
 
-    @staticmethod
-    def get_codec_progress() -> CodecProgress:
+    @classmethod
+    def get_codec_progress(cls : Type[T]) -> CodecProgress[T]:
         raise NotImplementedError()
 
     def analyse(self, analysis : Analysis, main_win : Any) -> Optional['Dataset']:

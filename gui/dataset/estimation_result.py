@@ -106,7 +106,7 @@ class Subject(NamedTuple):
 SubjectC = namedtupleC(Subject, strC, PenaltyC, listC(tupleC(ModelC, PenaltyC, listC(InstanceReprC))))
 
 PackedSubject = NewType('PackedSubject', bytes)
-PackedSubjectC = bytesC
+PackedSubjectC = cast(Codec[PackedSubject], bytesC)
 
 def subject_from_response_bytes(response_bytes : PackedResponse) -> Subject:
     # returns something orderable
@@ -390,8 +390,8 @@ class EstimationResult(Dataset):
     def label_size(self) -> str:
         return '%d subjects' % len(self.subjects)
 
-    @staticmethod
-    def get_codec_progress() -> CodecProgress:
+    @classmethod
+    def get_codec_progress(_cls) -> CodecProgress['EstimationResult']:
         subjects_encode : Callable[[Worker, FileOut, List[PackedResponse]], None]
         subjects_decode : Callable[[Worker, FileIn], List[PackedResponse]]
 
@@ -400,7 +400,7 @@ class EstimationResult(Dataset):
         intC_encode, intC_decode = intC.enc_dec()
 
         def get_size(x : 'EstimationResult') -> int:
-            return cast(int, subjects_size(x.subjects))
+            return subjects_size(x.subjects)
 
         def encode(worker : Worker, f : FileOut, x : 'EstimationResult') -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))

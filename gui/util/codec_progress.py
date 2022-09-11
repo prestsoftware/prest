@@ -96,6 +96,7 @@ def enum_by_typenameCP(name : str, alts : Sequence[tuple[type, CodecProgress]]) 
         if dec is None:
             raise CodecError(f'cannot decode enum class: {name}/{ty}')
 
+        # ignoring type because mypy won't let us cast to type variable
         return dec(worker, f)  # type: ignore
 
     return CodecProgress(get_size, encode, decode)

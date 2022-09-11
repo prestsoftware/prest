@@ -84,14 +84,14 @@ class ExperimentStats(Dataset):
             yield subject
             yield None  # bump progress
 
-    @staticmethod
-    def get_codec_progress() -> CodecProgress:
-        DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC
-        subjects_size, subjects_encode, subjects_decode = listCP(oneCP(SubjectC))
-        intC_encode, intC_decode = intC
+    @classmethod
+    def get_codec_progress(_cls) -> CodecProgress['ExperimentStats']:
+        DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC.enc_dec()
+        subjects_size, subjects_encode, subjects_decode = listCP(oneCP(SubjectC)).enc_dec()
+        intC_encode, intC_decode = intC.enc_dec()
 
         def get_size(x : 'ExperimentStats') -> int:
-            return cast(int, subjects_size(x.subjects))
+            return subjects_size(x.subjects)
 
         def encode(worker : Worker, f : FileOut, x : 'ExperimentStats') -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))

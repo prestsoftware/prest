@@ -7,7 +7,7 @@ import threading
 import subprocess
 import collections
 import typing
-from typing import Sequence, Any, Type, Optional, NamedTuple, Union
+from typing import Sequence, Any, Type, Optional, NamedTuple, Union, BinaryIO, cast, TypeVar
 
 import model
 import platform_specific
@@ -17,6 +17,9 @@ from util.codec import Codec, CodecError, EOF, FileIn, FileOut, namedtupleC, \
     strC, intC, frozensetC, listC, bytesC, tupleC, enumC
 
 log = logging.getLogger(__name__)
+
+Req = TypeVar('Req')
+Resp = TypeVar('Resp')
 
 class CoreError(Exception):
     pass
@@ -59,7 +62,7 @@ MessageC = enumC('Message', {
 })
 
 class Failure(CoreError):
-    def __init__(self, message, error):
+    def __init__(self, message : str, error : bytes) -> None:
         CoreError.__init__(self, message)
         self.error = error
 
@@ -115,8 +118,10 @@ class Core:
 
             if f_tee:
                 f_in, f_out = f_tee
-                self.stdin = typing.cast(FileOut, Tee(self.core.stdin, f_in))
-                self.stdout = typing.cast(FileIn, Tee(self.core.stdout, f_out))
+                assert self.core.stdin
+                assert self.core.stdout
+                self.stdin = cast(FileOut, Tee(self.core.stdin, f_in))
+                self.stdout = cast(FileIn, Tee(self.core.stdout, f_out))
             else:
                 self.stdin = typing.cast(FileOut, self.core.stdin)
 
@@ -137,10 +142,10 @@ class Core:
     def __enter__(self) -> 'Core':
         return self
 
-    def __exit__(self, *_exc_info):
+    def __exit__(self, *_exc_info : Any) -> None:
         self.shutdown()
 
-    def call(self, name : str, codec_req : Codec, codec_resp : Codec, request : Any) -> Any:
+    def call(self, name : str, codec_req : Codec[Req], codec_resp : Codec[Resp], request : Req) -> Resp:
         strC.encode(self.stdin, name)
         codec_req.encode(self.stdin, request)
         self.stdin.flush()

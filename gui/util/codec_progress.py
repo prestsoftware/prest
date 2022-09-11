@@ -1,45 +1,55 @@
-from typing import Callable, Any, NamedTuple, List, Sequence, Tuple
-
+from dataclasses import dataclass
+from typing import Callable, Sequence, TypeVar, Generic
 from gui.progress import Worker, MockWorker, Cancelled
 from util.codec import Codec, FileIn, FileOut, intC, strC, CodecError
 
-class CodecProgress(NamedTuple):
+T = TypeVar('T')
+
+@dataclass
+class CodecProgress(Generic[T]):
     # number of times the codec will call worker.step()
-    get_size : Callable[[Any], int]
+    get_size : Callable[[T], int]
 
-    encode : Callable[[Worker, FileOut, Any], None]
-    decode : Callable[[Worker, FileIn], Any]
+    encode : Callable[[Worker, FileOut, T], None]
+    decode : Callable[[Worker, FileIn], T]
 
-def oneCP(codec : Codec) -> CodecProgress:
-    enc, dec = codec
+    def enc_dec(self) -> tuple[
+        Callable[[T], int],
+        Callable[[Worker, FileOut, T], None],
+        Callable[[Worker, FileIn], T],
+    ]: 
+        return self.get_size, self.encode, self.decode
 
-    def get_size(x : Any) -> int:
+def oneCP(codec : Codec[T]) -> CodecProgress[T]:
+    enc, dec = codec.enc_dec()
+
+    def get_size(x : T) -> int:
         return 1
 
-    def encode(worker : Worker, f : FileOut, x : Any) -> None:
+    def encode(worker : Worker, f : FileOut, x : T) -> None:
         enc(f, x)
         worker.step()
 
-    def decode(worker : Worker, f : FileIn) -> Any:
+    def decode(worker : Worker, f : FileIn) -> T:
         result = dec(f)
         worker.step()
         return result
 
     return CodecProgress(get_size, encode, decode)
 
-def listCP(codec : CodecProgress):
-    get_sz, enc, dec = codec
-    intC_enc, intC_dec = intC
+def listCP(codec : CodecProgress[T]) -> CodecProgress[list[T]]:
+    get_sz, enc, dec = codec.enc_dec()
+    intC_enc, intC_dec = intC.enc_dec()
 
-    def get_size(xs : List[Any]) -> int:
+    def get_size(xs : list[T]) -> int:
         return sum(get_sz(x) for x in xs)
 
-    def encode(worker : Worker, f : FileOut, xs : List[Any]) -> None:
+    def encode(worker : Worker, f : FileOut, xs : list[T]) -> None:
         intC_enc(f, len(xs))
         for x in xs:
             enc(worker, f, x)  # calls worker.step()
 
-    def decode(worker : Worker, f : FileIn) -> List[Any]:
+    def decode(worker : Worker, f : FileIn) -> list[T]:
         length = intC_dec(f)
         result = []
         for _ in range(length):
@@ -48,7 +58,7 @@ def listCP(codec : CodecProgress):
 
     return CodecProgress(get_size, encode, decode)
 
-def enum_by_typenameCP(name : str, alts : Sequence[Tuple[type, CodecProgress]]) -> CodecProgress:
+def enum_by_typenameCP(name : str, alts : Sequence[tuple[type, CodecProgress]]) -> CodecProgress:
     codecs_sz_get = {
         ty.__name__: codec.get_size
         for ty, codec in alts
@@ -64,7 +74,7 @@ def enum_by_typenameCP(name : str, alts : Sequence[Tuple[type, CodecProgress]]) 
         for ty, codec in alts
     }.get
 
-    strC_encode, strC_decode = strC
+    strC_encode, strC_decode = strC.enc_dec()
 
     def get_size(x : tuple) -> int:
         get_sz = codecs_sz_get(type(x).__name__)
@@ -80,12 +90,13 @@ def enum_by_typenameCP(name : str, alts : Sequence[Tuple[type, CodecProgress]]) 
         strC_encode(f, ty)
         enc(worker, f, x)
 
-    def decode(worker : Worker, f : FileIn) -> Any:
+    def decode(worker : Worker, f : FileIn) -> T:
         ty = strC_decode(f)
         dec = codecs_dec_get(ty)
         if dec is None:
             raise CodecError(f'cannot decode enum class: {name}/{ty}')
 
-        return dec(worker, f)
+        # ignoring type because mypy won't let us cast to type variable
+        return dec(worker, f)  # type: ignore
 
     return CodecProgress(get_size, encode, decode)

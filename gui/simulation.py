@@ -74,7 +74,4 @@ class Response(NamedTuple):
 ResponseC = namedtupleC(Response, PackedSubjectC, intC)
 
 def run(core : Core, request : Request) -> Response:
-    return cast(
-        Response,
-        core.call('simulation', RequestC, ResponseC, request),
-    )
+    return core.call('simulation', RequestC, ResponseC, request)

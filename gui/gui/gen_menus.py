@@ -7,11 +7,11 @@ import simulation
 from uic.gen_menus import Ui_GenMenus
 
 class GenMenus(QWidget, Ui_GenMenus):
-    def __init__(self, parent):
+    def __init__(self, parent : QWidget) -> None:
         QWidget.__init__(self, parent)
         self.setupUi(self)
         self.alt_count : Optional[int] = None
-    
+
     def set_alt_count(self, alt_count : int) -> None:
         self.alt_count = alt_count
 

@@ -3,14 +3,20 @@ import struct
 import logging
 import base64
 import typing
+import dataclasses
 from io import BytesIO
 import numpy as np
+from dataclasses import dataclass
 from typing import Union, Any, BinaryIO, Type, NewType, NamedTuple, List, \
     Tuple, Callable, TypeVar, Optional, Dict, Sequence, Generic, cast
 
 log = logging.getLogger(__name__)
 
 T = TypeVar('T')
+E = TypeVar('E')
+F = TypeVar('F')
+K = TypeVar('K')
+V = TypeVar('V')
 
 class CodecError(Exception):
     pass
@@ -21,27 +27,34 @@ class EOF(CodecError):
 FileIn = NewType('FileIn', BinaryIO)
 FileOut = NewType('FileOut', BinaryIO)
 
-class Codec(NamedTuple):
-    encode : Callable[[FileOut, Any], None]
-    decode : Callable[[FileIn], Any]
+@dataclass
+class Codec(Generic[T]):
+    encode : Callable[[FileOut, T], None]
+    decode : Callable[[FileIn], T]
 
-    def dbg_encode(self, f : FileOut, x : Any) -> None:
+    def enc_dec(self) -> tuple[
+        Callable[[FileOut, T], None],
+        Callable[[FileIn], T],
+    ]:
+        return self.encode, self.decode
+
+    def dbg_encode(self, f : FileOut, x : T) -> None:
         bs = self.encode_to_memory(x)
         log.debug('encoding %s: %r' % (self.__class__.__name__, bs))
         f.write(bs)
 
-    def encode_to_memory(self, x : Any) -> bytes:
+    def encode_to_memory(self, x : T) -> bytes:
         buf = BytesIO()
         self.encode(typing.cast(FileOut, buf), x)
         return buf.getvalue()
 
-    def decode_from_memory(self, bs : bytes) -> Any:
+    def decode_from_memory(self, bs : bytes) -> T:
         return self.decode(typing.cast(FileIn, BytesIO(bs)))
 
-    def test(self, x : Any) -> None:
+    def test(self, x : T) -> None:
         assert x == self.decode_from_memory(self.encode_to_memory(x))
 
-def _intC() -> Codec:
+def _intC() -> Codec[int]:
     def encode(f : FileOut, x : int) -> None:
         if x < 0:
             raise CodecError('invalid int: {0}'.format(x))
@@ -85,7 +98,7 @@ def _intC() -> Codec:
 
 intC = _intC()
 
-def _floatC() -> Codec:
+def _floatC() -> Codec[float]:
     pack, unpack = struct.pack, struct.unpack
 
     def encode(f : FileOut, x : float) -> None:
@@ -98,7 +111,7 @@ def _floatC() -> Codec:
 
 floatC = _floatC()
 
-def _doubleC() -> Codec:
+def _doubleC() -> Codec[float]:
     pack, unpack = struct.pack, struct.unpack
 
     def encode(f : FileOut, x : float) -> None:
@@ -111,8 +124,8 @@ def _doubleC() -> Codec:
 
 doubleC = _doubleC()
 
-def _bytesC() -> Codec:
-    intC_encode, intC_decode = intC
+def _bytesC() -> Codec[bytes]:
+    intC_encode, intC_decode = intC.enc_dec()
 
     def encode(f : FileOut, x : bytes) -> None:
         intC_encode(f, len(x))
@@ -126,22 +139,22 @@ def _bytesC() -> Codec:
 
 bytesC = _bytesC()
 
-def _strC() -> Codec:
-    bytesC_encode, bytesC_decode = bytesC
+def _strC() -> Codec[str]:
+    bytesC_encode, bytesC_decode = bytesC.enc_dec()
 
     def encode(f : FileOut, x : str) -> None:
         bytesC_encode(f, x.encode('utf8'))
 
     def decode(f : FileIn) -> str:
-        return cast(str, bytesC_decode(f).decode('utf8'))
+        return bytesC_decode(f).decode('utf8')
 
     return Codec(encode, decode)
 
 strC = _strC()
 
-def tupleC(*codecs : Codec) -> Codec:
-    encodes = [enc for enc, _dec in codecs]
-    decodes = [dec for _enc, dec in codecs]
+def tupleC(*codecs : Codec) -> Codec[tuple]:
+    encodes = [c.encode for c in codecs]
+    decodes = [c.decode for c in codecs]
 
     def encode(f : FileOut, xs : tuple) -> None:
         if len(encodes) != len(xs):
@@ -155,9 +168,11 @@ def tupleC(*codecs : Codec) -> Codec:
 
     return Codec(encode, decode)
 
-def namedtupleC(cls : Type, *codecs : Codec) -> Codec:
-    encodes = [enc for enc, _dec in codecs]
-    decodes = [dec for _enc, dec in codecs]
+NT = TypeVar('NT', bound=NamedTuple)
+
+def namedtupleC(cls : type[NT], *codecs : Codec) -> Codec[NT]:
+    encodes = [c.encode for c in codecs]
+    decodes = [c.decode for c in codecs]
 
     if len(codecs) != len(cls._fields):
         raise CodecError('namedtupleC: %d codecs provided for tuple %s' % (
@@ -165,59 +180,83 @@ def namedtupleC(cls : Type, *codecs : Codec) -> Codec:
             cls._fields,
         ))
 
-    def encode(f : FileOut, xs : tuple) -> None:
+    def encode(f : FileOut, xs : NT) -> None:
         if len(encodes) != len(xs):
             raise CodecError('tuple length mismatch')
 
         for encode, x in zip(encodes, xs):
             encode(f, x)
 
-    def decode(f : FileIn) -> tuple:
-        return cast(tuple, cls(*[decode(f) for decode in decodes]))
+    def decode(f : FileIn) -> NT:
+        return cls(*[decode(f) for decode in decodes])
 
     return Codec(encode, decode)
 
-def listC(codec : Codec) -> Codec:
-    codec_encode, codec_decode = codec
-    intC_encode, intC_decode = intC
+DC = TypeVar('DC')
+def dataclassC(cls : type[DC], *codecs : Codec) -> Codec[DC]:
+    encodes = [c.encode for c in codecs]
+    decodes = [c.decode for c in codecs]
 
-    def encode(f : FileOut, xs : list) -> None:
+    if len(codecs) != len(dataclasses.fields(cls)):
+        raise CodecError('dataclassC: %d codecs provided for dataclass %s' % (
+            len(codecs),
+            cls,
+        ))
+
+    def encode(f : FileOut, xs : DC) -> None:
+        xs_tuple = dataclasses.astuple(xs)
+        if len(encodes) != len(xs_tuple):
+            raise CodecError('tuple length mismatch')
+
+        for encode, x in zip(encodes, xs_tuple):
+            encode(f, x)
+
+    def decode(f : FileIn) -> DC:
+        return cls(*[decode(f) for decode in decodes])
+
+    return Codec(encode, decode)
+
+def listC(codec : Codec[E]) -> Codec[list[E]]:
+    codec_encode, codec_decode = codec.enc_dec()
+    intC_encode, intC_decode = intC.enc_dec()
+
+    def encode(f : FileOut, xs : list[E]) -> None:
         intC_encode(f, len(xs))
         for item in xs:
             codec_encode(f, item)
 
-    def decode(f : FileIn) -> list:
+    def decode(f : FileIn) -> list[E]:
         length = intC_decode(f)
         return [codec_decode(f) for _ in range(length)]
 
     return Codec(encode, decode)
 
-def dictC(k : Codec, v : Codec) -> Codec:
-    _encode, _decode = listC(tupleC(k, v))
+def dictC(k : Codec[K], v : Codec[V]) -> Codec[dict[K,V]]:
+    _encode, _decode = listC(tupleC(k, v)).enc_dec()
 
-    def encode(f : FileOut, x : dict) -> None:
-        _encode(f, x.items())
+    def encode(f : FileOut, x : dict[K,V]) -> None:
+        _encode(f, cast(list[tuple], x.items()))
 
-    def decode(f : FileIn) -> dict:
-        return dict(_decode(f))
+    def decode(f : FileIn) -> dict[K,V]:
+        return dict(cast(list[tuple[K,V]], _decode(f)))
 
     return Codec(encode, decode)
 
-def setC(codec : Codec) -> Codec:
-    _encode, _decode = listC(codec)
+def setC(codec : Codec[E]) -> Codec[set[E]]:
+    _encode, _decode = listC(codec).enc_dec()
 
-    def decode(f : FileIn) -> set:
+    def decode(f : FileIn) -> set[E]:
         return set(_decode(f))
 
-    return Codec(_encode, decode)
+    return Codec(_encode, decode) # type: ignore
 
-def frozensetC(codec : Codec) -> Codec:
-    _encode, _decode = listC(codec)
+def frozensetC(codec : Codec[E]) -> Codec[frozenset[E]]:
+    _encode, _decode = listC(codec).enc_dec()
 
-    def decode(f : FileIn) -> frozenset:
+    def decode(f : FileIn) -> frozenset[E]:
         return frozenset(_decode(f))
 
-    return Codec(_encode, decode)
+    return Codec(_encode, decode)  # type: ignore
 
 def enumC(name : str, alts : Dict[type, Tuple[Codec, ...]]) -> Codec:
     codecs_enc_get = {
@@ -230,7 +269,7 @@ def enumC(name : str, alts : Dict[type, Tuple[Codec, ...]]) -> Codec:
         for ty, codecs in alts.items()
     }.get
 
-    intC_encode, intC_decode = intC
+    intC_encode, intC_decode = intC.enc_dec()
 
     def encode(f : FileOut, x : tuple) -> None:
         *values, tag = x
@@ -239,7 +278,7 @@ def enumC(name : str, alts : Dict[type, Tuple[Codec, ...]]) -> Codec:
             raise CodecError(f'cannot encode enum tag: {name}/{tag}')
 
         intC_encode(f, tag)
-        enc(f, values)
+        enc(f, cast(tuple, values))
 
     def decode(f : FileIn) -> Any:
         tag = intC_decode(f)
@@ -262,7 +301,7 @@ def enum_by_typenameC(name : str, alts : Sequence[Tuple[type, Codec]]) -> Codec:
         for ty, codec in alts
     }.get
 
-    strC_encode, strC_decode = strC
+    strC_encode, strC_decode = strC.enc_dec()
 
     def encode(f : FileOut, x : tuple) -> None:
         ty = type(x).__name__
@@ -283,7 +322,7 @@ def enum_by_typenameC(name : str, alts : Sequence[Tuple[type, Codec]]) -> Codec:
 
     return Codec(encode, decode)
 
-def _noneC() -> Codec:
+def _noneC() -> Codec[None]:
     def encode(f : FileOut, x : None) -> None:
         pass
 
@@ -294,8 +333,8 @@ def _noneC() -> Codec:
 
 noneC = _noneC()
 
-def _boolC() -> Codec:
-    intC_encode, intC_decode = intC
+def _boolC() -> Codec[bool]:
+    intC_encode, intC_decode = intC.enc_dec()
 
     def encode(f : FileOut, x : bool) -> None:
         intC_encode(f, int(x))
@@ -313,9 +352,9 @@ def _boolC() -> Codec:
 
 boolC = _boolC()
 
-def maybe(codec : Codec) -> Codec:
-    enc, dec = codec
-    boolC_encode, boolC_decode = boolC
+def maybe(codec : Codec[E]) -> Codec[Optional[E]]:
+    enc, dec = codec.enc_dec()
+    boolC_encode, boolC_decode = boolC.enc_dec()
 
     def encode(f : FileOut, x : Optional[Any]) -> None:
         if x is None:
@@ -332,32 +371,32 @@ def maybe(codec : Codec) -> Codec:
 
     return Codec(encode, decode)
 
-def newtypeC(codec : Codec, ctor, proj) -> Codec:
-    enc, dec = codec
+def newtypeC(codec : Codec[E], ctor : Callable[[E], F], proj : Callable[[F], E]) -> Codec[F]:
+    enc, dec = codec.enc_dec()
 
-    def encode(f : FileOut, x : Any) -> None:
+    def encode(f : FileOut, x : F) -> None:
         enc(f, proj(x))
 
-    def decode(f : FileIn) -> Any:
+    def decode(f : FileIn) -> F:
         return ctor(dec(f))
 
     return Codec(encode, decode)
 
-def numpyC(dtype : type) -> Codec:
-    bytesC_enc, bytesC_dec = bytesC
-    l_enc, l_dec = listC(intC)
+def numpyC(dtype : type) -> Codec[np.ndarray]:
+    bytesC_enc, bytesC_dec = bytesC.enc_dec()
+    l_enc, l_dec = listC(intC).enc_dec()
 
     def encode(f : FileOut, x : np.ndarray) -> None:
         assert x.dtype == dtype, f"expected array type: {dtype}, received: {x.dtype}"
-        l_enc(f, x.shape)
+        l_enc(f, cast(list[int], x.shape))
         bytesC_enc(f, x.tobytes())
 
     def decode(f : FileIn) -> np.ndarray:
         shape = tuple(l_dec(f))
-        stuff = cast(bytes, bytesC_dec(f))
+        stuff = bytesC_dec(f)
         return np.reshape(
             np.fromstring(stuff, dtype=dtype),  # type:ignore
             newshape=shape,
         )
-    
+
     return Codec(encode, decode)

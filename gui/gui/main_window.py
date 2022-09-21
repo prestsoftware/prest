@@ -27,6 +27,7 @@ import gui.about
 import gui.simulation
 import gui.estimation
 import gui.import_csv
+import gui.subject_filter
 
 log = logging.getLogger(__name__)
 
@@ -51,6 +52,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
         self.workspace = workspace.Workspace()
 
         # main menu
+        self.actionGenerate_subjects_with_filtering.triggered.connect(self.catch_exc(self.dlg_simulation_filtered))
         self.actionGenerate_random_subjects.triggered.connect(self.catch_exc(self.dlg_simulation))
         self.actionWorkspaceClear.triggered.connect(self.catch_exc(self.dlg_workspace_clear))
         self.actionWorkspaceLoad.triggered.connect(self.catch_exc(self.dlg_workspace_load))
@@ -83,6 +85,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
         )
         self.enableDebuggingTools.activated.connect(self.enable_debugging_tools)
         self.menuDebugging_tools.menuAction().setVisible(False)
+        self.actionGenerate_subjects_with_filtering.setVisible(False)
         self.hidden_features_enabled = False
 
         try:
@@ -412,6 +415,70 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
         except Cancelled:
             log.debug('simulation cancelled')
 
+    def dlg_simulation_filtered(self, _flag : bool) -> None:
+        dlg = gui.simulation.Simulation()
+        if dlg.exec() != QDialog.Accepted:
+            return
+
+        dlg2 = gui.subject_filter.SubjectFilter()
+        if dlg2.exec() != QDialog.Accepted:
+            return
+
+        options = dlg.value()
+        options_filter = dlg2.value()
+
+        class MyWorker(Worker):
+            def work(self) -> dataset.experimental_data.ExperimentalData:
+                self.set_work_size(options.subject_count)
+
+                ds = dataset.experimental_data.ExperimentalData(options.dataset_name, [])
+                ds.alternatives = options.alternatives
+                ds.observ_count = 0
+
+                with Core() as core:
+                    self.interrupt = lambda: core.shutdown()
+
+                    for subj_nr in range(1, options.subject_count+1):
+                        while True:
+                            response = simulation.run(core, simulation.Request(
+                                name='random%d' % subj_nr,
+                                alternatives=options.alternatives,
+                                gen_menus=options.gen_menus,
+                                gen_choices=options.gen_choices,
+                                preserve_deferrals=False,
+                            ))
+
+                            env = {}
+
+                            if options_filter.run_consistency_analysis:
+                                env['consistency'] = core.call(
+                                    'consistency',
+                                    dataset.PackedSubjectC,
+                                    dataset.consistency_result.SubjectRawC,
+                                    response.subject_packed
+                                )
+
+                            result : Any = eval(options_filter.condition_code, env)
+                            assert isinstance(result, bool)  # SubjectFilter.value() checks this
+
+                            if result:
+                                ds.subjects.append(response.subject_packed)
+                                ds.observ_count += response.observation_count
+                                self.set_progress(subj_nr)
+                                # move on to the next subject
+                                break
+                            else:
+                                # retry
+                                continue
+
+                return ds
+
+        try:
+            new_ds = MyWorker().run_with_progress(self, 'Generating subjects...')
+            self.add_dataset(new_ds)
+        except Cancelled:
+            log.debug('simulation cancelled')
+
     def show_console_window(self, should_show: bool):
         if should_show:
             platform_specific.show_console()
@@ -420,6 +487,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
 
     def enable_hidden_features(self, enable: bool):
         self.hidden_features_enabled = enable
+        self.actionGenerate_subjects_with_filtering.setVisible(True)
 
     def shutdown(self):
         log.debug('shutting GUI down')

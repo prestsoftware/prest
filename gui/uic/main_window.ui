@@ -159,7 +159,6 @@
      <string>&amp;Simulation</string>
     </property>
     <addaction name="actionGenerate_random_subjects"/>
-    <addaction name="actionGenerate_subjects_with_filtering"/>
    </widget>
    <addaction name="menuWorkspace"/>
    <addaction name="menuSimulation"/>

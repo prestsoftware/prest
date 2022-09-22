@@ -162,15 +162,15 @@ class ExperimentalData(Dataset):
     def label_size(self):
         return '%d subjs, %d observations' % (len(self.subjects), self.observ_count)
 
-    def config_estimation(self) -> Optional[gui.estimation.Options]:
+    def config_estimation(self, _experimental_features : bool) -> Optional[gui.estimation.Options]:
         dlg = gui.estimation.Estimation()
         if dlg.exec() == QDialog.Accepted:
             return dlg.value()
         else:
             return None
 
-    def config_simulation(self) -> Optional['gui.copycat_simulation.Options']:
-        dlg = gui.copycat_simulation.CopycatSimulation(self)
+    def config_simulation(self, experimental_features : bool) -> Optional[gui.copycat_simulation.Options]:
+        dlg = gui.copycat_simulation.CopycatSimulation(self, experimental_features)
         if dlg.exec() == QDialog.Accepted:
             return dlg.value()
         else:

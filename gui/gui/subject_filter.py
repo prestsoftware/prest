@@ -3,10 +3,10 @@ import random
 import logging
 import collections
 from dataclasses import dataclass
-from typing import List, FrozenSet, Set, NamedTuple
+from typing import Any
 
 from PyQt5.QtCore import Qt, QCoreApplication
-from PyQt5.QtWidgets import QDialog, QMessageBox, QProgressDialog
+from PyQt5.QtWidgets import QWidget, QMessageBox, QProgressDialog
 
 import gui
 import uic.subject_filter
@@ -21,9 +21,9 @@ class Options:
     run_consistency_analysis : bool
     condition_code : str
 
-class SubjectFilter(uic.subject_filter.Ui_SubjectFilter, gui.ExceptionDialog):
-    def __init__(self) -> None:
-        QDialog.__init__(self)
+class SubjectFilter(QWidget, uic.subject_filter.Ui_SubjectFilter):
+    def __init__(self, parent : QWidget) -> None:
+        QWidget.__init__(self, parent)
         self.setupUi(self)
 
     def value(self) -> Options:
@@ -32,25 +32,24 @@ class SubjectFilter(uic.subject_filter.Ui_SubjectFilter, gui.ExceptionDialog):
             condition_code=self.pteCondition.toPlainText(),
         )
 
+        env = {}
+
+        if options.run_consistency_analysis:
+            env['consistency'] = dataset.consistency_result.SubjectRaw(
+                name='subject',
+                warp_pairs=0,
+                warp_all=0,
+                rows=[dataset.consistency_result.Row(
+                    cycle_length=2,
+                    garp=0,
+                    sarp=0,
+                    garp_binary_menus=0,
+                    sarp_binary_menus=0,
+                )],
+            )
+
         try:
-            env = {}
-
-            if options.run_consistency_analysis:
-                env['consistency'] = dataset.consistency_result.SubjectRaw(
-                    name='subject',
-                    warp_pairs=0,
-                    warp_all=0,
-                    rows=[dataset.consistency_result.Row(
-                        cycle_length=2,
-                        garp=0,
-                        sarp=0,
-                        garp_binary_menus=0,
-                        sarp_binary_menus=0,
-                    )],
-                )
-
             result : Any = eval(options.condition_code, env)
-
         except Exception as e:
             raise gui.ValidationError(e)
 

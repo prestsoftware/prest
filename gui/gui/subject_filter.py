@@ -3,7 +3,7 @@ import random
 import logging
 import collections
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Optional
 
 from PyQt5.QtCore import Qt, QCoreApplication
 from PyQt5.QtWidgets import QWidget, QMessageBox, QProgressDialog
@@ -14,12 +14,33 @@ import dataset.experimental_data
 import dataset.consistency_result
 from gui.progress import Worker, Cancelled
 
+import dataset
+from core import Core
+
 log = logging.getLogger(__name__)
 
 @dataclass
 class Options:
     run_consistency_analysis : bool
     condition_code : str
+
+def accepts(options : Optional[Options], core : Core, subject_packed : dataset.PackedSubject) -> bool:
+    if options is None:
+        return True
+
+    env : dict[str, Any] = {}
+
+    if options.run_consistency_analysis:
+        env['consistency'] = core.call(
+            'consistency',
+            dataset.PackedSubjectC,
+            dataset.consistency_result.SubjectRawC,
+            subject_packed
+        )
+
+    result : Any = eval(options.condition_code, env)
+    assert isinstance(result, bool)  # SubjectFilter.value() checks this
+    return result
 
 class SubjectFilter(QWidget, uic.subject_filter.Ui_SubjectFilter):
     def __init__(self, parent : QWidget) -> None:

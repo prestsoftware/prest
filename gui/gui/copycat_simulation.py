@@ -93,6 +93,6 @@ class CopycatSimulation(uic.copycat_simulation.Ui_CopycatSimulation, gui.Excepti
             preserve_deferrals=self.cbPreserveDeferrals.isChecked(),
             subject_filter=
                 self.subjectFilter.value()
-                if self.gbFilter.checkState() == Qt.Checked
+                if self.gbFilter.isChecked()
                 else None
         )

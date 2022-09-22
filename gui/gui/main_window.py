@@ -402,23 +402,11 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
                                 preserve_deferrals=False,
                             ))
 
-                            subject_accepted : bool
-                            if options.subject_filter is None:
-                                subject_accepted = True
-                            else:
-                                env = {}
-
-                                if options.subject_filter.run_consistency_analysis:
-                                    env['consistency'] = core.call(
-                                        'consistency',
-                                        dataset.PackedSubjectC,
-                                        dataset.consistency_result.SubjectRawC,
-                                        response.subject_packed
-                                    )
-
-                                result : Any = eval(options.subject_filter.condition_code, env)
-                                assert isinstance(result, bool)  # SubjectFilter.value() checks this
-                                subject_accepted = result
+                            subject_accepted = gui.subject_filter.accepts(
+                                options.subject_filter,
+                                core,
+                                response.subject_packed,
+                            )
 
                             if subject_accepted:
                                 ds.subjects.append(response.subject_packed)

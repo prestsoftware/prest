@@ -181,22 +181,33 @@ class ExperimentalData(Dataset):
             position = 0
             for subject_packed in self.subjects:
                 for j in range(options.multiplicity):
-                    response = simulation.run(core, simulation.Request(
-                        name='random%d' % (j+1),
-                        alternatives=self.alternatives,  # we don't use subject.alternatives here
-                        gen_menus=simulation.GenMenus(
-                            generator=simulation.Copycat(subject_packed),
-                            defaults=False,  # this will be ignored, anyway
-                        ),
-                        gen_choices=options.gen_choices,
-                        preserve_deferrals=options.preserve_deferrals,
-                    ))
+                    while True:
+                        response = simulation.run(core, simulation.Request(
+                            name='random%d' % (j+1),
+                            alternatives=self.alternatives,  # we don't use subject.alternatives here
+                            gen_menus=simulation.GenMenus(
+                                generator=simulation.Copycat(subject_packed),
+                                defaults=False,  # this will be ignored, anyway
+                            ),
+                            gen_choices=options.gen_choices,
+                            preserve_deferrals=options.preserve_deferrals,
+                        ))
 
-                    subjects.append(response.subject_packed)
+                        subject_accepted = gui.subject_filter.accepts(
+                            options.subject_filter,
+                            core,
+                            response.subject_packed,
+                        )
 
-                    position += 1
-                    if position % 1024 == 0:
-                        worker.set_progress(position)
+                        if subject_accepted:
+                            subjects.append(response.subject_packed)
+
+                            position += 1
+                            if position % 1024 == 0:
+                                worker.set_progress(position)
+                            break
+                        else:
+                            continue
 
         ds = ExperimentalData(name=options.name, alternatives=self.alternatives)
         ds.subjects = subjects

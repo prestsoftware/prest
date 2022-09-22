@@ -179,9 +179,11 @@ class ExperimentalData(Dataset):
 
             worker.set_work_size(len(self.subjects) * options.multiplicity)
             position = 0
+            iteration_counter = 0
             for subject_packed in self.subjects:
                 for j in range(options.multiplicity):
                     while True:
+                        iteration_counter += 1
                         response = simulation.run(core, simulation.Request(
                             name='random%d' % (j+1),
                             alternatives=self.alternatives,  # we don't use subject.alternatives here
@@ -203,7 +205,7 @@ class ExperimentalData(Dataset):
                             subjects.append(response.subject_packed)
 
                             position += 1
-                            if position % 1024 == 0:
+                            if iteration_counter % 256 == 0:
                                 worker.set_progress(position)
                             break
                         else:

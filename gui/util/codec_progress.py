@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable, Sequence, TypeVar, Generic
+from typing import Callable, Sequence, TypeVar, Generic, Any
 from gui.progress import Worker, MockWorker, Cancelled
 from util.codec import Codec, FileIn, FileOut, intC, strC, CodecError
 
@@ -90,13 +90,12 @@ def enum_by_typenameCP(name : str, alts : Sequence[tuple[type, CodecProgress]]) 
         strC_encode(f, ty)
         enc(worker, f, x)
 
-    def decode(worker : Worker, f : FileIn) -> T:
+    def decode(worker : Worker, f : FileIn) -> Any:
         ty = strC_decode(f)
         dec = codecs_dec_get(ty)
         if dec is None:
             raise CodecError(f'cannot decode enum class: {name}/{ty}')
 
-        # ignoring type because mypy won't let us cast to type variable
-        return dec(worker, f)  # type: ignore
+        return dec(worker, f)
 
     return CodecProgress(get_size, encode, decode)

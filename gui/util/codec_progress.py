@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Callable, Sequence, TypeVar, Generic, Any
-from gui.progress import Worker, MockWorker, Cancelled
+from gui.progress import Worker
 from util.codec import Codec, FileIn, FileOut, intC, strC, CodecError
 
 T = TypeVar('T')
@@ -17,7 +17,7 @@ class CodecProgress(Generic[T]):
         Callable[[T], int],
         Callable[[Worker, FileOut, T], None],
         Callable[[Worker, FileIn], T],
-    ]: 
+    ]:
         return self.get_size, self.encode, self.decode
 
 def oneCP(codec : Codec[T]) -> CodecProgress[T]:

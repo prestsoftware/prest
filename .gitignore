@@ -13,5 +13,4 @@ prest.env/
 .mypy_cache/
 venv/
 /scripts/
-/images
 *.bak

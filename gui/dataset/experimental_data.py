@@ -291,6 +291,7 @@ class ExperimentalData(Dataset):
                     models=options.models,
                     disable_parallelism=options.disable_parallelism,
                     disregard_deferrals=options.disregard_deferrals,
+                    distance_score=options.distance_score,
                 )
 
                 responses = core.call(

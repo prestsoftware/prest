@@ -6,6 +6,7 @@ from gui.progress import MockWorker
 from model import preorder, unattractive, UndominatedChoice, PartiallyDominantChoice, \
     StatusQuoUndominatedChoice, Overload, PreorderParams
 from dataset import load_raw_csv, SubjectC
+from gui.estimation import DistanceScore
 from gui.estimation import Options as EstimationOpts
 from dataset.experimental_data import ExperimentalData
 import dataset.budgetary
@@ -112,10 +113,15 @@ def test_model_estimation(tmpdir, name, alts, subj_count):
 
     if all(cr.default is not None for subj in map(SubjectC.decode_from_memory, ds.subjects) for cr in subj.choices):
         models.append(StatusQuoUndominatedChoice())
-    
+
     dsm = ds.analysis_estimation(
         MockWorker(),
-        EstimationOpts(models, disable_parallelism=False, disregard_deferrals=False)
+        EstimationOpts(
+            models,
+            disable_parallelism=False,
+            disregard_deferrals=False,
+            distance_score=DistanceScore.HOUTMAN_MAKS
+        ),
     )
 
     check_export(tmpdir, dsm, 'compact (human-friendly)', 'gui/test/expected/%s-models-compact.csv' % name)

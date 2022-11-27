@@ -16,7 +16,7 @@ import platform_specific
 from dataclasses import dataclass
 from core import Core
 from gui.progress import Worker
-from gui.estimation import DistanceScore
+from gui.estimation import DistanceScore, distanceScoreC
 from model import get_name as model_get_name
 from model import Model as ModelRepr
 from model import ModelC
@@ -57,7 +57,7 @@ class Request(NamedTuple):
     disregard_deferrals : bool
     distance_score : DistanceScore
 
-RequestC = namedtupleC(Request, listC(dataset.PackedSubjectC), listC(ModelC), boolC, boolC)
+RequestC = namedtupleC(Request, listC(dataset.PackedSubjectC), listC(ModelC), boolC, boolC, distanceScoreC)
 
 InstanceRepr = NewType('InstanceRepr', bytes)
 InstanceReprC = bytesC

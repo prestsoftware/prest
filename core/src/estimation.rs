@@ -522,7 +522,6 @@ mod test {
 
     #[test]
     fn jaccard_menu() {
-        use model::Model;
         use model::PreorderParams as PP;
         use model::Model::PreorderMaximization as PM;
 
@@ -535,16 +534,16 @@ mod test {
                 [1,2] -> [1],
                 [2,3] -> [2],
                 [3,4] -> [3],
-                [4,0] -> [4]
+                [4,0] -> [0]
         ]);
 
         let response_hm = super::run_one(&precomputed, DistanceScore::HoutmanMaks, &subject, &models).unwrap();
-        assert_eq!(response_hm.score, Penalty::exact(1));
-        assert_eq!(response_hm.best_instances.len(), 5);
+        assert_eq!(response_hm.score, Penalty::exact(0));
+        assert_eq!(response_hm.best_instances.len(), 1);
 
         let response_jm = super::run_one(&precomputed, DistanceScore::JaccardPerMenu, &subject, &models).unwrap();
-        assert_eq!(response_jm.score, Penalty::exact(1));
-        assert_eq!(response_jm.best_instances.len(), 5);
+        assert_eq!(response_jm.score, Penalty::exact(0));
+        assert_eq!(response_jm.best_instances.len(), 1);
     }
 
     #[test]

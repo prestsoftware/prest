@@ -806,17 +806,17 @@ mod test {
         assert_eq!(response.rows, vec![
             Row{
                 cycle_length: 2,
-                garp: BigUint::from(0),
-                sarp: BigUint::from(0),
-                garp_binary_menus: BigUint::from(0),
-                sarp_binary_menus: BigUint::from(0),
+                garp: BigUint::from(0u32),
+                sarp: BigUint::from(0u32),
+                garp_binary_menus: BigUint::from(0u32),
+                sarp_binary_menus: BigUint::from(0u32),
             },
             Row{
                 cycle_length: 3,
-                garp: BigUint::from(1),
-                sarp: BigUint::from(0),
-                garp_binary_menus: BigUint::from(1),
-                sarp_binary_menus: BigUint::from(0),
+                garp: BigUint::from(1u32),
+                sarp: BigUint::from(0u32),
+                garp_binary_menus: BigUint::from(1u32),
+                sarp_binary_menus: BigUint::from(0u32),
             }
         ]);
     }
@@ -861,7 +861,7 @@ mod test {
 
         assert_eq!(
             detailed.rows.into_iter().map(|r| r.garp_binary_menus).sum::<BigUint>(),
-            BigUint::from(136),
+            BigUint::from(136u32),
         );
     }
 
@@ -928,16 +928,16 @@ mod test {
 
         assert_eq!(
             column(&detailed.rows, |r| r.sarp.clone()),
-            &[(2, BigUint::from(1)), (3, BigUint::from(1))]
+            &[(2, BigUint::from(1u32)), (3, BigUint::from(1u32))]
         );
-        assert_eq!(detailed.warp, BigUint::from(1));
+        assert_eq!(detailed.warp, BigUint::from(1u32));
         assert_eq!(
             column(&detailed.rows, |r| r.garp.clone()),
-            &[(2, BigUint::from(1)), (3, BigUint::from(2)), (4, BigUint::from(2))]
+            &[(2, BigUint::from(1u32)), (3, BigUint::from(2u32)), (4, BigUint::from(2u32))]
         );
         assert_eq!(
             column(&detailed.rows, |r| r.garp_binary_menus.clone()),
-            &[(3, BigUint::from(2)), (4, BigUint::from(1))]
+            &[(3, BigUint::from(2u32)), (4, BigUint::from(1u32))]
         );
     }
 
@@ -970,7 +970,7 @@ mod test {
         let response = run(&request).unwrap();
 
         assert_eq!(response.warp_pairs, 1);
-        assert_eq!(response.warp, BigUint::from(2));
+        assert_eq!(response.warp, BigUint::from(2u32));
     }
 
     #[test]

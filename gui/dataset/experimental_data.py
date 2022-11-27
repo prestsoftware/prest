@@ -1,25 +1,19 @@
-import sys
-import time
-import random
 import logging
-import threading
 import collections
 from typing import Sequence, Tuple, Dict, List, Set, \
-    FrozenSet, Iterator, NamedTuple, Iterable, Any, Optional, cast
+    FrozenSet, Iterator, NamedTuple, Optional
 
-from PyQt5.QtCore import Qt, QModelIndex, QAbstractItemModel
-from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
+from PyQt5.QtWidgets import QDialog, QHeaderView
 
-import model
 import dataset
 import gui.copycat_simulation
 import gui.estimation
 import simulation
 from core import Core
-from dataset import Dataset, DatasetHeaderC, ChoiceRow, ChoiceRowC, \
+from dataset import Dataset, DatasetHeaderC, ChoiceRow, \
     Subject, SubjectC, ExportVariant, Analysis, PackedSubject, PackedSubjectC
 from gui.progress import Worker
-from dataset.estimation_result import EstimationResult, Penalty, PenaltyC
+from dataset.estimation_result import EstimationResult
 from dataset.consistency_result import ConsistencyResult
 from dataset.experiment_stats import ExperimentStats
 from dataset.tuple_intrans_alts import TupleIntransAlts
@@ -30,11 +24,10 @@ import dataset.tuple_intrans_alts
 import dataset.tuple_intrans_menus
 import dataset.integrity_check
 import dataset.estimation_result as estimation_result
-from model import Model, ModelC
 import uic.view_dataset
 import util.tree_model
-from util.codec import Codec, FileIn, FileOut, namedtupleC, strC, intC, \
-    frozensetC, listC, bytesC, tupleC, maybe
+from util.codec import FileIn, FileOut, namedtupleC, strC, intC, \
+    frozensetC, maybe
 from util.codec_progress import CodecProgress, listCP, oneCP
 
 log = logging.getLogger(__name__)
@@ -97,7 +90,7 @@ class ExperimentalData(Dataset):
         Dataset.__init__(self, name, alternatives)
         self.subjects: List[PackedSubject] = []
         self.observ_count: int = 0
-        
+
     @staticmethod
     def from_csv(name: str, rows: Sequence[Sequence[str]], indices: Tuple[int,int,Optional[int],int]) -> 'ExperimentalData':
         i_s, i_m, i_d, i_c = indices  # CSV column indices: subject, menu, default, choice
@@ -278,7 +271,6 @@ class ExperimentalData(Dataset):
         return ds
 
     def analysis_estimation(self, worker : Worker, options : gui.estimation.Options) -> EstimationResult:
-
         CHUNK_SIZE = 64
         with Core() as core:
             worker.interrupt = lambda: core.shutdown()  # register interrupt hook
@@ -304,8 +296,13 @@ class ExperimentalData(Dataset):
 
                 worker.set_progress(len(rows))
 
+            if options.distance_score != gui.estimation.DistanceScore.HOUTMAN_MAKS:
+                suffix = f' (model est., {options.distance_score.value})'
+            else:
+                suffix = ' (model est.)'
+
             ds = EstimationResult(
-                self.name + ' (model est.)',
+                self.name + suffix,
                 self.alternatives,
             )
             ds.subjects = rows
@@ -337,7 +334,7 @@ class ExperimentalData(Dataset):
         )
         ds.load_from_core(rows)
         return ds
-    
+
     def analysis_summary_stats(self, worker : Worker, _config : None) -> ExperimentStats:
         subjects = []
         worker.set_work_size(len(self.subjects))

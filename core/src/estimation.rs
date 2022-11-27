@@ -569,7 +569,7 @@ mod test {
 
         let response_jd = super::run_one(&precomputed, DistanceScore::JaccardPerDataset, &subject, &models).unwrap();
         assert_eq!(response_jd.score, Penalty::exact(0));
-        assert_eq!(response_jd.best_instances.len(), 2);
+        assert_eq!(response_jd.best_instances.len(), 1);
     }
 
     #[test]

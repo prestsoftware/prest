@@ -567,9 +567,9 @@ mod test {
         assert_eq!(response_hm.score, Penalty::exact(0));
         assert_eq!(response_hm.best_instances.len(), 1);
 
-        let response_jm = super::run_one(&precomputed, DistanceScore::JaccardPerDataset, &subject, &models).unwrap();
-        assert_eq!(response_jm.score, Penalty::exact(0));
-        assert_eq!(response_jm.best_instances.len(), 1);
+        let response_jd = super::run_one(&precomputed, DistanceScore::JaccardPerDataset, &subject, &models).unwrap();
+        assert_eq!(response_jd.score, Penalty::exact(0));
+        assert_eq!(response_jd.best_instances.len(), 2);
     }
 
     #[test]

@@ -32,7 +32,7 @@ def from_fraction(x : Fraction) -> int | float:
     if x.denominator == 1:
         return x.numerator
     else:
-        return float(x)
+        return round(float(x), 3)  # sounds about appropriate
 
 class Penalty(NamedTuple):
     # both bounds are inclusive

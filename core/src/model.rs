@@ -492,7 +492,7 @@ impl Instance {
                         }).fold((0, 0), |(ni, nu), (i, u)| (ni+i, nu+u));
 
                         let n = crs.len() as u32;
-                        Ratio::new(i*(u-n), u)  // scale into the same range of [0..n]
+                        Ratio::new(n*(u-i), u)  // scale into the same range of [0..n]
                     }
                 }
             };

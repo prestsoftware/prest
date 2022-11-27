@@ -4,6 +4,9 @@ use std::io::{Read,Write,Cursor,Seek,SeekFrom};
 use byteorder::{ReadBytesExt,WriteBytesExt,NativeEndian};
 use std::hash::Hash;
 use std::collections::{HashSet,HashMap,BTreeMap,BTreeSet};
+use num_bigint::BigUint;
+use num_rational::Ratio;
+use num_integer::Integer;
 
 #[derive(Debug)]
 pub enum Error {
@@ -383,6 +386,49 @@ impl<T : Decode + Eq + Ord> Decode for BTreeSet<T> {
     fn decode<R : Read>(f : &mut R) -> Result<BTreeSet<T>> {
         let xs : Vec<_> = Decode::decode(f)?;
         Ok(xs.into_iter().collect())
+    }
+}
+
+impl Encode for BigUint {
+    fn encode<W : Write>(&self, f : &mut W) -> Result<()> {
+        let mut bytes = self.to_radix_le(128);
+        for i in 0..bytes.len()-1 {
+            bytes[i] |= 0x80;  // mark every but the last byte
+        }
+        f.write_all(&bytes)?;
+        Ok(())
+    }
+}
+
+impl Decode for BigUint {
+    fn decode<R : Read>(f : &mut R) -> Result<BigUint> {
+        let mut bytes = Vec::new();
+        loop {
+            let byte = f.read_u8()?;
+            bytes.push(byte & 0x7F);
+
+            if byte < 0x80 {
+                break;
+            }
+        }
+
+        match BigUint::from_radix_le(&bytes, 128) {
+            Some(x) => Ok(x),
+            None => Err(Error::BadInteger),
+        }
+    }
+}
+
+impl<T : Encode> Encode for Ratio<T> {
+    fn encode<W : Write>(&self, f : &mut W) -> Result<()> {
+        (self.numer(), self.denom()).encode(f)
+    }
+}
+
+impl<T : Decode+Clone+Integer> Decode for Ratio<T> {
+    fn decode<R : Read>(f : &mut R) -> Result<Ratio<T>> {
+        let (n, d) = Decode::decode(f)?;
+        Ok(Ratio::new(n, d))
     }
 }
 

@@ -360,7 +360,7 @@ mod test {
     use preorder;
     use fast_preorder;
     use base64;
-    use model::{Instance,Penalty};
+    use model::{Instance,Penalty,DistanceScore};
     use codec;
     use alt_set::AltSet;
     use alt::Alt;
@@ -397,7 +397,7 @@ mod test {
         let models = [Model::TopTwo];
         let mut precomputed = Precomputed::new(None);
         precomputed.precompute(4).unwrap();
-        let response = super::run_one(&precomputed, &subject, &models).unwrap();
+        let response = super::run_one(&precomputed, DistanceScore::HoutmanMaks, &subject, &models).unwrap();
 
         assert_eq!(response.score, Penalty::exact(0));
         assert_eq!(response.best_instances.len(), 2);
@@ -456,7 +456,7 @@ mod test {
 
         let mut precomputed = Precomputed::new(None);
         precomputed.precompute(4).unwrap();
-        let response = super::run_one(&precomputed, &subject, &models).unwrap();
+        let response = super::run_one(&precomputed, DistanceScore::HoutmanMaks, &subject, &models).unwrap();
 
         assert_eq!(response.score, Penalty::exact(0));
         assert_eq!(response.best_instances.len(), 11);
@@ -497,7 +497,7 @@ mod test {
                 [0,2] -> [0,2],
                 [0,2,3] -> [0],
                 [0,2,4] -> [2],
-                
+
                 [0,3] -> [0],
                 [1,3] -> [1],
                 [2,3] -> [2],
@@ -508,7 +508,7 @@ mod test {
                 [3,4] -> [3]
         ]);
 
-        let response = super::run_one(&precomputed, &subject, &models).unwrap();
+        let response = super::run_one(&precomputed, DistanceScore::HoutmanMaks, &subject, &models).unwrap();
         assert_eq!(response.score, Penalty::exact(2));
         assert_eq!(response.best_instances.len(), 3);
 
@@ -585,7 +585,7 @@ mod test {
         let instance = model::Instance::PreorderMaximization(p);
         assert_eq!(instance.choice(alts![0,1].view(), None), alts![]);
 
-        let response = super::run_one(&precomputed, &subject, &models).unwrap();
+        let response = super::run_one(&precomputed, DistanceScore::HoutmanMaks, &subject, &models).unwrap();
         assert_eq!(response.score, Penalty::exact(0));
         assert_eq!(response.best_instances, vec![super::InstanceInfo{
             model: PM(PP{ strict: None, total: None }),

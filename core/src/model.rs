@@ -885,7 +885,6 @@ mod test {
     fn balance() {
         let mut precomp = Precomputed::new(None);
         precomp.precompute(4).unwrap();
-        
         {
             let mut m = 0;
             let mut n = 0;

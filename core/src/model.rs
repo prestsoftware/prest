@@ -449,15 +449,16 @@ impl Instance {
                                 }
                             }
 
+                            let model_choice = self.choice(cr.menu.view(), cr.default);
                             let intersection = {
                                 let mut intersection = cr.choice.clone();
-                                intersection &= cr.menu.view();
+                                intersection &= model_choice.view();
                                 intersection.size()
                             };
 
                             let union = {
                                 let mut union = cr.choice.clone();
-                                union |= cr.menu.view();
+                                union |= model_choice.view();
                                 union.size()
                             };
 
@@ -474,15 +475,16 @@ impl Instance {
                                 }
                             }
 
+                            let model_choice = self.choice(cr.menu.view(), cr.default);
                             let intersection = {
                                 let mut intersection = cr.choice.clone();
-                                intersection &= cr.menu.view();
+                                intersection &= model_choice.view();
                                 intersection.size()
                             };
 
                             let union = {
                                 let mut union = cr.choice.clone();
-                                union |= cr.menu.view();
+                                union |= model_choice.view();
                                 union.size()
                             };
 

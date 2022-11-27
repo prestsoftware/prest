@@ -547,6 +547,32 @@ mod test {
     }
 
     #[test]
+    fn jaccard_dataset() {
+        use model::PreorderParams as PP;
+        use model::Model::PreorderMaximization as PM;
+
+        let mut precomputed = Precomputed::new(None);
+        precomputed.precompute(5).unwrap();
+
+        let models = [PM(PP{strict:Some(true),total:Some(true)})];
+        let subject = testsubj(5, choices![
+                [0,1] -> [0],
+                [1,2] -> [1],
+                [2,3] -> [2],
+                [3,4] -> [3],
+                [4,0] -> [0]
+        ]);
+
+        let response_hm = super::run_one(&precomputed, DistanceScore::HoutmanMaks, &subject, &models).unwrap();
+        assert_eq!(response_hm.score, Penalty::exact(0));
+        assert_eq!(response_hm.best_instances.len(), 1);
+
+        let response_jm = super::run_one(&precomputed, DistanceScore::JaccardPerDataset, &subject, &models).unwrap();
+        assert_eq!(response_jm.score, Penalty::exact(0));
+        assert_eq!(response_jm.best_instances.len(), 1);
+    }
+
+    #[test]
     fn indecisive() {
         use model::PreorderParams as PP;
         use model::Model::PreorderMaximization as PM;

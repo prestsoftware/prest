@@ -110,6 +110,26 @@ impl Decode for Model {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum DistanceScore {
+    HoutmanMaks,
+    JaccardPerMenu,
+    JaccardPerDataset,
+}
+
+impl Decode for DistanceScore {
+    fn decode<R : Read>(f : &mut R) -> codec::Result<DistanceScore> {
+        use self::DistanceScore::*;
+        let tag : String = Decode::decode(f)?;
+        match tag.as_str() {
+            "houtman-maks" => Ok(HoutmanMaks),
+            "jaccard-menu" => Ok(JaccardPerMenu),
+            "jaccard-dataset" => Ok(JaccardPerDataset),
+            _ => Err(codec::Error::BadEnumTag),
+        }
+    }
+}
+
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Clone)]
 pub enum Instance {
     PreorderMaximization(Preorder),
@@ -381,40 +401,99 @@ impl Instance {
         }
     }
 
-    pub fn penalty(&self, crs : &[ChoiceRow]) -> Penalty {
-        let upper_bound : Ratio<u32> = crs.iter().map(|cr| {
-            // special case for SWAPS
+    pub fn penalty(&self, distance_score : DistanceScore, crs : &[ChoiceRow]) -> Penalty {
+        let upper_bound : Ratio<u32> =
             if let &Instance::Swaps(ref p) = self {
-                if let Some(choice) = cr.choice.view().as_singleton() {
-                    // all strictly better options
-                    return Ratio::from(p.upset(choice).iter().filter(
-                        |&c|
-                            cr.menu.view().contains(c)
-                            && c != choice
-                    ).count() as u32)
-                } else {
-                    panic!("SWAPS model: choices must be exactly singletons");
+                // special case for SWAPS
+                if distance_score != DistanceScore::HoutmanMaks {
+                    panic!("SWAPS is available only with the Houtman-Maks distance score");
                 }
-            }
 
-            let standard_penalty =
-                if cr.choice == self.choice(cr.menu.view(), cr.default) {
-                    Ratio::from(0)
-                } else {
-                    Ratio::from(1)
-                };
-
-            if cr.menu.view().is_singleton() {
-                if let Instance::PartiallyDominantChoice{p:_,fc:_} = self {
-                    // PDC should not be penalised for deferring at singletons
-                    Ratio::from(0)
-                } else {
-                    standard_penalty
-                }
+                crs.iter().map(|cr| {
+                    if let Some(choice) = cr.choice.view().as_singleton() {
+                        // all strictly better options
+                        return Ratio::from(p.upset(choice).iter().filter(
+                            |&c|
+                                cr.menu.view().contains(c)
+                                && c != choice
+                        ).count() as u32)
+                    } else {
+                        panic!("SWAPS model: choices must be exactly singletons");
+                    }
+                }).sum()
             } else {
-                standard_penalty
-            }
-        }).sum();
+                match distance_score {
+                    DistanceScore::HoutmanMaks => {
+                        crs.iter().map(|cr| {
+                            // PDC should not be penalised for deferring at singletons
+                            if let Instance::PartiallyDominantChoice{p:_,fc:_} = self {
+                                if cr.menu.view().is_singleton() {
+                                    return Ratio::from(0);
+                                }
+                            }
+
+                            if cr.choice == self.choice(cr.menu.view(), cr.default) {
+                                Ratio::from(0)
+                            } else {
+                                Ratio::from(1)
+                            }
+                        }).sum()
+                    }
+
+                    DistanceScore::JaccardPerMenu => {
+                        crs.iter().map(|cr| {
+                            // PDC should not be penalised for deferring at singletons
+                            if let Instance::PartiallyDominantChoice{p:_,fc:_} = self {
+                                if cr.menu.view().is_singleton() {
+                                    return Ratio::from(0);
+                                }
+                            }
+
+                            let intersection = {
+                                let mut intersection = cr.choice.clone();
+                                intersection &= cr.menu.view();
+                                intersection.size()
+                            };
+
+                            let union = {
+                                let mut union = cr.choice.clone();
+                                union |= cr.menu.view();
+                                union.size()
+                            };
+
+                            Ratio::new(intersection, union)
+                        }).sum()
+                    }
+
+                    DistanceScore::JaccardPerDataset => {
+                        let (i, u) = crs.iter().map(|cr| {
+                            // PDC should not be penalised for deferring at singletons
+                            if let Instance::PartiallyDominantChoice{p:_,fc:_} = self {
+                                if cr.menu.view().is_singleton() {
+                                    return (0, 1)
+                                }
+                            }
+
+                            let intersection = {
+                                let mut intersection = cr.choice.clone();
+                                intersection &= cr.menu.view();
+                                intersection.size()
+                            };
+
+                            let union = {
+                                let mut union = cr.choice.clone();
+                                union |= cr.menu.view();
+                                union.size()
+                            };
+
+                            (intersection, union)
+                        }).fold((0, 0), |(ni, nu), (i, u)| (ni+i, nu+u));
+
+                        let n = crs.len() as u32;
+                        Ratio::new(i*n, u)  // scale into the same range of [0..n]
+                    }
+                }
+            };
 
         let lower_bound = match self {
             &Instance::SequentiallyRationalizableChoice(_,_)

@@ -1,5 +1,5 @@
 use std::collections::HashSet;
-use model::{self,Penalty,Model,Instance,PreorderParams};
+use model::{self,Penalty,Model,Instance,PreorderParams,DistanceScore};
 use precomputed::{self,Precomputed};
 use std::result;
 use std::fmt;
@@ -56,6 +56,7 @@ pub struct Request {
     models : Vec<model::Model>,
     disable_parallelism : bool,
     disregard_deferrals : bool,
+    distance_score : DistanceScore,
 }
 
 impl Decode for Request {
@@ -65,6 +66,7 @@ impl Decode for Request {
             models: Decode::decode(f)?,
             disable_parallelism: Decode::decode(f)?,
             disregard_deferrals: Decode::decode(f)?,
+            distance_score: Decode::decode(f)?,
         })
     }
 }
@@ -236,6 +238,7 @@ impl BestInstances {
 
 fn evaluate_model(
     precomputed : &Precomputed,
+    distance_score : DistanceScore,
     model : Model,
     alt_count : u32,
     choices : &[ChoiceRow],
@@ -245,7 +248,7 @@ fn evaluate_model(
     model::traverse_all(precomputed, model, alt_count, choices, &mut |inst| {
         model_instances.add_instance(
             model,
-            inst.penalty(choices),
+            inst.penalty(distance_score, choices),
             inst,
         )
     })?;
@@ -253,7 +256,10 @@ fn evaluate_model(
     Ok(model_instances)
 }
 
-pub fn run_one(precomputed : &Precomputed, subject : &Subject, models : &[Model]) -> Result<Response> {
+pub fn run_one(
+    precomputed : &Precomputed, distance_score : DistanceScore,
+    subject : &Subject, models : &[Model],
+) -> Result<Response> {
     let alt_count = subject.alternatives.len() as u32;
 
     let mut best_instances = BestInstances::new();
@@ -264,7 +270,7 @@ pub fn run_one(precomputed : &Precomputed, subject : &Subject, models : &[Model]
         }
 
         best_instances = best_instances.combine(
-            evaluate_model(precomputed, model, alt_count, &subject.choices)?
+            evaluate_model(precomputed, distance_score, model, alt_count, &subject.choices)?
         );
     }
 
@@ -285,6 +291,7 @@ pub fn run_one(precomputed : &Precomputed, subject : &Subject, models : &[Model]
         best_instances = best_instances.combine(
             evaluate_model(
                 precomputed,
+                distance_score,
                 Model::SequentiallyRationalizableChoice,
                 alt_count,
                 &subject.choices
@@ -316,13 +323,23 @@ pub fn run(precomputed : &mut Precomputed, request : &Request) -> Result<Vec<Pac
     let results : Vec<Result<Response>> = if request.disable_parallelism {
         // run estimation sequentially
         request.subjects.iter().map(
-            |subj| run_one(precomputed, &subj.unpack().drop_deferrals(request.disregard_deferrals), &request.models)
+            |subj| run_one(
+                precomputed,
+                request.distance_score,
+                &subj.unpack().drop_deferrals(request.disregard_deferrals),
+                &request.models,
+            )
         ).collect()
     } else {
         // run estimation in parallel
         let mut results = Vec::new();
         request.subjects.par_iter().map(
-            |subj| run_one(precomputed, &subj.unpack().drop_deferrals(request.disregard_deferrals), &request.models)
+            |subj| run_one(
+                precomputed,
+                request.distance_score,
+                &subj.unpack().drop_deferrals(request.disregard_deferrals),
+                &request.models
+            )
         ).collect_into_vec(&mut results);
         results
     };

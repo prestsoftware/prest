@@ -1,11 +1,12 @@
 extern crate byteorder;
 extern crate argparse;
 extern crate num;
+extern crate num_bigint;
+extern crate num_rational;
+extern crate num_integer;
 extern crate base64;
 extern crate rand;
 extern crate rayon;
-
-//extern crate num;
 
 #[macro_use]
 pub mod alt_set;
@@ -27,7 +28,6 @@ pub mod model;
 pub mod precomputed;
 pub mod args;
 pub mod consistency;
-pub mod integer;
 pub mod simulation;
 pub mod experiment_stats;
 pub mod void;

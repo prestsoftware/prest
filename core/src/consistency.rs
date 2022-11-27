@@ -7,7 +7,7 @@ use std::io::{Read,Write};
 use std::iter::FromIterator;
 
 use alt::Alt;
-use integer::Integer;
+use num_bigint::BigUint;
 use rpc_common::{ChoiceRow,Subject};
 use codec::{self,Encode,Decode,Packed};
 
@@ -113,7 +113,7 @@ impl Cycle {
         }
     }
 
-    fn multiplicity_in(&self, g : &Graph) -> Integer {
+    fn multiplicity_in(&self, g : &Graph) -> BigUint {
         let mut result = one();
 
         for (u, v) in self.edges() {
@@ -127,13 +127,13 @@ impl Cycle {
         self.edges().any(|(u,v)| g.has_edge(u, v))
     }
 
-    fn garp_multiplicity_in(&self, strict : &Graph, non_strict : &Graph) -> Integer {
+    fn garp_multiplicity_in(&self, strict : &Graph, non_strict : &Graph) -> BigUint {
         fn multiplicity_from(
             strict : &Graph,
             non_strict : &Graph,
             got_strict_edge : bool,
             edges : &[(Alt, Alt)]
-        ) -> Integer {
+        ) -> BigUint {
             if edges.is_empty() {
                 if got_strict_edge {
                     return one();
@@ -326,10 +326,10 @@ impl Decode for Request {
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Debug)]
 pub struct Row {
     cycle_length : u32,
-    garp : Integer,
-    sarp : Integer,
-    garp_binary_menus : Integer,
-    sarp_binary_menus : Integer,
+    garp : BigUint,
+    sarp : BigUint,
+    garp_binary_menus : BigUint,
+    sarp_binary_menus : BigUint,
 }
 
 impl Row {
@@ -360,7 +360,7 @@ pub struct Response {
     subject_name : String,
     rows : Vec<Row>,
     warp_pairs : u32,
-    warp : Integer,
+    warp : BigUint,
 }
 
 impl Encode for Response {
@@ -806,17 +806,17 @@ mod test {
         assert_eq!(response.rows, vec![
             Row{
                 cycle_length: 2,
-                garp: Integer::from(0),
-                sarp: Integer::from(0),
-                garp_binary_menus: Integer::from(0),
-                sarp_binary_menus: Integer::from(0),
+                garp: BigUint::from(0),
+                sarp: BigUint::from(0),
+                garp_binary_menus: BigUint::from(0),
+                sarp_binary_menus: BigUint::from(0),
             },
             Row{
                 cycle_length: 3,
-                garp: Integer::from(1),
-                sarp: Integer::from(0),
-                garp_binary_menus: Integer::from(1),
-                sarp_binary_menus: Integer::from(0),
+                garp: BigUint::from(1),
+                sarp: BigUint::from(0),
+                garp_binary_menus: BigUint::from(1),
+                sarp_binary_menus: BigUint::from(0),
             }
         ]);
     }
@@ -860,8 +860,8 @@ mod test {
         let detailed = run(&request).unwrap();
 
         assert_eq!(
-            detailed.rows.into_iter().map(|r| r.garp_binary_menus).sum::<Integer>(),
-            Integer::from(136),
+            detailed.rows.into_iter().map(|r| r.garp_binary_menus).sum::<BigUint>(),
+            BigUint::from(136),
         );
     }
 
@@ -928,16 +928,16 @@ mod test {
 
         assert_eq!(
             column(&detailed.rows, |r| r.sarp.clone()),
-            &[(2, Integer::from(1)), (3, Integer::from(1))]
+            &[(2, BigUint::from(1)), (3, BigUint::from(1))]
         );
-        assert_eq!(detailed.warp, Integer::from(1));
+        assert_eq!(detailed.warp, BigUint::from(1));
         assert_eq!(
             column(&detailed.rows, |r| r.garp.clone()),
-            &[(2, Integer::from(1)), (3, Integer::from(2)), (4, Integer::from(2))]
+            &[(2, BigUint::from(1)), (3, BigUint::from(2)), (4, BigUint::from(2))]
         );
         assert_eq!(
             column(&detailed.rows, |r| r.garp_binary_menus.clone()),
-            &[(3, Integer::from(2)), (4, Integer::from(1))]
+            &[(3, BigUint::from(2)), (4, BigUint::from(1))]
         );
     }
 
@@ -970,7 +970,7 @@ mod test {
         let response = run(&request).unwrap();
 
         assert_eq!(response.warp_pairs, 1);
-        assert_eq!(response.warp, Integer::from(2));
+        assert_eq!(response.warp, BigUint::from(2));
     }
 
     #[test]

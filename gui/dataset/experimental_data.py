@@ -43,7 +43,7 @@ class ChoiceRow_str(NamedTuple):
     menu : FrozenSet[str]
     default : Optional[str]
     choice : FrozenSet[str]
-    
+
 ChoiceRow_strC = namedtupleC(ChoiceRow_str, frozensetC(strC), maybe(strC), frozensetC(strC))
 
 class ChoiceRowNode(util.tree_model.Node):

@@ -4,6 +4,7 @@ import typing
 import dataclasses
 from io import BytesIO
 import numpy as np
+from enum import Enum
 from fractions import Fraction
 from dataclasses import dataclass
 from typing import Any, BinaryIO, NewType, NamedTuple, \
@@ -256,6 +257,18 @@ def frozensetC(codec : Codec[E]) -> Codec[frozenset[E]]:
         return frozenset(_decode(f))
 
     return Codec(_encode, decode)  # type: ignore
+
+EnumTy = TypeVar('EnumTy', bound=Enum)
+def pyEnumC(cls : type[EnumTy], valC : Codec) -> Codec[EnumTy]:
+    _encode, _decode = valC.enc_dec()
+
+    def encode(f : FileOut, x : EnumTy) -> None:
+        _encode(f, x.value)
+
+    def decode(f : FileIn) -> EnumTy:
+        return cls(Enum(_decode(f)))
+
+    return Codec(encode, decode)
 
 def enumC(name : str, alts : Dict[type, Tuple[Codec, ...]]) -> Codec:
     codecs_enc_get = {

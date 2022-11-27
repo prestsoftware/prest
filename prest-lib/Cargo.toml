@@ -19,6 +19,7 @@ num = "*"
 num-bigint = "*"
 num-rational = "*"
 num-integer = "*"
+num-traits = "*"
 rayon = "*"
 csv = "*"
 

@@ -11,6 +11,7 @@ use std::io::{Read,Write};
 use std::iter::FromIterator;
 use codec::{self,Encode,Decode};
 use common::{ChoiceRow};
+use num_rational::Ratio;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct PreorderParams {
@@ -213,13 +214,13 @@ fn undominated_choice(p : &Preorder, menu : AltSetView) -> AltSet {
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Penalty {
     // both bounds are inclusive
-    pub lower_bound : u32,
-    pub upper_bound : u32,
+    pub lower_bound : Ratio<u32>,
+    pub upper_bound : Ratio<u32>,
 }
 
 impl Penalty {
     pub fn exact(value : u32) -> Penalty {
-        Penalty{lower_bound: value, upper_bound: value}
+        Penalty{lower_bound: Ratio::from(value), upper_bound: Ratio::from(value)}
     }
 
     pub fn merge_min(&mut self, other : &Penalty) {
@@ -383,28 +384,32 @@ impl Instance {
     }
 
     pub fn penalty(&self, crs : &[ChoiceRow]) -> Penalty {
-        let upper_bound = crs.iter().map(|cr| {
+        let upper_bound : Ratio<u32> = crs.iter().map(|cr| {
             // special case for SWAPS
             if let &Instance::Swaps(ref p) = self {
                 if let Some(choice) = cr.choice.view().as_singleton() {
                     // all strictly better options
-                    return p.upset(choice).iter().filter(
+                    return Ratio::from(p.upset(choice).iter().filter(
                         |&c|
                             cr.menu.view().contains(c)
                             && c != choice
-                    ).count() as u32
+                    ).count() as u32)
                 } else {
                     panic!("SWAPS model: choices must be exactly singletons");
                 }
             }
 
             let standard_penalty =
-                if cr.choice == self.choice(cr.menu.view(), cr.default) { 0 } else { 1 };
+                if cr.choice == self.choice(cr.menu.view(), cr.default) {
+                    Ratio::from(0)
+                } else {
+                    Ratio::from(1)
+                };
 
             if cr.menu.view().is_singleton() {
                 if let Instance::PartiallyDominantChoice{p:_,fc:_} = self {
                     // PDC should not be penalised for deferring at singletons
-                    0
+                    Ratio::from(0)
                 } else {
                     standard_penalty
                 }
@@ -415,7 +420,7 @@ impl Instance {
 
         let lower_bound = match self {
             &Instance::SequentiallyRationalizableChoice(_,_)
-                => cmp::min(1, upper_bound),
+                => cmp::min(Ratio::from(1), upper_bound),
             _
                 => upper_bound,
         };

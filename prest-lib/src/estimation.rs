@@ -9,6 +9,8 @@ use common::{Subject,ChoiceRow};
 use codec::{self,Encode,Decode,Packed};
 use std::iter::FromIterator;
 use rayon::prelude::*;
+use num_rational::Ratio;
+use num_traits::identities::Zero;
 
 pub type Result<T> = result::Result<T, EstimationError>;
 
@@ -118,7 +120,7 @@ impl BestInstances {
         }
     }
 
-    fn upper_bound_for(&self, model : Model) -> Option<u32> {
+    fn upper_bound_for(&self, model : Model) -> Option<Ratio<u32>> {
         self.instances.iter().filter_map(|inst|
             if inst.model == model {
                 Some(inst.penalty.upper_bound)
@@ -270,11 +272,11 @@ pub fn run_one(precomputed : &Precomputed, subject : &Subject, models : &[Model]
     // 1) it was chosen by the user
     if models.contains(&Model::SequentiallyRationalizableChoice)
         // 2) and there's no perfect rationalisation by UC
-        && best_instances.upper_bound_for(Model::UndominatedChoice{strict:true}) != Some(0)
+        && best_instances.upper_bound_for(Model::UndominatedChoice{strict:true}) != Some(Zero::zero())
         // 3) and there's no perfect rationalisation by UM, either
         && best_instances.upper_bound_for(Model::PreorderMaximization(
             PreorderParams{strict: Some(true), total: Some(true)}
-        )) != Some(0)
+        )) != Some(Zero::zero())
         // Note that we don't need to check non-strict models
         // because if non-strict models rationalise perfectly
         // then we have a multi-choice somewhere,

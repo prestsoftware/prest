@@ -6,6 +6,8 @@ use prest::{model,codec,preorder,alt};
 use alt::Alt;
 use model::Instance;
 use preorder::Preorder;
+use base64::prelude::BASE64_STANDARD;
+use base64::engine::Engine;
 
 fn fmt_digraph(p : &Preorder, alt_names : &[String], unattr : &[Alt]) -> String {
     let mut result = String::from("digraph G {\n");
@@ -54,7 +56,7 @@ fn main() {
     println!("model str: {}", model_str);
     println!("alternatives: {:?}", alt_names);
 
-    let bytes = base64::decode(&model_str).unwrap();
+    let bytes = BASE64_STANDARD.decode(&model_str).unwrap();
     println!("bytes: {:?}", bytes);
 
     let instance : model::Instance = codec::decode_from_memory(&bytes).unwrap();

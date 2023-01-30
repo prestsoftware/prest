@@ -3,6 +3,8 @@ use codec;
 use codec::{Decode,Encode};
 use std::fmt;
 use std::result::Result;
+use base64::prelude::BASE64_STANDARD;
+use base64::engine::Engine;
 
 use alt_set::AltSet;
 use model::Instance;
@@ -101,7 +103,7 @@ pub fn graph_response(p : &Preorder) -> Response {
 }
 
 pub fn run(req : Request) -> Result<Response, Error> {
-    let bytes = base64::decode(&req.instance_code)?;
+    let bytes = BASE64_STANDARD.decode(&req.instance_code)?;
     let instance = codec::decode_from_memory(&bytes)?;
 
     match instance {

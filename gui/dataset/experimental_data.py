@@ -1,25 +1,20 @@
-import sys
-import time
-import random
+from __future__ import annotations
+
 import logging
-import threading
 import collections
-from typing import Sequence, Tuple, Dict, List, Set, \
-    FrozenSet, Iterator, NamedTuple, Iterable, Any, Optional, cast
+from typing import Sequence, Iterator, NamedTuple, Optional
 
-from PyQt5.QtCore import Qt, QModelIndex, QAbstractItemModel
-from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
+from PyQt5.QtWidgets import QDialog, QHeaderView
 
-import model
 import dataset
 import gui.copycat_simulation
 import gui.estimation
 import simulation
 from core import Core
-from dataset import Dataset, DatasetHeaderC, ChoiceRow, ChoiceRowC, \
+from dataset import Dataset, DatasetHeaderC, ChoiceRow, \
     Subject, SubjectC, ExportVariant, Analysis, PackedSubject, PackedSubjectC
 from gui.progress import Worker
-from dataset.estimation_result import EstimationResult, Penalty, PenaltyC
+from dataset.estimation_result import EstimationResult
 from dataset.consistency_result import ConsistencyResult
 from dataset.experiment_stats import ExperimentStats
 from dataset.tuple_intrans_alts import TupleIntransAlts
@@ -30,20 +25,19 @@ import dataset.tuple_intrans_alts
 import dataset.tuple_intrans_menus
 import dataset.integrity_check
 import dataset.estimation_result as estimation_result
-from model import Model, ModelC
 import uic.view_dataset
 import util.tree_model
-from util.codec import Codec, FileIn, FileOut, namedtupleC, strC, intC, \
-    frozensetC, listC, bytesC, tupleC, maybe
+from util.codec import FileIn, FileOut, namedtupleC, strC, intC, \
+    frozensetC, maybe
 from util.codec_progress import CodecProgress, listCP, oneCP
 
 log = logging.getLogger(__name__)
 
 class ChoiceRow_str(NamedTuple):
-    menu : FrozenSet[str]
+    menu : frozenset[str]
     default : Optional[str]
-    choice : FrozenSet[str]
-    
+    choice : frozenset[str]
+
 ChoiceRow_strC = namedtupleC(ChoiceRow_str, frozensetC(strC), maybe(strC), frozensetC(strC))
 
 class ChoiceRowNode(util.tree_model.Node):
@@ -66,7 +60,7 @@ class SubjectNode(util.tree_model.Node):
     def create_child(self, row: int) -> ChoiceRowNode:
         return ChoiceRowNode(self, row, self.subject.choices[row])
 
-def parse_set(s: str) -> FrozenSet[str]:
+def parse_set(s: str) -> frozenset[str]:
     s = s.strip()
 
     if s == '':
@@ -79,7 +73,7 @@ class CsvError(Exception):
 
 class ExperimentalData(Dataset):
     class ViewDialog(QDialog, uic.view_dataset.Ui_ViewDataset):
-        def __init__(self, ds: 'ExperimentalData') -> None:
+        def __init__(self, ds: ExperimentalData) -> None:
             QDialog.__init__(self)
             self.setupUi(self)
 
@@ -95,14 +89,14 @@ class ExperimentalData(Dataset):
 
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:
         Dataset.__init__(self, name, alternatives)
-        self.subjects: List[PackedSubject] = []
+        self.subjects: list[PackedSubject] = []
         self.observ_count: int = 0
-        
+
     @staticmethod
-    def from_csv(name: str, rows: Sequence[Sequence[str]], indices: Tuple[int,int,Optional[int],int]) -> 'ExperimentalData':
+    def from_csv(name: str, rows: Sequence[Sequence[str]], indices: tuple[int,int,Optional[int],int]) -> ExperimentalData:
         i_s, i_m, i_d, i_c = indices  # CSV column indices: subject, menu, default, choice
 
-        subjects_raw: Dict[str,List[ChoiceRow_str]] = collections.defaultdict(list)
+        subjects_raw: dict[str,list[ChoiceRow_str]] = collections.defaultdict(list)
         for row in rows:
             # row[i_s] is the name of the subject
             cr = ChoiceRow_str(
@@ -118,12 +112,12 @@ class ExperimentalData(Dataset):
 
             subjects_raw[row[i_s]].append(cr)
 
-        subjects: List[PackedSubject] = []
-        alternatives_dataset: Set[str] = set()
+        subjects: list[PackedSubject] = []
+        alternatives_dataset: set[str] = set()
         observ_count = 0
 
         for subject_name, choices in subjects_raw.items():
-            alternatives_subj: Set[str] = set()
+            alternatives_subj: set[str] = set()
             for cr in choices:
                 alternatives_subj |= cr.menu
                 alternatives_subj |= cr.choice
@@ -176,8 +170,8 @@ class ExperimentalData(Dataset):
         else:
             return None
 
-    def analysis_simulation(self, worker : Worker, options : 'gui.copycat_simulation.Options') -> 'ExperimentalData':
-        subjects : List[PackedSubject] = []
+    def analysis_simulation(self, worker : Worker, options : 'gui.copycat_simulation.Options') -> ExperimentalData:
+        subjects : list[PackedSubject] = []
 
         with Core() as core:
             worker.interrupt = lambda: core.shutdown()  # register interrupt hook
@@ -187,14 +181,14 @@ class ExperimentalData(Dataset):
             for subject_packed in self.subjects:
                 for j in range(options.multiplicity):
                     response = simulation.run(core, simulation.Request(
-                            name='random%d' % (j+1),
-                            alternatives=self.alternatives,  # we don't use subject.alternatives here
-                            gen_menus=simulation.GenMenus(
-                                generator=simulation.Copycat(subject_packed),
-                                defaults=False,  # this will be ignored, anyway
-                            ),
-                            gen_choices=options.gen_choices,
-                            preserve_deferrals=options.preserve_deferrals,
+                        name='random%d' % (j+1),
+                        alternatives=self.alternatives,  # we don't use subject.alternatives here
+                        gen_menus=simulation.GenMenus(
+                            generator=simulation.Copycat(subject_packed),
+                            defaults=False,  # this will be ignored, anyway
+                        ),
+                        gen_choices=options.gen_choices,
+                        preserve_deferrals=options.preserve_deferrals,
                     ))
 
                     subjects.append(response.subject_packed)
@@ -208,20 +202,20 @@ class ExperimentalData(Dataset):
         ds.observ_count = options.multiplicity * self.observ_count
         return ds
 
-    def analysis_merge_choices(self, worker : Worker, _config : None) -> 'ExperimentalData':
-        subjects : List[PackedSubject] = []
+    def analysis_merge_choices(self, worker : Worker, _config : None) -> ExperimentalData:
+        subjects : list[PackedSubject] = []
         observ_count : int = 0
 
         # we group by pairs (menu, default)
-        MenuDef = Tuple[FrozenSet[int], Optional[int]]
+        MenuDef = tuple[frozenset[int], Optional[int]]
 
         worker.set_work_size(len(self.subjects))
         for i, subject_packed in enumerate(self.subjects):
             subject = Subject.unpack(subject_packed)
 
-            choices : List[ChoiceRow] = []
-            menu_idx : Dict[MenuDef, int] = {}
-            deferrals_seen : Set[MenuDef] = set()
+            choices : list[ChoiceRow] = []
+            menu_idx : dict[MenuDef, int] = {}
+            deferrals_seen : set[MenuDef] = set()
 
             for cr in subject.choices:
                 # deferrals are kept separately
@@ -270,7 +264,7 @@ class ExperimentalData(Dataset):
         with Core() as core:
             worker.interrupt = lambda: core.shutdown()  # register interrupt hook
 
-            rows : List[estimation_result.PackedResponse] = []
+            rows : list[estimation_result.PackedResponse] = []
             worker.set_work_size(len(self.subjects))
             for i in range(0, len(self.subjects), CHUNK_SIZE):
                 request = estimation_result.Request(
@@ -323,7 +317,7 @@ class ExperimentalData(Dataset):
         )
         ds.load_from_core(rows)
         return ds
-    
+
     def analysis_summary_stats(self, worker : Worker, _config : None) -> ExperimentStats:
         subjects = []
         worker.set_work_size(len(self.subjects))
@@ -357,7 +351,7 @@ class ExperimentalData(Dataset):
             ),
         )
 
-    def export_detailed(self) -> Iterator[Optional[Tuple[str,str,Optional[str],str]]]:
+    def export_detailed(self) -> Iterator[Optional[tuple[str,str,Optional[str],str]]]:
         for subject in map(SubjectC.decode_from_memory, self.subjects):
             for cr in subject.choices:
                 yield (
@@ -416,7 +410,7 @@ class ExperimentalData(Dataset):
     def analysis_integrity_check(self, worker : Worker, _config : None) -> dataset.AnalysisResult:
         worker.set_work_size(len(self.subjects))
 
-        subjects : List[dataset.integrity_check.Subject] = []
+        subjects : list[dataset.integrity_check.Subject] = []
 
         with Core() as core:
             worker.interrupt = lambda: core.shutdown()
@@ -447,7 +441,8 @@ class ExperimentalData(Dataset):
 
     def get_analyses(self) -> Sequence[Analysis]:
         return (
-            Analysis('Integrity check',
+            Analysis(
+                name='Integrity check',
                 config=None,
                 run=self.analysis_integrity_check,
             ),
@@ -489,20 +484,20 @@ class ExperimentalData(Dataset):
         )
 
     @classmethod
-    def get_codec_progress(_cls) -> CodecProgress['ExperimentalData']:
+    def get_codec_progress(_cls) -> CodecProgress[ExperimentalData]:
         DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC.enc_dec()
         subjects_size, subjects_encode, subjects_decode = listCP(oneCP(PackedSubjectC)).enc_dec()
         intC_encode, intC_decode = intC.enc_dec()
 
-        def get_size(x : 'ExperimentalData') -> int:
+        def get_size(x : ExperimentalData) -> int:
             return subjects_size(x.subjects)
 
-        def encode(worker : Worker, f : FileOut, x : 'ExperimentalData') -> None:
+        def encode(worker : Worker, f : FileOut, x : ExperimentalData) -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))
             subjects_encode(worker, f, x.subjects)
             intC_encode(f, x.observ_count)
 
-        def decode(worker : Worker, f : FileIn) -> 'ExperimentalData':
+        def decode(worker : Worker, f : FileIn) -> ExperimentalData:
             ds = ExperimentalData(*DatasetHeaderC_decode(f))
             ds.subjects = subjects_decode(worker, f)
             ds.observ_count = intC_decode(f)

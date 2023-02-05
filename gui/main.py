@@ -10,7 +10,7 @@ import sys
 import logging
 import platform_specific
 
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QApplication
 
 import branding
 import gui.main_window

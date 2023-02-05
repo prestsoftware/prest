@@ -1,9 +1,4 @@
-import os
-import pytest
-
 from gui.progress import MockWorker
-from model import preorder
-from dataset import load_raw_csv
 from dataset.experimental_data import ExperimentalData
 
 def test_merging():
@@ -17,7 +12,12 @@ def test_merging():
         'subjA Ca,Pa,Hi Hi',
     ]
     ds = ExperimentalData.from_csv('X', [r.split(' ') for r in rows], (0,1,None,2))
-    newds = ds.analysis_merge_choices(MockWorker(), None)
+    newds = ds.analysis_merge_choices(
+        MockWorker(),
+        ExperimentalData.MergeOptions(
+            track_deferrals_separately=True,
+        ),
+    )
 
     assert list(newds.export_detailed()) == [
         ('subjA', 'Ca,Hi,Pa', None, 'Ca,Hi,Pa'),
@@ -39,7 +39,12 @@ def test_merging_default():
         'subjA Ca,Hi,Pa Hi ',
     ]
     ds = ExperimentalData.from_csv('X', [r.split(' ') for r in rows], (0,1,2,3))
-    newds = ds.analysis_merge_choices(MockWorker(), None)
+    newds = ds.analysis_merge_choices(
+        MockWorker(),
+        ExperimentalData.MergeOptions(
+            track_deferrals_separately=True,
+        ),
+    )
 
     assert list(newds.export_detailed()) == [
         ('subjA', 'Ca,Hi,Pa', 'Pa', 'Ca,Pa'),

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import collections
+from dataclasses import dataclass
 from typing import Sequence, Iterator, NamedTuple, Optional
 
 from PyQt5.QtWidgets import QDialog, QHeaderView
@@ -202,7 +203,17 @@ class ExperimentalData(Dataset):
         ds.observ_count = options.multiplicity * self.observ_count
         return ds
 
-    def analysis_merge_choices(self, worker : Worker, _config : None) -> ExperimentalData:
+    @dataclass
+    class MergeOptions:
+        track_deferrals_separately : bool
+
+    def config_merge_choices(self) -> Optional[MergeOptions]:
+        # hardwire this without UI for now
+        return ExperimentalData.MergeOptions(
+            track_deferrals_separately=False
+        )
+
+    def analysis_merge_choices(self, worker : Worker, config : MergeOptions) -> ExperimentalData:
         subjects : list[PackedSubject] = []
         observ_count : int = 0
 
@@ -218,8 +229,8 @@ class ExperimentalData(Dataset):
             deferrals_seen : set[MenuDef] = set()
 
             for cr in subject.choices:
-                # deferrals are kept separately
-                if not cr.choice:
+                # deferrals are kept separately if requested
+                if config.track_deferrals_separately and (not cr.choice):
                     if (cr.menu, cr.default) in deferrals_seen:
                         # this deferral has already been seen, just skip it
                         continue
@@ -473,7 +484,7 @@ class ExperimentalData(Dataset):
             ),
             Analysis(
                 name='Merge choices at the same menu',
-                config=None,
+                config=self.config_merge_choices,
                 run=self.analysis_merge_choices,
             ),
             Analysis(

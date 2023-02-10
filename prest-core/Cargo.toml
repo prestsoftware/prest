@@ -15,6 +15,9 @@ license = "BSD-3-Clause"
 prest = { path = "../prest-lib", version = "*" }
 argparse = "*"
 rand = "*"
+csv = "*"
+byteorder = "*"
+base64 = "*"
 
 [lib]
 path = "src/lib.rs"

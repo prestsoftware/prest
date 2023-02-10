@@ -1,5 +1,5 @@
 [package]
-name = "prest-core"
+name = "prest_core"
 version = "1.1.0"
 authors = [
 	"Georgios Gerasimou <giorgosgerasimou@hotmail.com>",
@@ -12,7 +12,7 @@ repository = "https://github.com/prestsoftware/prest"
 license = "BSD-3-Clause"
 
 [dependencies]
-prest-lib = { path = "../prest-lib", version = "*" }
+prest = { path = "../prest-lib", version = "*" }
 argparse = "*"
 rand = { version = "*", features = ["small_rng"] }
 base64 = "*"

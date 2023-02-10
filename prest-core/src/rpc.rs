@@ -2,15 +2,10 @@ use std;
 use std::io::{Read,Write,Stdout,Stdin,BufReader,BufWriter};
 use std::result::Result;
 use std::fmt::Display;
-use codec::{self,Encode,Decode};
 
-use estimation;
-use consistency;
-use simulation;
-use experiment_stats;
-use budgetary;
-use integrity;
-use instviz;
+use prest::codec::{self,Encode,Decode};
+use prest::common::{Log,LogLevel};
+use prest::{estimation,consistency,simulation,experiment_stats,budgetary,integrity,instviz};
 
 #[derive(Debug)]
 pub enum ActionRequest {
@@ -76,7 +71,7 @@ impl<E : Encode + Display> From<E> for Error {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub struct LogMessage {
     pub level : LogLevel,
     pub message : String,

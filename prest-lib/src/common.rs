@@ -97,6 +97,7 @@ pub trait Log {
     }
 }
 
+#[derive(Clone, Copy)]
 pub enum LogLevel {
     Debug,
     Info,

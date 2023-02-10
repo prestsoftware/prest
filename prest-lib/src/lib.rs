@@ -1,11 +1,8 @@
 extern crate byteorder;
-extern crate argparse;
 extern crate num;
 extern crate base64;
 extern crate rand;
 extern crate rayon;
-
-//extern crate num;
 
 #[macro_use]
 pub mod alt_set;

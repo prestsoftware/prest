@@ -52,12 +52,12 @@ def get_frozen_dir() -> str:
 def get_embedded_file_path(*fnames : str) -> str:
     for fname in fnames:
         path = os.path.join(os.getcwd(), fname)
-        if os.path.exists(path):
+        if os.path.isfile(path):
             return path  # in current directory
 
         if is_frozen():
             path = os.path.join(get_frozen_dir(), fname)
-            if os.path.exists(path):
+            if os.path.isfile(path):
                 return path
 
     raise FileNotFound(*fnames)

@@ -14,6 +14,7 @@ license = "BSD-3-Clause"
 [dependencies]
 prest = { path = "../prest-lib", version = "*" }
 argparse = "*"
+rand = "*"
 
 [lib]
 path = "src/lib.rs"

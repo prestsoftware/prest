@@ -1,9 +1,11 @@
 extern crate prest;
+extern crate prest_core;
 extern crate rand;
 
 use rand::SeedableRng;
 use rand::rngs::SmallRng;
-use prest::{rpc,precomputed,estimation,args,consistency,simulation,instviz};
+use prest_core::{rpc,args};
+use prest::{precomputed,estimation,consistency,simulation,instviz};
 use prest::{experiment_stats,budgetary,integrity};
 use precomputed::Precomputed;
 

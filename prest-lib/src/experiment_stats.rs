@@ -3,7 +3,7 @@ use std::io::{Read,Write};
 
 use void::Void;
 use codec::{Encode,Decode,Packed,self};
-use rpc_common::{Subject};
+use common::{Subject};
 
 type Error = Void;
 
@@ -58,7 +58,7 @@ mod test {
     use super::*;
     use alt_set::AltSet;
     use alt::Alt;
-    use rpc_common::{Subject,ChoiceRow};
+    use common::{Subject,ChoiceRow};
     use codec;
     use std::iter::FromIterator;
 

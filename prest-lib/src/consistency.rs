@@ -8,7 +8,7 @@ use std::iter::FromIterator;
 
 use alt::Alt;
 use integer::Integer;
-use rpc_common::{ChoiceRow,Subject};
+use common::{ChoiceRow,Subject};
 use codec::{self,Encode,Decode,Packed};
 
 #[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Hash, Copy)]
@@ -734,7 +734,7 @@ pub mod tuple_intrans {
     #[cfg(test)]
     mod test {
         use super::*;
-        use rpc_common::{Subject,ChoiceRow};
+        use common::{Subject,ChoiceRow};
 
         fn testreq(alt_count : u32, choices : Vec<ChoiceRow>) -> Request {
             Request{subject: codec::Packed(Subject{

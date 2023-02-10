@@ -6,7 +6,7 @@ use rand::Rng;
 use rand::seq::SliceRandom;
 
 use model;
-use rpc_common::{ChoiceRow,Subject};
+use common::{ChoiceRow,Subject};
 use codec::{Encode,Decode,Packed,self};
 use alt_set::{AltSet,AltSetView};
 use alt::Alt;

@@ -5,7 +5,7 @@ use std::result;
 use std::fmt;
 use std::convert::From;
 use std::io::{Read,Write};
-use rpc_common::{Subject,ChoiceRow};
+use common::{Subject,ChoiceRow};
 use codec::{self,Encode,Decode,Packed};
 use std::iter::FromIterator;
 use rayon::prelude::*;
@@ -345,7 +345,7 @@ mod test {
     use codec;
     use alt_set::AltSet;
     use alt::Alt;
-    use rpc_common::{ChoiceRow,Subject};
+    use common::{ChoiceRow,Subject};
     use std::iter::FromIterator;
 
     fn testsubj(alt_count : u32, choices : Vec<ChoiceRow>) -> Subject {

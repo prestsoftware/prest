@@ -2,15 +2,10 @@ use std;
 use std::io::{Read,Write,Stdout,Stdin,BufReader,BufWriter};
 use std::result::Result;
 use std::fmt::Display;
-use codec::{self,Encode,Decode};
 
-use estimation;
-use consistency;
-use simulation;
-use experiment_stats;
-use budgetary;
-use integrity;
-use instviz;
+use prest::codec::{self,Encode,Decode};
+use prest::common::{Log,LogLevel};
+use prest::{estimation,consistency,simulation,experiment_stats,budgetary,integrity,instviz};
 
 #[derive(Debug)]
 pub enum ActionRequest {
@@ -76,26 +71,7 @@ impl<E : Encode + Display> From<E> for Error {
     }
 }
 
-#[derive(Clone, Copy)]
-pub enum LogLevel {
-    Debug,
-    Info,
-    Warning,
-    Error,
-}
-
-impl Encode for LogLevel {
-    fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
-        use self::LogLevel::*;
-        match *self {
-            Debug   => 0u8.encode(f),
-            Info    => 1u8.encode(f),
-            Warning => 2u8.encode(f),
-            Error   => 3u8.encode(f),
-        }
-    }
-}
-
+#[derive(Clone)]
 pub struct LogMessage {
     pub level : LogLevel,
     pub message : String,
@@ -152,27 +128,6 @@ impl IO {
         }
         self.stdout.flush()?;
         Ok(())
-    }
-}
-
-pub trait Log {
-    fn log(&mut self, level : LogLevel, message : String);
-    fn progress(&mut self, position : u32);
-
-    fn debug(&mut self, msg : String) {
-        self.log(LogLevel::Debug, msg)
-    }
-
-    fn info(&mut self, msg : String) {
-        self.log(LogLevel::Info, msg)
-    }
-
-    fn warn(&mut self, msg : String) {
-        self.log(LogLevel::Warning, msg)
-    }
-
-    fn error(&mut self, msg : String) {
-        self.log(LogLevel::Error, msg)
     }
 }
 

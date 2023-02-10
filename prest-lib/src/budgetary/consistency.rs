@@ -3,10 +3,10 @@ use std::fmt;
 use std::io::Write;
 use std::iter::FromIterator;
 use budgetary::Subject;
-use rpc::Log;
 use matrix::{Matrix,dot_product};
 use codec::{self,Encode};
 use std::collections::{HashSet,BTreeMap};
+use common::Log;
 use set_cover;
 
 #[derive(Debug, Clone)]

@@ -12,17 +12,12 @@ repository = "https://github.com/prestsoftware/prest"
 license = "BSD-3-Clause"
 
 [dependencies]
-argparse = "*"
 rand = { version = "*", features = ["small_rng"] }
 base64 = "*"
 byteorder = "*"
 num = "*"
 rayon = "*"
 csv = "*"
-#nalgebra = "*"
-#log = "*"
 
 [lib]
 path = "src/lib.rs"
-
-# vim: ft=cfg

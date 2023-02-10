@@ -66,7 +66,7 @@ jobs:
 
           pyinstaller \
               --add-data 'version.txt;.' \
-              --add-binary 'core/target/release/prest-core.exe;.' \
+              --add-binary 'prest-core/target/release/prest-core.exe;.' \
               --add-data 'gui/images;images' \
               --add-data 'docs/build/html;html' \
               --add-data 'preorders-7.bin;.' \
@@ -133,7 +133,7 @@ jobs:
 
           pyinstaller \
               --add-data 'version.txt:.' \
-              --add-binary 'core/target/release/prest-core:.' \
+              --add-binary 'prest-core/target/release/prest-core:.' \
               --add-data 'gui/images:images' \
               --add-data 'docs/build/html:html' \
               --add-data 'preorders-7.bin:.' \
@@ -200,7 +200,7 @@ jobs:
 
           pyinstaller \
               --add-data 'version.txt:.' \
-              --add-binary 'core/target/release/prest-core:.' \
+              --add-binary 'prest-core/target/release/prest-core:.' \
               --add-data 'gui/images:images' \
               --add-data 'docs/build/html:html' \
               --add-data 'preorders-7.bin:.' \

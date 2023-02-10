@@ -1,7 +1,7 @@
 use alt::Alt;
 use alt_set::{AltSet,AltSetView};
 use preorder::Preorder;
-use rpc_common::ChoiceRow;
+use common::ChoiceRow;
 use std::collections::HashMap;
 use std::iter::{FromIterator,repeat};
 

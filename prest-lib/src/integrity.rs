@@ -5,7 +5,7 @@ use std::io::{Read,Write};
 use alt::{Alt};
 use alt_set::{AltSet};
 use codec::{self,Packed,Encode,Decode};
-use rpc_common::{Subject};
+use common::{Subject};
 use std::collections::HashMap;
 
 #[derive(Debug)]

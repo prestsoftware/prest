@@ -10,7 +10,7 @@ use std::cmp;
 use std::io::{Read,Write};
 use std::iter::FromIterator;
 use codec::{self,Encode,Decode};
-use rpc_common::{ChoiceRow};
+use common::{ChoiceRow};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct PreorderParams {
@@ -702,7 +702,7 @@ mod test {
     use alt::Alt;
     use std::iter::FromIterator;
     /* disabled for now
-    use rpc_common::ChoiceRow;
+    use common::ChoiceRow;
     use approximate_estimation::sequentially_rationalizable_choice;
     use super::*;
 

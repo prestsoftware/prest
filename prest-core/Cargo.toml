@@ -1,0 +1,27 @@
+[package]
+name = "prest-core"
+version = "1.1.0"
+authors = [
+	"Georgios Gerasimou <giorgosgerasimou@hotmail.com>",
+	"Matus Tejiscak <ziman@functor.sk>"
+]
+description = "Preference estimation from choice data."
+documentation = "https://prestsoftware.com"
+homepage = "https://prestsoftware.com"
+repository = "https://github.com/prestsoftware/prest"
+license = "BSD-3-Clause"
+
+[dependencies]
+prest-lib = { path = "../prest-lib", version = "*" }
+argparse = "*"
+rand = { version = "*", features = ["small_rng"] }
+base64 = "*"
+byteorder = "*"
+num = "*"
+rayon = "*"
+csv = "*"
+#nalgebra = "*"
+#log = "*"
+
+[lib]
+path = "src/lib.rs"

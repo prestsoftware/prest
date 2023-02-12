@@ -1,4 +1,4 @@
-use std::io::Read;
+use std::io::{Read,Write};
 use std::marker::PhantomData;
 use std::collections::HashSet;
 
@@ -10,6 +10,11 @@ pub trait FromRow {
     const COLUMN_NAMES : &'static[&'static str];
     fn from_row(alternatives : &mut Vec<String>, row : &[&str]) -> Result<Self, Self::ParseError>
         where Self : Sized;
+}
+
+pub trait ToRow {
+    const COLUMN_NAMES : &'static[&'static str];
+    fn to_row(&self, alternatives : &[&str]) -> Vec<String>;
 }
 
 pub trait FromCell {
@@ -24,6 +29,13 @@ pub trait ToCell {
 
 #[derive(Debug)]
 pub enum Void {}
+
+impl ToRow for () {
+    const COLUMN_NAMES : &'static[&'static str] = &[];
+    fn to_row(&self, _alternatives : &[&str]) -> Vec<String> {
+        Vec::new()
+    }
+}
 
 impl FromRow for () {
     type ParseError = Void;
@@ -260,4 +272,31 @@ pub fn read_subjects<R, Sub, Row>(rdr : R, subj_name_column : &str)
         current_subject: None,
         alternatives: Vec::new(),
     })
+}
+
+pub fn write_subjects<W, Sub, Row, I>(wtr : W, subjects : I)
+    -> Result<(), csv::Error>
+    where W : Write, I : Iterator<Item=Subject<Sub, Row>>, Sub : ToRow, Row : ToRow
+{
+    let mut csv = csv::Writer::from_writer(wtr);
+    csv.write_record({
+        let mut header : Vec<&'static str> = vec!["subject"];
+        header.extend_from_slice(Sub::COLUMN_NAMES);
+        header.extend_from_slice(Row::COLUMN_NAMES);
+        header
+    })?;
+
+    for subject in subjects {
+        let alternatives : Vec<&str> = subject.alternatives.iter().map(String::as_str).collect();
+        for row in subject.rows {
+            csv.write_record({
+                let mut csv_row : Vec<String> = vec![subject.name.clone()];
+                csv_row.append(&mut subject.data.to_row(&alternatives));
+                csv_row.append(&mut row.to_row(&alternatives));
+                csv_row
+            })?;
+        }
+    }
+
+    Ok(())
 }

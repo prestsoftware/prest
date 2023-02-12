@@ -6,6 +6,7 @@ use codec::{self,Encode,Decode};
 use alt::Alt;
 use std::fmt;
 use rand::Rng;
+use std::string::String;
 
 pub type Block = u32;
 
@@ -162,6 +163,20 @@ impl<'a> AltSetView<'a> {
             tail: self.blocks,
             offset: 0,
         }
+    }
+
+    pub fn to_string(&self, alternatives : &[&str]) -> String {
+        let mut s = String::new();
+
+        for (i, alt) in self.iter().enumerate() {
+            if i > 0 {
+                fmt::Write::write_char(&mut s, ',').unwrap();
+            }
+
+            fmt::Write::write_str(&mut s, alternatives[alt.index() as usize]).unwrap();
+        }
+
+        s
     }
 }
 

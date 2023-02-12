@@ -36,7 +36,7 @@ impl Decode for MenuGenerator {
 }
 
 impl MenuGenerator {
-    fn gen<R : Rng>(&self, rng : &mut R, alt_count : u32) -> Vec<(AltSet, Option<Alt>)> {
+    pub fn gen<R : Rng>(&self, rng : &mut R, alt_count : u32) -> Vec<(AltSet, Option<Alt>)> {
         use self::MenuGenerator::*;
         match *self {
             Exhaustive => {

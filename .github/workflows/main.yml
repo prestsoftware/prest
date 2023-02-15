@@ -23,15 +23,15 @@ jobs:
     steps:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
       - name: Unshallow the repository
         run: git fetch --prune --unshallow
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v3
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.10
+          python-version: 3.9
 
       - name: Install dependencies
         run: |
@@ -39,7 +39,7 @@ jobs:
           pip install -r gui/requirements.txt
 
       - name: Install Rust
-        uses: actions-rs/toolchain@v2
+        uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
 
@@ -79,7 +79,7 @@ jobs:
           ls dist
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: prest-${{ runner.os }}
           path: dist/prest-*.exe
@@ -92,15 +92,15 @@ jobs:
     steps:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
       - name: Unshallow the repository
         run: git fetch --prune --unshallow
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v3
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.10
+          python-version: 3.9
 
       - name: Install dependencies
         run: |
@@ -108,7 +108,7 @@ jobs:
           pip install -r gui/requirements.txt
 
       - name: Install Rust
-        uses: actions-rs/toolchain@v2
+        uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
 
@@ -146,7 +146,7 @@ jobs:
           ls dist
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: prest-${{ runner.os }}
           path: dist/prest-*
@@ -159,15 +159,15 @@ jobs:
     steps:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
       - name: Unshallow the repository
         run: git fetch --prune --unshallow
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v3
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.10
+          python-version: 3.9
 
       - name: Install dependencies
         run: |
@@ -175,7 +175,7 @@ jobs:
           pip install -r gui/requirements.txt
 
       - name: Install Rust
-        uses: actions-rs/toolchain@v2
+        uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
 
@@ -221,7 +221,7 @@ jobs:
           rm -f "dist/${PNAME}"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: prest-${{ runner.os }}
           path: dist/prest-*.command

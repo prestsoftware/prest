@@ -94,7 +94,7 @@ impl Precomputed {
 
         Ok(())
     }
-    
+
     pub fn get(&self, size : u32) -> Result<&Preorders> {
         if size >= self.preorders.len() as u32 {
             return Err(Error::TooManyAlternatives(size))

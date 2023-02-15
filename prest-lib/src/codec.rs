@@ -12,6 +12,7 @@ pub enum Error {
     BadEnumTag,
     IO(std::io::Error),
     Unicode(std::string::FromUtf8Error),
+    Other(String),
 }
 
 impl From<std::io::Error> for Error {

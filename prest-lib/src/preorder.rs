@@ -7,6 +7,8 @@ use std::io::{Read,Write};
 use codec::{self,Encode,Decode};
 use std::collections::{HashMap,HashSet};
 use alt::Alt;
+use base64::prelude::BASE64_STANDARD;
+use base64::engine::Engine;
 
 #[derive(PartialEq,Eq,PartialOrd,Ord,Clone,Hash,Debug)]
 pub struct Preorder {
@@ -360,6 +362,20 @@ impl Preorder {
         }
 
         Preorder{blocks, size: target_size}
+    }
+
+    pub fn to_base64(&self) -> String {
+        BASE64_STANDARD.encode(
+            codec::encode_to_memory(self).unwrap()
+        )
+    }
+
+    pub fn from_base64(s : &str) -> codec::Result<Self> {
+        codec::decode_from_memory(
+            &BASE64_STANDARD.decode(s).map_err(
+                |err| codec::Error::Other(format!("{:?}", err))
+            )?
+        )
     }
 }
 

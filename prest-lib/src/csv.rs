@@ -30,6 +30,12 @@ pub trait ToCell {
 #[derive(Debug)]
 pub enum Void {}
 
+impl Void {
+    pub fn into<T>(self) -> T {
+        match self {}
+    }
+}
+
 impl ToRow for () {
     const COLUMN_NAMES : &'static[&'static str] = &[];
     fn to_row(&self, _alternatives : &[&str]) -> Vec<String> {

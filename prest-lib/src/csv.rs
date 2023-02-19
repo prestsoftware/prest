@@ -280,29 +280,51 @@ pub fn read_subjects<R, Sub, Row>(rdr : R, subj_name_column : &str)
     })
 }
 
-pub fn write_subjects<W, Sub, Row, I>(wtr : W, subjects : I)
-    -> Result<(), csv::Error>
-    where W : Write, I : Iterator<Item=Subject<Sub, Row>>, Sub : ToRow, Row : ToRow
-{
-    let mut csv = csv::Writer::from_writer(wtr);
-    csv.write_record({
-        let mut header : Vec<&'static str> = vec!["subject"];
-        header.extend_from_slice(Sub::COLUMN_NAMES);
-        header.extend_from_slice(Row::COLUMN_NAMES);
-        header
-    })?;
+pub struct Writer<W : Write, Sub, Row> {
+    csv : csv::Writer<W>,
+    phantom_sub : PhantomData<Sub>,
+    phantom_row : PhantomData<Row>,
+}
 
-    for subject in subjects {
+impl<W : Write, Sub : ToRow, Row : ToRow> Writer<W, Sub, Row> {
+    pub fn new(w : W) -> Result<Self, csv::Error> {
+        let mut csv = csv::Writer::from_writer(w);
+        csv.write_record({
+            let mut header : Vec<&'static str> = vec!["subject"];
+            header.extend_from_slice(Sub::COLUMN_NAMES);
+            header.extend_from_slice(Row::COLUMN_NAMES);
+            header
+        })?;
+
+        Ok(Writer{
+            csv,
+            phantom_sub : PhantomData,
+            phantom_row : PhantomData,
+        })
+    }
+
+    pub fn write(&mut self, subject : Subject<Sub, Row>) -> Result<(), csv::Error> {
         let alternatives : Vec<&str> = subject.alternatives.iter().map(String::as_str).collect();
         for row in subject.rows {
-            csv.write_record({
+            self.csv.write_record({
                 let mut csv_row : Vec<String> = vec![subject.name.clone()];
                 csv_row.append(&mut subject.data.to_row(&alternatives));
                 csv_row.append(&mut row.to_row(&alternatives));
                 csv_row
             })?;
         }
-    }
 
+        Ok(())
+    }
+}
+
+pub fn write_subjects<W, Sub, Row, I>(wtr : W, subjects : I)
+    -> Result<(), csv::Error>
+    where W : Write, I : Iterator<Item=Subject<Sub, Row>>, Sub : ToRow, Row : ToRow
+{
+    let mut csv = Writer::new(wtr)?;
+    for subject in subjects {
+        csv.write(subject)?;
+    }
     Ok(())
 }

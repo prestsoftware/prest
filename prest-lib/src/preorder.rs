@@ -3,6 +3,7 @@ use alt_set::{Block,AltSetView,AltSet};
 use graph::Graph;
 use std::mem;
 use std::iter;
+use std::fmt;
 use std::io::{Read,Write};
 use codec::{self,Encode,Decode};
 use std::collections::{HashMap,HashSet};
@@ -20,8 +21,8 @@ impl Encode for Preorder {
     fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
         self.size.encode(f)?;
 
-        let block_size = 8 * mem::size_of::<Block>();  // in bits
-        let stride = (self.size as usize + block_size - 1) / block_size;  // round upwards
+        const BLOCK_SIZE : usize = 8 * mem::size_of::<Block>();  // in bits
+        let stride = (self.size as usize + BLOCK_SIZE - 1) / BLOCK_SIZE;  // round upwards
         assert_eq!(self.blocks.len(), self.size as usize * stride);
 
         for &block in &self.blocks {
@@ -36,8 +37,8 @@ impl Decode for Preorder {
     fn decode<R : Read>(f : &mut R) -> codec::Result<Preorder> {
         let size : u32 = Decode::decode(f)?;
 
-        let block_size = 8 * mem::size_of::<Block>();  // in bits
-        let stride = (size as usize + block_size - 1) / block_size;  // round upwards
+        const BLOCK_SIZE : usize = 8 * mem::size_of::<Block>();  // in bits
+        let stride = (size as usize + BLOCK_SIZE - 1) / BLOCK_SIZE;  // round upwards
         let block_count = size as usize * stride;
 
         let mut blocks = Vec::new();
@@ -76,15 +77,15 @@ pub fn simplify_edges(edges : &[(Alt, Alt)]) -> Vec<(Alt, Alt)> {
     }
 
     let mut edges : HashSet<(Alt, Alt)> = edges.iter().cloned().collect();
-    let mut changing = true;
+    let mut is_changing = true;
 
-    while changing {
-        changing = false;
+    while is_changing {
+        is_changing = false;
 
         for (i, j) in edges.clone() {
             if is_redundant(&edges, i, j) {
                 edges.remove(&(i, j));
-                changing = true;
+                is_changing = true;
             }
         }
     }
@@ -131,8 +132,8 @@ impl Preorder {
     }
 
     pub fn restrict(&mut self, alts : AltSetView) {
-        let block_size = 8 * mem::size_of::<Block>() as u32;  // in bits
-        let stride = (self.size + block_size - 1) / block_size;  // round upwards
+        const BLOCK_SIZE : u32 = 8 * mem::size_of::<Block>() as u32;  // in bits
+        let stride = (self.size + BLOCK_SIZE - 1) / BLOCK_SIZE;  // round upwards
         for i in 0..self.size {
             let i_alt = Alt(i as u32);
             if alts.contains(i_alt) {
@@ -159,8 +160,8 @@ impl Preorder {
     }
 
     pub fn diagonal(size : u32) -> Preorder {
-        let block_size = 8 * mem::size_of::<Block>() as u32;  // in bits
-        let stride = (size + block_size - 1) / block_size;  // round upwards
+        const BLOCK_SIZE : u32 = 8 * mem::size_of::<Block>() as u32;  // in bits
+        let stride = (size + BLOCK_SIZE - 1) / BLOCK_SIZE;  // round upwards
         let nblocks = size * stride;
 
         let mut result = Preorder{ blocks: vec![0; nblocks as usize], size };
@@ -188,12 +189,12 @@ impl Preorder {
     #[inline]
     pub fn set_leq(&mut self, Alt(i) : Alt, Alt(j) : Alt, leq : bool) {
         // i = row, j = column
-        // assuming that block_size is a power of two
+        // assuming that BLOCK_SIZE is a power of two
         // and the compiler will optimise it to bit shifts
-        let block_size = 8 * mem::size_of::<Block>() as u32;  // in bits
-        let stride = (self.size + block_size - 1) / block_size;  // round upwards
-        let offset = j / block_size;
-        let bit_ofs = j % block_size;
+        const BLOCK_SIZE : u32 = 8 * mem::size_of::<Block>() as u32;  // in bits
+        let stride = (self.size + BLOCK_SIZE - 1) / BLOCK_SIZE;  // round upwards
+        let offset = j / BLOCK_SIZE;
+        let bit_ofs = j % BLOCK_SIZE;
 
         if leq {
             self.blocks[(i * stride + offset) as usize] |= 1 << bit_ofs;
@@ -205,12 +206,12 @@ impl Preorder {
     #[inline]
     pub fn leq(&self, Alt(i) : Alt, Alt(j) : Alt) -> bool {
         // i = row, j = column
-        // assuming that block_size is a power of two
+        // assuming that BLOCK_SIZE is a power of two
         // and the compiler will optimise it to bit shifts
-        let block_size = 8 * mem::size_of::<Block>() as u32;  // in bits
-        let stride = (self.size + block_size - 1) / block_size;  // round upwards
-        let offset = j / block_size;
-        let bit_ofs = j % block_size;
+        const BLOCK_SIZE : u32 = 8 * mem::size_of::<Block>() as u32;  // in bits
+        let stride = (self.size + BLOCK_SIZE - 1) / BLOCK_SIZE;  // round upwards
+        let offset = j / BLOCK_SIZE;
+        let bit_ofs = j % BLOCK_SIZE;
         (self.blocks[(i * stride + offset) as usize] >> bit_ofs) & 0x1 != 0
     }
 
@@ -253,14 +254,15 @@ impl Preorder {
     }
 
     pub fn upset(&self, Alt(i) : Alt) -> AltSetView {
-        let block_size = 8 * mem::size_of::<Block>() as u32;  // in bits
-        let stride = (self.size + block_size - 1) / block_size;  // in blocks, round upwards
+        const BLOCK_SIZE : u32 = 8 * mem::size_of::<Block>() as u32;  // in bits
+        let stride = (self.size + BLOCK_SIZE - 1) / BLOCK_SIZE;  // in blocks, round upwards
         AltSetView {
             blocks: &self.blocks[(i*stride) as usize .. (i*stride + stride) as usize]
         }
     }
 
-    pub fn as_linear_order(&self) -> Vec<Alt> {
+    // returns a descending order
+    pub fn as_linear_order(&self) -> Option<Vec<Alt>> {
         // order[k] = alternative with k dominators
         let mut order = vec![None; self.size as usize];
 
@@ -274,14 +276,65 @@ impl Preorder {
         // because the maximal element would have an empty upset
         // (so it won't produce a wrong answer silently)
 
-        order.into_iter().map(
-            |i| i.expect("not a linear order")
-        ).collect()
+        order.into_iter().collect()
+    }
+
+    // returns a descending order of equivalence classes
+    pub fn as_weak_order(&self) -> Option<Vec<Vec<Alt>>> {
+        if !self.is_total() {
+            return None;
+        }
+
+        // alternatives in (non-strictly) descending order
+        let alts = {
+            let mut alts = Alt::all(self.size).map(
+                |x| (x, self.upset(x).size())
+            ).collect::<Vec<_>>();
+            alts.sort_unstable_by_key(|&(_, upset_size)| upset_size);
+            alts
+        };
+
+        // here we use the fact that once we know that the order is total
+        // we can order vertices according to the upset size ascending
+        // and then group them by the upset size to obtain the classes of equivalence
+
+        let mut result = Vec::new();
+        let mut eq_class = Vec::new();
+        let mut prev_upset_size = None;
+        for (x, upset_size) in alts.into_iter() {
+            // (u, v) means v ≥ u
+            match prev_upset_size {
+                // first edge
+                None => {
+                    prev_upset_size = Some(upset_size);
+                    eq_class = vec![x];
+                }
+
+                Some(ref mut prev_degree) => {
+                    if *prev_degree == upset_size {
+                        // adding to the existing equivalence class
+                        eq_class.push(x);
+                    } else {
+                        // starting a new equivalence class
+                        *prev_degree = upset_size;
+                        result.push(eq_class);
+                        eq_class = vec![x];
+                    }
+                }
+            }
+        }
+
+        // push the last equivalence class
+        if !eq_class.is_empty() {
+            result.push(eq_class);
+        }
+
+        Some(result)
     }
 
     pub fn from_values<T: PartialOrd>(values : &[T]) -> Preorder {
-        let block_size = 8 * mem::size_of::<Block>();  // in bits
-        let stride = (values.len() + block_size - 1) / block_size;  // round upwards
+        const BLOCK_SIZE : usize = 8 * mem::size_of::<Block>();  // in bits
+        let stride = (values.len() + BLOCK_SIZE - 1) / BLOCK_SIZE;  // round upwards
         let mut blocks = vec![0; values.len() * stride];
 
         let mut ofs = 0;
@@ -316,9 +369,9 @@ impl Preorder {
     }
 
     pub fn stuff(&self, target_size : u32, mask : Block) -> Preorder {
-        let block_size = 8 * mem::size_of::<Block>() as u32;  // in bits
-        let stride_dst = (target_size + block_size - 1) / block_size;  // round upwards
-        let stride_src = (self.size + block_size - 1) / block_size;  // round upwards
+        const BLOCK_SIZE : u32 = 8 * mem::size_of::<Block>() as u32;  // in bits
+        let stride_dst = (target_size + BLOCK_SIZE - 1) / BLOCK_SIZE;  // round upwards
+        let stride_src = (self.size + BLOCK_SIZE - 1) / BLOCK_SIZE;  // round upwards
         let mut blocks = vec![0; (target_size * stride_dst) as usize];
 
         let mut row_mask = mask;
@@ -333,11 +386,11 @@ impl Preorder {
                 let mut j_src = 0;
                 for j_dst in 0..target_size {
                     if col_mask & 0x1 != 0 {
-                        blocks[(ofs_dst + j_dst/block_size) as usize]
-                            |= ((self.blocks[(ofs_src + j_src/block_size) as usize]
-                                    >> (j_src % block_size))
+                        blocks[(ofs_dst + j_dst/BLOCK_SIZE) as usize]
+                            |= ((self.blocks[(ofs_src + j_src/BLOCK_SIZE) as usize]
+                                    >> (j_src % BLOCK_SIZE))
                                   & 0x1)
-                                << (j_dst % block_size);
+                                << (j_dst % BLOCK_SIZE);
 
                         j_src += 1;
                     }
@@ -348,13 +401,13 @@ impl Preorder {
                 i_src += 1
             } else {
                 // unattractive option, fill the row with ones
-                let block_count = (target_size / block_size) as usize;
+                let block_count = (target_size / BLOCK_SIZE) as usize;
                 for i in 0 .. block_count {
                     blocks[ofs_dst as usize + i] = Block::max_value();
                 }
 
-                if target_size % block_size > 0 {
-                    blocks[ofs_dst as usize + block_count] = (1 << (target_size % block_size)) - 1;
+                if target_size % BLOCK_SIZE > 0 {
+                    blocks[ofs_dst as usize + block_count] = (1 << (target_size % BLOCK_SIZE)) - 1;
                 }
             }
 
@@ -376,6 +429,53 @@ impl Preorder {
                 |err| codec::Error::Other(format!("{:?}", err))
             )?
         )
+    }
+
+    pub fn pretty_fmt<W : fmt::Write>(&self, w : &mut W, alternatives : &[&str]) -> fmt::Result {
+        if let Some(eq_classes) = self.as_weak_order() {
+            let mut is_first_eq_class = true;
+            for eq_class in eq_classes.into_iter() {
+                if !is_first_eq_class {
+                    write!(w, " > ")?;
+                } else {
+                    is_first_eq_class = false;
+                }
+
+                let mut is_first_alt = true;
+                for Alt(i) in eq_class.into_iter() {
+                    if !is_first_alt {
+                        write!(w, " ~ ")?;
+                    } else {
+                        is_first_alt = false;
+                    }
+
+                    write!(w, "{}", alternatives[i as usize])?;
+                }
+            }
+            Ok(())
+        } else {
+            let mut is_first_edge = true;
+            for (u, v) in self.simple_digraph().into_iter() {
+                if !is_first_edge {
+                    write!(w, "; ")?;
+                } else {
+                    is_first_edge = false;
+                }
+
+                write!(
+                    w, "{} ≥ {}",
+                    alternatives[v.index() as usize],
+                    alternatives[u.index() as usize],
+                )?;
+            }
+            Ok(())
+        }
+    }
+
+    pub fn pretty(&self, alternatives : &[&str]) -> String {
+        let mut result = String::new();
+        self.pretty_fmt(&mut result, alternatives).unwrap();
+        result
     }
 }
 

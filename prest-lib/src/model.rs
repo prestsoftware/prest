@@ -361,7 +361,9 @@ impl Instance {
                 }
 
                 // top 2 elements
-                p.as_linear_order().into_iter().filter(|&i| menu.contains(i)).take(2).collect()
+                p.as_linear_order().expect("not a linear order").into_iter().filter(
+                    |&i| menu.contains(i)
+                ).take(2).collect()
             }
 
             &Instance::SequentiallyRationalizableChoice(ref p, ref q) => {

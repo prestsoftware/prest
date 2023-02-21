@@ -1,14 +1,12 @@
-import json
-import collections
-import hashlib
+from __future__ import annotations
+
 import base64
 from typing import NamedTuple, Sequence, List, Iterator, Tuple, Dict, \
     Optional, Any, Union, NewType, cast, Callable
 
-from PyQt5.QtGui import QIcon, QCursor
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView, \
-    QToolTip, QMessageBox, QFileDialog
+from PyQt5.QtWidgets import QDialog, QHeaderView, QMessageBox, QFileDialog
 
 import gui
 import model
@@ -189,7 +187,7 @@ class EstimationResult(Dataset):
     class Instance(Node):
         def __init__(self, parent_node: 'EstimationResult.Model', row: int, instance: InstanceRepr) -> None:
             code = base64.b64encode(instance).decode('ascii')
-            subject = parent_node.subject
+            #subject = parent_node.subject
             help_icon = QIcon(platform_specific.get_embedded_file_path('images/qm-16.png'))
             Node.__init__(
                 self, parent_node, row,
@@ -228,8 +226,10 @@ class EstimationResult(Dataset):
                 )
 
             alts = self.alternatives
+
             def vstr(xs : frozenset[int]) -> str:
                 return '"' + ', '.join(sorted(alts[i] for i in xs)) + '"'
+
             def vset(xs : frozenset[int]) -> frozenset[str]:
                 return frozenset(alts[i] for i in xs)
 
@@ -287,8 +287,10 @@ class EstimationResult(Dataset):
 
                 if info.graphviz_missing:
                     html += '(please install GraphViz to visualise graphs)<br>\n'
+
                     def vset(xs : frozenset[str]) -> str:
                         return '{' + ','.join(sorted(xs)) + '}'
+
                     for graph in info.graphs:
                         html += ''.join(
                             f'{vset(greater)} ≥ {vset(lesser)}<br>\n'

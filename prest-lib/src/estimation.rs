@@ -93,6 +93,17 @@ impl Encode for InstanceInfo {
     }
 }
 
+impl Decode for InstanceInfo {
+    fn decode<R : Read>(f : &mut R) -> codec::Result<InstanceInfo> {
+        Ok(InstanceInfo {
+            model: Decode::decode(f)?,
+            penalty: Decode::decode(f)?,
+            instance: Decode::decode(f)?,
+        })
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct Response {
     pub subject_name : String,
     pub score : Penalty,
@@ -102,6 +113,16 @@ pub struct Response {
 impl Encode for Response {
     fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
         (&self.subject_name, self.score.clone(), &self.best_instances).encode(f)
+    }
+}
+
+impl Decode for Response {
+    fn decode<R : Read>(f : &mut R) -> codec::Result<Response> {
+        Ok(Response {
+            subject_name: Decode::decode(f)?,
+            score: Decode::decode(f)?,
+            best_instances: Decode::decode(f)?,
+        })
     }
 }
 

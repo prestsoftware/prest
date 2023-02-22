@@ -5,10 +5,12 @@ use std::fmt::Display;
 
 use prest::codec::{self,Encode,Decode};
 use prest::common::{Log,LogLevel};
-use prest::{estimation,consistency,simulation,experiment_stats,budgetary,integrity,instviz};
+use prest::{estimation,consistency,simulation,experiment_stats};
+use prest::{budgetary,integrity,instviz,aggregate_preferences};
 
 #[derive(Debug)]
 pub enum ActionRequest {
+    AggregatePreferences(aggregate_preferences::Request),
     InstViz(instviz::Request),
     IntegrityCheck(integrity::Request),
     BudgetaryConsistency(budgetary::consistency::Request),
@@ -31,6 +33,7 @@ impl Decode for ActionRequest {
 
         let tag : String = Decode::decode(f)?;
         match tag.as_str() {
+            "aggregate-preferences" => Ok(AggregatePreferences(Decode::decode(f)?)),
             "instviz" => Ok(InstViz(Decode::decode(f)?)),
             "budgetary-consistency" => Ok(BudgetaryConsistency(Decode::decode(f)?)),
             "summary" => Ok(Summary(Decode::decode(f)?)),

@@ -6,7 +6,7 @@ use rand::SeedableRng;
 use rand::rngs::SmallRng;
 use prest_core::{rpc,args};
 use prest::{precomputed,estimation,consistency,simulation,instviz};
-use prest::{experiment_stats,budgetary,integrity};
+use prest::{experiment_stats,budgetary,integrity,aggregate_preferences};
 use precomputed::Precomputed;
 
 fn rpc_loop(args : &args::Args) {
@@ -90,6 +90,12 @@ fn rpc_loop(args : &args::Args) {
 
             ActionRequest::InstViz(req) => {
                 rpc.write_result(instviz::run(req)).unwrap();
+            }
+
+            ActionRequest::AggregatePreferences(req) => {
+                rpc.write_result(
+                    aggregate_preferences::run(req)
+                ).unwrap();
             }
         }
     }

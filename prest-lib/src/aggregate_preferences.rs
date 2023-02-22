@@ -28,11 +28,15 @@ impl codec::Encode for Response {
 }
 
 pub enum Error {
+    NotUtilityMaximization,
 }
 
 impl codec::Encode for Error {
-    fn encode<W : Write>(&self, _f : &mut W) -> codec::Result<()> {
-        match *self {
+    fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
+        use self::Error::*;
+        match self {
+            NotUtilityMaximization =>
+                "aggregation available only for Utility Maximization".encode(f),
         }
     }
 }
@@ -42,7 +46,13 @@ fn aggregate(ps : &[Preorder]) -> Result<Preorder, Error> {
 }
 
 fn extract_preorder(instance : model::Instance) -> Result<Preorder, Error> {
-    unimplemented!()
+    match instance {
+        model::Instance::PreorderMaximization(p)
+            if p.is_strict() && p.is_total()
+                => Ok(p),
+
+        _ => Err(Error::NotUtilityMaximization),
+    }
 }
 
 pub fn run(req : Request) -> Result<Response, Error> {

@@ -13,6 +13,8 @@ import model
 import dataset
 import subprocess
 import platform_specific
+import dataset.aggregated_preferences
+from dataset.aggregated_preferences import InstanceRepr, InstanceReprC
 from dataclasses import dataclass
 from core import Core
 from gui.progress import Worker
@@ -50,9 +52,6 @@ class Request(NamedTuple):
     disregard_deferrals : bool
 
 RequestC = namedtupleC(Request, listC(dataset.PackedSubjectC), listC(ModelC), boolC, boolC)
-
-InstanceRepr = NewType('InstanceRepr', bytes)
-InstanceReprC = bytesC
 
 class InstanceInfo(NamedTuple):
     model : ModelRepr
@@ -347,8 +346,36 @@ class EstimationResult(Dataset):
         Dataset.__init__(self, name, alternatives)
         self.subjects: List[PackedResponse] = []
 
+    def analysis_aggregate_preferences(self, worker : Worker, _config : None) -> dataset.AnalysisResult:
+        worker.set_work_size(1)
+
+        with Core() as core:
+            worker.interrupt = lambda: core.shutdown()
+
+            response = core.call(
+                'aggregate-preferences',
+                listC(PackedResponseC),
+                dataset.aggregated_preferences.ResponseC,
+                self.subjects,
+            )
+
+            worker.set_progress(1)
+
+        ds = dataset.aggregated_preferences.AggregatedPreferences(
+            self.name + ' (aggregated)',
+            self.alternatives,
+            response,
+        )
+        return ds
+
     def get_analyses(self) -> Sequence[Analysis]:
-        return []
+        return (
+            Analysis(
+                name='Aggregate preferences',
+                config=None,
+                run=self.analysis_aggregate_preferences,
+            ),
+        )
 
     def get_export_variants(self) -> Sequence[ExportVariant]:
         return (

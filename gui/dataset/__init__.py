@@ -1,16 +1,16 @@
+from __future__ import annotations
+
 import openpyxl
 
 import csv
 import logging
 from typing import Sequence, Any, List, Type, NamedTuple, Callable, Iterator, \
-    Optional, FrozenSet, Iterable, NewType, Union, cast, overload, TypeVar
+    Optional, FrozenSet, Iterable, NewType, Union, cast, TypeVar
 
 import openpyxl.utils.cell
-from PyQt5.QtWidgets import QDialog, QMessageBox
+from PyQt5.QtWidgets import QMessageBox
 
-import core
 import enum
-import model
 import branding
 from gui.progress import Worker, Cancelled
 from util.codec import Codec, tupleC, strC, listC, namedtupleC, frozensetC, \
@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 def load_raw_csv(fname):
     with open(fname) as f:
         return list(csv.reader(line.strip() for line in f))
-    
+
 class ExportVariant(NamedTuple):
     name : str
     column_names : Sequence[str]
@@ -44,7 +44,7 @@ AnalysisResult = Union[None, ShowMessageBox, 'Dataset']
 class Analysis(NamedTuple):
     name : str
     config : Optional[Callable[[], Optional[Any]]]  # display config dialog, return config | can be None
-    run :  Callable[[Worker, Any], AnalysisResult]  # (worker, config) -> result
+    run : Callable[[Worker, Any], AnalysisResult]  # (worker, config) -> result
     is_hidden : bool = False
 
 AltSet = FrozenSet[int]
@@ -70,12 +70,6 @@ class Subject(NamedTuple):
 
     def csv_set(self, alt_set: Iterable[int]) -> str:
         return ','.join(self.alternatives[i] for i in sorted(alt_set))
-
-    @overload
-    def csv_alt(self, index : None) -> None: ...
-
-    @overload
-    def csv_alt(self, index : int) -> str: ...
 
     def csv_alt(self, index : Optional[int]) -> Optional[str]:
         if index is None:
@@ -203,7 +197,7 @@ class Dataset:
                         worker.set_progress(position)
 
         elif '*.xlsx' in fformat:
-            wb = openpyxl.Workbook() 
+            wb = openpyxl.Workbook()
             wb.properties.creator = branding.PREST_VERSION
             ws = wb.active
 

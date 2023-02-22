@@ -1,11 +1,13 @@
 use std::ops::{Add,Mul,AddAssign};
 use std::io::{Read,Write};
 use std::iter::Sum;
-use codec::{self,Packed};
+
 use model;
 use estimation;
 use alt::Alt;
 use preorder::Preorder;
+use codec::{self,Packed};
+use precomputed::{self,Precomputed};
 
 #[derive(Debug, Clone)]
 pub struct Request {
@@ -33,19 +35,26 @@ impl codec::Encode for Response {
 pub enum Error {
     NotUtilityMaximization,
     Ambiguous,
+    Precomputation(precomputed::Error),
 }
 
 impl codec::Encode for Error {
     fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
         use self::Error::*;
         match self {
-            NotUtilityMaximization =>
-                "aggregation available only for Utility Maximization".encode(f),
+            NotUtilityMaximization => (0e8).encode(f),
 
             // we'll probably have to deal with this at some point
-            Ambiguous =>
-                "Kemeny algorithm returns multiple tied answers".encode(f),
+            Ambiguous => (1e8).encode(f),
+
+            Precomputation(e) => (2e8, e).encode(f),
         }
+    }
+}
+
+impl From<precomputed::Error> for Error {
+    fn from(e : precomputed::Error) -> Error {
+        Error::Precomputation(e)
     }
 }
 
@@ -121,11 +130,12 @@ impl AddAssign<&KemenyTable> for KemenyTable {
     }
 }
 
-impl Mul<&KemenyScore> for &KemenyTable {
+impl Mul<&KemenyTable> for &KemenyTable {
     type Output = u32;
-    fn mul(self, other : &KemenyScore) -> u32 {
-        self.scores.iter().map(
-            |score| score * other
+    fn mul(self, other : &KemenyTable) -> u32 {
+        assert_eq!(self.scores.len(), other.scores.len());
+        self.scores.iter().zip(&other.scores).map(
+            |(x, y)| x * y
         ).sum()
     }
 }
@@ -151,8 +161,32 @@ impl Sum for KemenyTable {
 
 // using the Kemeny method
 fn aggregate(ps : &[Preorder]) -> Result<Preorder, Error> {
-    let kemeny_table : KemenyTable = ps.iter().map(KemenyTable::from_preorder).sum();
-    unimplemented!()
+    assert!(!ps.is_empty(), "cannot aggregate an empty set of preferences");
+    let alt_count = ps[0].size;
+
+    let precomputed = Precomputed::precomputed(alt_count, None);
+    let tbl_aggregated : KemenyTable = ps.iter().map(KemenyTable::from_preorder).sum();
+
+    let mut best_score = 0u32;
+    let mut best_preorders = vec![];
+
+    for p in &precomputed.get(alt_count)?.weak_orders {
+        let score = &tbl_aggregated * &KemenyTable::from_preorder(p);
+        if score > best_score {
+            best_score = score;
+            best_preorders = vec![p];
+        } else if score == best_score {
+            best_preorders.push(p);
+        }
+    }
+
+    if best_preorders.len() > 1 {
+        Err(Error::Ambiguous)
+    } else {
+        // we check non-emptiness at the beginning of the function
+        assert_eq!(best_preorders.len(), 1);
+        Ok(best_preorders[0].clone())
+    }
 }
 
 fn extract_preorder(instance : model::Instance) -> Result<Preorder, Error> {

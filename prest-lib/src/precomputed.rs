@@ -58,6 +58,12 @@ impl Precomputed {
         }
     }
 
+    pub fn precomputed(max_size : u32, fname_precomputed_preorders : Option<&str>) -> Self {
+        let mut precomputed = Precomputed::new(fname_precomputed_preorders);
+        precomputed.precompute(max_size);
+        precomputed
+    }
+
     pub fn precompute(&mut self, max_size : u32) -> Result<()> {
         for size in self.preorders.len() as u32 .. max_size+1 {
             let preorders = if size < 7 {

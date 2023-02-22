@@ -58,10 +58,10 @@ impl Precomputed {
         }
     }
 
-    pub fn precomputed(max_size : u32, fname_precomputed_preorders : Option<&str>) -> Self {
+    pub fn precomputed(max_size : u32, fname_precomputed_preorders : Option<&str>) -> Result<Self> {
         let mut precomputed = Precomputed::new(fname_precomputed_preorders);
-        precomputed.precompute(max_size);
-        precomputed
+        precomputed.precompute(max_size)?;
+        Ok(precomputed)
     }
 
     pub fn precompute(&mut self, max_size : u32) -> Result<()> {

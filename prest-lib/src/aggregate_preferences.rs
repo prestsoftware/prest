@@ -1,3 +1,4 @@
+use std::fmt;
 use std::ops::{Add,Mul,AddAssign};
 use std::io::{Read,Write};
 use std::iter::Sum;
@@ -48,6 +49,22 @@ impl codec::Encode for Error {
             Ambiguous => (1e8).encode(f),
 
             Precomputation(e) => (2e8, e).encode(f),
+        }
+    }
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f : &mut fmt::Formatter) -> fmt::Result {
+        use self::Error::*;
+        match self {
+            NotUtilityMaximization =>
+                write!(f, "only Utility Maximization is supported"),
+
+            Ambiguous =>
+                write!(f, "Kemeny algorithm produces multiple results"),
+
+            Precomputation(e) =>
+                e.fmt(f),
         }
     }
 }
@@ -164,7 +181,7 @@ fn aggregate(ps : &[Preorder]) -> Result<Preorder, Error> {
     assert!(!ps.is_empty(), "cannot aggregate an empty set of preferences");
     let alt_count = ps[0].size;
 
-    let precomputed = Precomputed::precomputed(alt_count, None);
+    let precomputed = Precomputed::precomputed(alt_count, None)?;
     let tbl_aggregated : KemenyTable = ps.iter().map(KemenyTable::from_preorder).sum();
 
     let mut best_score = 0u32;

@@ -170,11 +170,13 @@ class Core:
 
                 else:
                     raise MalformedResponse('invalid response: %s' % msg)
-        except EOF as e:
+        except EOF:
             death_note = self.stderr_reader.get_content().decode('utf8')
             log.warn('core died with message: {0}'.format(death_note))
             raise CoreDeath(death_note)
         except CodecError as e:
+            death_note = self.stderr_reader.get_content().decode('utf8')
+            log.warn('core died with message: {0}'.format(death_note))
             raise MalformedResponse('malformed response from core') from e
 
     def crash(self) -> None:

@@ -225,6 +225,11 @@ impl Preorder {
         self.leq(i,j) && self.leq(j,i)
     }
 
+    #[inline]
+    pub fn gt(&self, i : Alt, j : Alt) -> bool {
+        !self.leq(i,j) && self.leq(j,i)
+    }
+
     pub fn is_strict(&self) -> bool {
         // no equivalences exist
         !Alt::distinct_pairs(self.size).any(

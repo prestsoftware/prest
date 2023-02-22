@@ -1,8 +1,6 @@
 use std::fmt;
 use std::io::{Read,Write};
-use std::iter::{Map,repeat};
-use std::ops::Range;
-use std::vec::IntoIter;
+use std::iter::repeat;
 use codec::{Encode,Decode,Result};
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
@@ -14,21 +12,21 @@ impl Alt {
         self.0
     }
 
-    pub fn all(alt_count : u32) -> Map<Range<u32>, fn(u32) -> Alt> {
+    pub fn all(alt_count : u32) -> impl Iterator<Item=Alt> {
         (0..alt_count).map(Alt)
     }
 
-    pub fn all_above(Alt(i) : Alt, alt_count : u32) -> Map<Range<u32>, fn(u32) -> Alt> {
+    pub fn all_above(Alt(i) : Alt, alt_count : u32) -> impl Iterator<Item=Alt> {
         (i+1 .. alt_count).map(Alt)
     }
 
-    pub fn all_pairs(alt_count : u32) -> IntoIter<(Alt, Alt)> {
+    pub fn all_pairs(alt_count : u32) -> impl Iterator<Item=(Alt, Alt)> {
         Alt::all(alt_count).flat_map(
             |i| repeat(i).zip(Alt::all(alt_count))
         ).collect::<Vec<_>>().into_iter()
     }
 
-    pub fn distinct_pairs(alt_count : u32) -> IntoIter<(Alt, Alt)> {
+    pub fn distinct_pairs(alt_count : u32) -> impl Iterator<Item=(Alt, Alt)> {
         Alt::all(alt_count).flat_map(
             |i| repeat(i).zip(Alt::all_above(i, alt_count))
         ).collect::<Vec<_>>().into_iter()

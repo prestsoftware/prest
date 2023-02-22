@@ -1,11 +1,12 @@
 use std::io::{Read,Write};
-use codec;
+use codec::{self,Packed};
 use model;
 use estimation;
+use preorder::Preorder;
 
 #[derive(Debug, Clone)]
 pub struct Request {
-    subjects : Vec<codec::Packed<estimation::Response>>,
+    subjects : Vec<Packed<estimation::Response>>,
 }
 
 impl codec::Decode for Request {
@@ -17,7 +18,7 @@ impl codec::Decode for Request {
 }
 
 pub struct Response {
-    instance : codec::Packed<model::Instance>,
+    instance : Packed<model::Instance>,
 }
 
 impl codec::Encode for Response {
@@ -36,8 +37,30 @@ impl codec::Encode for Error {
     }
 }
 
-pub fn run(req : Request) -> Result<Response, String> {
+fn aggregate(ps : &[Preorder]) -> Result<Preorder, Error> {
+    unimplemented!()
+}
+
+fn extract_preorder(instance : model::Instance) -> Result<Preorder, Error> {
+    unimplemented!()
+}
+
+pub fn run(req : Request) -> Result<Response, Error> {
+    let p = aggregate(
+        &req.subjects.into_iter().map(
+            |resp| aggregate(
+                &resp.into_unpacked().best_instances.into_iter().map(
+                    |info| extract_preorder(
+                        info.instance.into_unpacked()
+                    )
+                ).collect::<Result<Vec<_>, Error>>()?[..]
+            )
+        ).collect::<Result<Vec<_>, Error>>()?[..]
+    )?;
+
     Ok(Response{
-        instance: req.subjects[0].unpack().best_instances[0].instance.clone(),
+        instance: Packed(
+            model::Instance::PreorderMaximization(p)
+        ),
     })
 }

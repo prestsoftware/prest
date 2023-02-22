@@ -1,21 +1,18 @@
 from __future__ import annotations
 
-import base64
 from typing import NamedTuple, Sequence, List, Iterator, Tuple, Dict, \
     Optional, Any, Union, NewType, cast, Callable
 
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog, QHeaderView, QMessageBox, QFileDialog
+from PyQt5.QtWidgets import QDialog, QHeaderView
 
 import gui
 import model
 import dataset
-import subprocess
 import platform_specific
 import dataset.aggregated_preferences
-from dataset.aggregated_preferences import InstanceRepr, InstanceReprC
-from dataclasses import dataclass
+from dataset.aggregated_preferences import InstanceRepr, InstanceReprC, display_instance, instance_repr_to_code
 from core import Core
 from gui.progress import Worker
 from model import get_name as model_get_name
@@ -25,7 +22,7 @@ from model import get_ordering_key as model_get_ordering_key
 from dataset import Dataset, DatasetHeaderC, ExportVariant, Analysis
 from util.tree_model import Node, TreeModel, Field, PackedRootNode
 from util.codec import Codec, FileIn, FileOut, namedtupleC, strC, intC, \
-    frozensetC, listC, bytesC, tupleC, boolC
+    listC, bytesC, tupleC, boolC
 from util.codec_progress import CodecProgress, listCP, oneCP
 import uic.view_estimated
 
@@ -71,23 +68,6 @@ ResponsesC = listC(ResponseC)
 PackedResponse = NewType('PackedResponse', bytes)
 PackedResponseC = cast(Codec[PackedResponse], bytesC)
 PackedResponsesC = listC(PackedResponseC)
-
-class InstVizRequest(NamedTuple):
-    instance_code : str
-
-InstVizRequestC = namedtupleC(InstVizRequest, strC)
-
-class GraphRepr(NamedTuple):
-    vertices : list[frozenset[int]]
-    edges : list[tuple[frozenset[int], frozenset[int]]]
-
-GraphReprC = namedtupleC(GraphRepr, listC(frozensetC(intC)), listC(tupleC(frozensetC(intC), frozensetC(intC))))
-
-class InstVizResponse(NamedTuple):
-    graphs : list[GraphRepr]
-    extra_info : list[tuple[str, str]]
-
-InstVizResponseC = namedtupleC(InstVizResponse, listC(GraphReprC), listC(tupleC(strC, strC)))
 
 class Instance(NamedTuple):
     model: str
@@ -137,22 +117,6 @@ def subject_from_response_bytes(response_bytes : PackedResponse) -> Subject:
         ],
     )
 
-@dataclass
-class RenderedGraph:
-    # available only if graphviz could be run
-    png_url : Optional[str]
-    png_bytes : Optional[bytes]
-
-    # available always, for text-based representations
-    vertices : list[frozenset[str]]
-    edges : list[tuple[frozenset[str], frozenset[str]]]
-
-@dataclass
-class RenderedInstance:
-    graphviz_missing : bool
-    graphs : list[RenderedGraph]
-    extra_info : list[tuple[str, str]]
-
 class EstimationResult(Dataset):
     class Subject(Node):
         def __init__(self, parent_node, row: int, subject: Subject) -> None:
@@ -185,7 +149,7 @@ class EstimationResult(Dataset):
 
     class Instance(Node):
         def __init__(self, parent_node: 'EstimationResult.Model', row: int, instance: InstanceRepr) -> None:
-            code = base64.b64encode(instance).decode('ascii')
+            code = instance_repr_to_code(instance)
             #subject = parent_node.subject
             help_icon = QIcon(platform_specific.get_embedded_file_path('images/qm-16.png'))
             Node.__init__(
@@ -215,132 +179,10 @@ class EstimationResult(Dataset):
 
             self.twSubjects.clicked.connect(self.catch_exc(self.dlg_item_clicked))
 
-        def render_instance(self, instance_code : str) -> RenderedInstance:
-            with Core() as core:
-                response : InstVizResponse = core.call(
-                    'instviz',
-                    InstVizRequestC,
-                    InstVizResponseC,
-                    InstVizRequest(instance_code=instance_code),
-                )
-
-            alts = self.alternatives
-
-            def vstr(xs : frozenset[int]) -> str:
-                return '"' + ', '.join(sorted(alts[i] for i in xs)) + '"'
-
-            def vset(xs : frozenset[int]) -> frozenset[str]:
-                return frozenset(alts[i] for i in xs)
-
-            graphs : list[RenderedGraph] = []
-            graphviz_missing = False
-            for graph in response.graphs:
-                dot_src = (
-                    'digraph G {\n bgcolor="transparent" \n'
-                    + ''.join(f'{vstr(vs)};\n' for vs in graph.vertices)
-                    + ''.join(
-                            f'{vstr(greater)} -> {vstr(lesser)};\n'
-                            for lesser, greater in graph.edges
-                        )
-                    + '}'
-                )
-
-                try:
-                    dot_exe = platform_specific.get_embedded_file_path(
-                        'dot.exe',  # deployment Windows
-                        'dot',      # deployment elsewhere (?)
-                        '/usr/bin/dot',  # dev
-                    )
-                except platform_specific.FileNotFound:
-                    png_bytes = None
-                    png_url = None
-                    graphviz_missing = True
-                else:
-                    dot = subprocess.run(
-                        [dot_exe, '-Tpng'],
-                        capture_output=True,
-                        input=dot_src.encode('ascii'),
-                    )
-
-                    png_bytes = dot.stdout
-                    png_url = 'data:image/png;base64,' + base64.b64encode(png_bytes).decode('ascii')
-
-                graphs.append(RenderedGraph(
-                    png_url=png_url,
-                    png_bytes=png_bytes,
-                    vertices=[vset(xs) for xs in graph.vertices],
-                    edges=[(vset(xs), vset(ys)) for xs, ys in graph.edges],
-                ))
-
-            return RenderedInstance(
-                graphviz_missing=graphviz_missing,
-                graphs=graphs,
-                extra_info=response.extra_info,
-            )
-
         def dlg_item_clicked(self, idx):
             instance_code = cast(str, self.model.data(idx, Qt.UserRole))
             if instance_code:
-                info = self.render_instance(instance_code)
-                html = ''
-
-                if info.graphviz_missing:
-                    html += '(please install GraphViz to visualise graphs)<br>\n'
-
-                    def vset(xs : frozenset[str]) -> str:
-                        return '{' + ','.join(sorted(xs)) + '}'
-
-                    for graph in info.graphs:
-                        html += ''.join(
-                            f'{vset(greater)} ≥ {vset(lesser)}<br>\n'
-                            for lesser, greater in graph.edges
-                        )
-                        html += '<hr>\n'
-                else:
-                    for graph in info.graphs:
-                        assert graph.png_url
-                        html += f'<img src="{graph.png_url}">'
-                    html += '<br>\n'
-
-                if info.extra_info:
-                    html += ''.join(f'<br>\n{key}: {val}' for key, val in info.extra_info)
-
-                # seems to disappear too quickly on windows
-                #
-                #QToolTip.showText(QCursor.pos(), html)
-
-                # shows an information icon, which disrupts the message
-                #
-                #QMessageBox.information(
-                #    self,
-                #    f'Instance information: {instance_code}',
-                #    html,
-                #)
-
-                mb = QMessageBox()
-                mb.setStandardButtons(
-                    QMessageBox.Close
-                    if info.graphviz_missing else
-                    QMessageBox.Save | QMessageBox.Close
-                )
-                mb.setWindowTitle(f'Instance information: {instance_code}')
-                mb.setText(html)
-                btn = mb.exec()
-
-                if btn == QMessageBox.Save:
-                    if len(info.graphs) != 1:
-                        raise Exception('Saving multiple graphs is not supported yet.')
-
-                    assert info.graphs[0].png_bytes  # button disabled otherwise
-                    fname, _ = QFileDialog.getSaveFileName(
-                        self,
-                        "Save instance visualisation",
-                        f'{instance_code.strip("=")}.png',
-                        filter="PNG files (*.png)",
-                    )
-                    if fname:
-                        with open(fname, 'wb') as f:
-                            f.write(info.graphs[0].png_bytes)
+                display_instance(self.alternatives, instance_code)
 
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:
         Dataset.__init__(self, name, alternatives)
@@ -402,7 +244,7 @@ class EstimationResult(Dataset):
                         penalty.lower_bound if penalty.lower_bound == penalty.upper_bound else None,
                         penalty.upper_bound,
                         model_get_name(model),
-                        base64.b64encode(instance).decode('ascii')
+                        instance_repr_to_code(instance),
                     )
 
             yield None  # bump progress

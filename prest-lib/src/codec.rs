@@ -386,7 +386,7 @@ impl<T : Decode + Eq + Ord> Decode for BTreeSet<T> {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Packed<T>(pub T);
 
 impl<T> Packed<T> {

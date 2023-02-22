@@ -72,7 +72,7 @@ impl Decode for Request {
 pub struct InstanceInfo {
     pub model : Model,
     pub penalty : Penalty,
-    pub instance : Vec<u8>,
+    pub instance : codec::Packed<Instance>,
 }
 
 impl InstanceInfo {
@@ -80,7 +80,7 @@ impl InstanceInfo {
         InstanceInfo {
             model,
             penalty,
-            instance: codec::encode_to_memory(inst).unwrap(),
+            instance: codec::Packed(inst.clone()),
         }
     }
 }

@@ -5,7 +5,7 @@ use estimation;
 
 #[derive(Debug, Clone)]
 pub struct Request {
-    subjects : Vec<estimation::Response>,
+    subjects : Vec<codec::Packed<estimation::Response>>,
 }
 
 impl codec::Decode for Request {
@@ -17,7 +17,7 @@ impl codec::Decode for Request {
 }
 
 pub struct Response {
-    instance : model::Instance,
+    instance : codec::Packed<model::Instance>,
 }
 
 impl codec::Encode for Response {
@@ -38,6 +38,6 @@ impl codec::Encode for Error {
 
 pub fn run(req : Request) -> Result<Response, String> {
     Ok(Response{
-        instance: codec::decode_from_memory(&req.subjects[0].best_instances[0].instance).unwrap(),
+        instance: req.subjects[0].unpack().best_instances[0].instance.clone(),
     })
 }

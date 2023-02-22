@@ -175,9 +175,13 @@ class Core:
             log.warn('core died with message: {0}'.format(death_note))
             raise CoreDeath(death_note)
         except CodecError as e:
-            death_note = self.stderr_reader.get_content().decode('utf8')
-            log.warn('core died with message: {0}'.format(death_note))
+            stderr = self.stderr_reader.get_content().decode('utf8')
+            log.warn('core stderr: {0}'.format(stderr))
             raise MalformedResponse('malformed response from core') from e
+        except Exception:
+            stderr = self.stderr_reader.get_content().decode('utf8')
+            log.warn('core stderr: {0}'.format(stderr))
+            raise
 
     def crash(self) -> None:
         self.call('crash', strC, strC, 'Crash test')

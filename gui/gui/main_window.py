@@ -90,6 +90,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
                 platform_specific.get_embedded_file_path(
                     'html',  # deployment
                     'docs/build/html',  # development
+                    criterion=os.path.isdir,
                 )
             )
         except OSError as e:

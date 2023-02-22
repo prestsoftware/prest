@@ -111,6 +111,7 @@ class Core:
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
+                env={'RUST_BACKTRACE': 'full'},
             )
 
             self.stdin : FileOut
@@ -146,11 +147,11 @@ class Core:
         self.shutdown()
 
     def call(self, name : str, codec_req : Codec[Req], codec_resp : Codec[Resp], request : Req) -> Resp:
-        strC.encode(self.stdin, name)
-        codec_req.encode(self.stdin, request)
-        self.stdin.flush()
-
         try:
+            strC.encode(self.stdin, name)
+            codec_req.encode(self.stdin, request)
+            self.stdin.flush()
+
             while True:
                 msg = MessageC.decode(self.stdout)
                 #log.debug('message received: %s' % str(msg))

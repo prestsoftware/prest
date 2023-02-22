@@ -5,7 +5,7 @@ import os
 import sys
 import ctypes
 import logging
-from typing import Optional, cast
+from typing import Optional, cast, Callable
 
 log = logging.getLogger(__name__)
 
@@ -49,15 +49,15 @@ def get_frozen_dir() -> str:
     return result
 
 # takes list of possible names
-def get_embedded_file_path(*fnames : str) -> str:
+def get_embedded_file_path(*fnames : str, criterion : Callable[[str], bool] = os.path.isfile) -> str:
     for fname in fnames:
         path = os.path.join(os.getcwd(), fname)
-        if os.path.isfile(path):
+        if criterion(path):
             return path  # in current directory
 
         if is_frozen():
             path = os.path.join(get_frozen_dir(), fname)
-            if os.path.isfile(path):
+            if criterion(path):
                 return path
 
     raise FileNotFound(*fnames)

@@ -176,6 +176,42 @@ impl Sum for KemenyTable {
     }
 }
 
+struct Winners<S, T> {
+    best_score : Option<S>,
+    winners : Vec<T>,
+}
+
+impl<S : Ord, T> Winners<S, T> {
+    pub fn new() -> Winners<S, T> {
+        Winners {
+            best_score : None,
+            winners : Vec::new(),
+        }
+    }
+
+    pub fn add(&mut self, score : S, candidate : T) {
+        match self.best_score {
+            None => {
+                self.best_score = Some(score);
+                self.winners = vec![candidate];
+            },
+
+            Some(ref mut best_score) => {
+                if score > *best_score {
+                    *best_score = score;
+                    self.winners = vec![candidate];
+                } else if score == *best_score {
+                    self.winners.push(candidate);
+                }
+            },
+        }
+    }
+
+    pub fn into_result(self) -> Option<(S, Vec<T>)> {
+        Some((self.best_score?, self.winners))
+    }
+}
+
 // using the Kemeny method
 fn aggregate(ps : &[Preorder]) -> Result<Preorder, Error> {
     assert!(!ps.is_empty(), "cannot aggregate an empty set of preferences");
@@ -184,18 +220,16 @@ fn aggregate(ps : &[Preorder]) -> Result<Preorder, Error> {
     let precomputed = Precomputed::precomputed(alt_count, None)?;
     let tbl_aggregated : KemenyTable = ps.iter().map(KemenyTable::from_preorder).sum();
 
-    let mut best_score = 0u32;
-    let mut best_preorders = vec![];
-
+    let mut winners = Winners::new();
     for p in &precomputed.get(alt_count)?.weak_orders {
-        let score = &tbl_aggregated * &KemenyTable::from_preorder(p);
-        if score > best_score {
-            best_score = score;
-            best_preorders = vec![p];
-        } else if score == best_score {
-            best_preorders.push(p);
-        }
+        winners.add(
+            &tbl_aggregated * &KemenyTable::from_preorder(p),
+            p,
+        )
     }
+
+    // we assert non-emptiness at the beginning of the function
+    let (_best_score, best_preorders) = winners.into_result().unwrap();
 
     if best_preorders.len() > 1 {
         Err(Error::Ambiguous)

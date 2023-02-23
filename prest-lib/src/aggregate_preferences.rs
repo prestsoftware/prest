@@ -1,7 +1,8 @@
 use std::fmt;
 use std::ops::{Add,Mul,AddAssign};
 use std::io::{Read,Write};
-use std::iter::Sum;
+use std::iter::{Sum,FromIterator};
+use std::collections::HashSet;
 use num_rational::Ratio;
 use num_traits::identities::{Zero,One};
 
@@ -46,12 +47,12 @@ impl codec::Decode for Request {
 }
 
 pub struct Response {
-    instance : Packed<model::Instance>,
+    best_instances : Vec<Packed<model::Instance>>,
 }
 
 impl codec::Encode for Response {
     fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
-        (&self.instance).encode(f)
+        (&self.best_instances).encode(f)
     }
 }
 
@@ -241,19 +242,25 @@ fn aggregate(ps : &[(Score, Preorder)]) -> Result<Vec<Preorder>, Error> {
     )
 }
 
-fn aggregate_iterated(ps : &[Preorder]) -> Result<Preorder, Error> {
-    let mut preorders = ps.iter().cloned().collect::<Vec<Preorder>>();
+fn aggregate_iterated(ps : &[Preorder]) -> Result<Vec<Preorder>, Error> {
+    let mut preorders : HashSet<Preorder> = ps.iter().cloned().collect();
 
-    while preorders.len() > 1 {
-        preorders = aggregate(
-            &std::iter::repeat(One::one())
-                .zip(preorders)
-                .collect::<Vec<(Score, Preorder)>>()
-        )?;
+    loop {
+        let new_preorders : HashSet<Preorder> = HashSet::from_iter(
+            aggregate(
+                &std::iter::repeat(One::one())
+                    .zip(preorders)
+                    .collect::<Vec<_>>()
+            )?
+        );
+
+        if new_preorders == preorders {
+            // we're done
+            break;
+        }
     }
 
-    assert_eq!(preorders.len(), 1);
-    Ok(preorders[0].clone())
+    Ok(Vec::from_iter(preorders))
 }
 
 fn extract_preorder(instance : model::Instance) -> Result<Preorder, Error> {
@@ -266,58 +273,49 @@ fn extract_preorder(instance : model::Instance) -> Result<Preorder, Error> {
     }
 }
 
+fn combos<'a, T>(xs : &'a Vec<Vec<T>>) -> Vec<Vec<&'a T>> {
+}
+
 pub fn run(req : Request) -> Result<Response, Error> {
     // collect preorders from all subjects
-    let preorders : Vec<(Score, Preorder)> = match &req.mode {
+    let result : Vec<Preorder> = match &req.mode {
         Mode::Weighted => {
-            req.subjects.into_iter().flat_map(
+            let subjects : Vec<(Score, Preorder)> = req.subjects.into_iter().flat_map(
                 |Packed(subj)| {
                     let score = Score::new(1, subj.best_instances.len() as u32);
                     subj.best_instances.into_iter().map(
                         move |info| Ok((score, extract_preorder(info.instance.into_unpacked())?))
                     )
                 }
-            ).collect::<Result<Vec<(Score, Preorder)>, Error>>()?
-        },
+            ).collect::<Result<_, Error>>()?;
+
+            aggregate(&subjects)?
+        }
 
         Mode::Iterated => {
-            req.subjects.into_iter().map(
+            let subjects : Vec<Vec<Preorder>> = req.subjects.into_iter().map(
                 |Packed(subj)| {
-                    Ok((
-                        One::one(),
+                    Ok(
                         aggregate_iterated(
                             &subj.best_instances.into_iter().map(
-                                move |info| Ok(extract_preorder(info.instance.into_unpacked())?)
+                                move |info| Ok(
+                                    extract_preorder(info.instance.into_unpacked())?
+                                )
                             ).collect::<Result<Vec<Preorder>, Error>>()?
                         )?,
-                    ))
+                    )
                 }
-            ).collect::<Result<Vec<(Score, Preorder)>, Error>>()?
-        }
-    };
+            ).collect::<Result<_, Error>>()?;
 
-    // aggregate those preorders
-    let result = match &req.mode {
-        Mode::Weighted => {
-            let result = aggregate(&preorders)?;
-            assert!(result.len() > 0);
-            if result.len() > 1 {
-                return Err(Error::Ambiguous);
-            } else {
-                result[0].clone()
-            }
-        },
-
-        Mode::Iterated => {
-            aggregate_iterated(
-                &preorders.into_iter().map(|(_score, p)| p).collect::<Vec<Preorder>>()
-            )?
+            unimplemented!()
         }
     };
 
     Ok(Response{
-        instance: Packed(
-            model::Instance::PreorderMaximization(result)
-        ),
+        best_instances: result.into_iter().map(
+            |p| Packed(
+                model::Instance::PreorderMaximization(p)
+            )
+        ).collect()
     })
 }

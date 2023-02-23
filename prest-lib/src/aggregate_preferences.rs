@@ -1,5 +1,5 @@
 use std::fmt;
-use std::ops::{Add,Mul,AddAssign,MulAssign};
+use std::ops::{Add,Mul,AddAssign};
 use std::io::{Read,Write};
 use std::iter::Sum;
 use num_rational::Ratio;
@@ -202,12 +202,15 @@ impl Sum for KemenyTable {
 }
 
 // using the Kemeny method
-fn aggregate(ps : &[Preorder]) -> Result<Preorder, Error> {
+fn aggregate(ps : &[(Score, Preorder)]) -> Result<Preorder, Error> {
     assert!(!ps.is_empty(), "cannot aggregate an empty set of preferences");
-    let alt_count = ps[0].size;
+    let alt_count = ps[0].1.size;
 
     let precomputed = Precomputed::precomputed(alt_count, None)?;
-    let tbl_aggregated : KemenyTable = ps.iter().map(KemenyTable::from_preorder).sum();
+    let tbl_aggregated : KemenyTable = ps.iter().map(
+        |(weight, p)|
+            &KemenyTable::from_preorder(p) * *weight
+    ).sum();
 
     // we assert non-emptiness at the beginning of the function
     let (_best_score, best_preorders) = winners::run_iter_with_score(
@@ -235,21 +238,20 @@ fn extract_preorder(instance : model::Instance) -> Result<Preorder, Error> {
 }
 
 pub fn run(req : Request) -> Result<Response, Error> {
-    let p = aggregate(
-        &req.subjects.into_iter().map(
-            |resp| aggregate(
-                &resp.into_unpacked().best_instances.into_iter().map(
-                    |info| extract_preorder(
-                        info.instance.into_unpacked()
-                    )
-                ).collect::<Result<Vec<_>, Error>>()?[..]
+    let preorders : Vec<(Score, Preorder)> = req.subjects.into_iter().flat_map(
+        |Packed(subj)| {
+            let score = Score::new(1, subj.best_instances.len() as u32);
+            subj.best_instances.into_iter().map(
+                move |info| Ok((score, extract_preorder(info.instance.into_unpacked())?))
             )
-        ).collect::<Result<Vec<_>, Error>>()?[..]
-    )?;
+        }
+    ).collect::<Result<Vec<(Score, Preorder)>, Error>>()?;
 
     Ok(Response{
         instance: Packed(
-            model::Instance::PreorderMaximization(p)
+            model::Instance::PreorderMaximization(
+                aggregate(&preorders)?
+            )
         ),
     })
 }

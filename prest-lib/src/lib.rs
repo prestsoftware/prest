@@ -34,3 +34,4 @@ pub mod csv;
 pub mod graph;
 pub mod instviz;
 pub mod aggregate_preferences;
+pub mod winners;

@@ -12,7 +12,10 @@ import model
 import dataset
 import platform_specific
 import dataset.aggregated_preferences
-from dataset.aggregated_preferences import InstanceRepr, InstanceReprC, display_instance, instance_repr_to_code
+from dataset.aggregated_preferences import InstanceRepr, InstanceReprC, \
+    display_instance, instance_repr_to_code, \
+    PackedEstimationResponse, PackedEstimationResponseC, \
+    PackedEstimationResponsesC  # noqa: F401 (used as public reexport)
 from core import Core
 from gui.progress import Worker
 from model import get_name as model_get_name
@@ -65,10 +68,6 @@ class Response(NamedTuple):
 ResponseC = namedtupleC(Response, strC, PenaltyC, listC(InstanceInfoC))
 ResponsesC = listC(ResponseC)
 
-PackedResponse = NewType('PackedResponse', bytes)
-PackedResponseC = cast(Codec[PackedResponse], bytesC)
-PackedResponsesC = listC(PackedResponseC)
-
 class Instance(NamedTuple):
     model: str
     data: InstanceRepr
@@ -85,7 +84,7 @@ SubjectC = namedtupleC(Subject, strC, PenaltyC, listC(tupleC(ModelC, PenaltyC, l
 PackedSubject = NewType('PackedSubject', bytes)
 PackedSubjectC = cast(Codec[PackedSubject], bytesC)
 
-def subject_from_response_bytes(response_bytes : PackedResponse) -> Subject:
+def subject_from_response_bytes(response_bytes : PackedEstimationResponse) -> Subject:
     # returns something orderable
     def model_sort_criterion(chunk : Tuple[ModelRepr, Tuple[Penalty, List[InstanceRepr]]]) -> Any:
         model, (penalty, instances) = chunk
@@ -186,7 +185,7 @@ class EstimationResult(Dataset):
 
     def __init__(self, name: str, alternatives: Sequence[str]) -> None:
         Dataset.__init__(self, name, alternatives)
-        self.subjects: List[PackedResponse] = []
+        self.subjects: List[PackedEstimationResponse] = []
 
     def analysis_aggregate_preferences(self, worker : Worker, _config : None) -> dataset.AnalysisResult:
         worker.set_work_size(1)
@@ -196,9 +195,12 @@ class EstimationResult(Dataset):
 
             response = core.call(
                 'aggregate-preferences',
-                listC(PackedResponseC),
+                dataset.aggregated_preferences.RequestC,
                 dataset.aggregated_preferences.ResponseC,
-                self.subjects,
+                dataset.aggregated_preferences.Request(
+                    mode=dataset.aggregated_preferences.Mode.Iterated,
+                    subjects=self.subjects,
+                )
             )
 
             worker.set_progress(1)
@@ -263,11 +265,11 @@ class EstimationResult(Dataset):
 
     @classmethod
     def get_codec_progress(_cls) -> CodecProgress['EstimationResult']:
-        subjects_encode : Callable[[Worker, FileOut, List[PackedResponse]], None]
-        subjects_decode : Callable[[Worker, FileIn], List[PackedResponse]]
+        subjects_encode : Callable[[Worker, FileOut, List[PackedEstimationResponse]], None]
+        subjects_decode : Callable[[Worker, FileIn], List[PackedEstimationResponse]]
 
         DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC.enc_dec()
-        subjects_size, subjects_encode, subjects_decode = listCP(oneCP(PackedResponseC)).enc_dec()
+        subjects_size, subjects_encode, subjects_decode = listCP(oneCP(PackedEstimationResponseC)).enc_dec()
         intC_encode, intC_decode = intC.enc_dec()
 
         def get_size(x : 'EstimationResult') -> int:

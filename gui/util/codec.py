@@ -1,13 +1,14 @@
-import json
+from __future__ import annotations
+
 import struct
 import logging
-import base64
 import typing
 import dataclasses
 from io import BytesIO
+from enum import Enum
 import numpy as np
 from dataclasses import dataclass
-from typing import Union, Any, BinaryIO, Type, NewType, NamedTuple, List, \
+from typing import Any, BinaryIO, NewType, NamedTuple, \
     Tuple, Callable, TypeVar, Optional, Dict, Sequence, Generic, cast
 
 log = logging.getLogger(__name__)
@@ -398,5 +399,17 @@ def numpyC(dtype : type) -> Codec[np.ndarray]:
             np.fromstring(stuff, dtype=dtype),  # type:ignore
             newshape=shape,
         )
+
+    return Codec(encode, decode)
+
+ET = TypeVar('ET', bound=Enum)
+def pythonEnumC(cls : type[ET], valueC : Codec) -> Codec[ET]:
+    valueC_enc, valueC_dec = valueC.enc_dec()
+
+    def encode(f : FileOut, x : ET) -> None:
+        valueC_enc(f, x.value)
+
+    def decode(f : FileIn) -> ET:
+        return cls(valueC_dec(f))
 
     return Codec(encode, decode)

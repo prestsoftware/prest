@@ -3,6 +3,7 @@ from __future__ import annotations
 import base64
 import logging
 import subprocess
+from enum import Enum
 
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
@@ -12,12 +13,29 @@ from core import Core
 from gui.progress import Worker
 from dataclasses import dataclass
 from dataset import Dataset, Analysis, ExportVariant, DatasetHeaderC
-from typing import Sequence, NewType, Optional
+from typing import Sequence, NewType, Optional, cast
 from util.codec import FileIn, FileOut, dataclassC, bytesC, listC, frozensetC, \
-    intC, tupleC, strC
+    intC, tupleC, strC, Codec, pythonEnumC
 from util.codec_progress import CodecProgress, oneCP
 
 log = logging.getLogger(__name__)
+
+PackedEstimationResponse = NewType('PackedEstimationResponse', bytes)
+PackedEstimationResponseC = cast(Codec[PackedEstimationResponse], bytesC)
+PackedEstimationResponsesC = listC(PackedEstimationResponseC)
+
+class Mode(Enum):
+    Weighted = 'weighted'
+    Iterated = 'iterated'
+
+ModeC = pythonEnumC(Mode, strC)
+
+@dataclass
+class Request:
+    mode : Mode
+    subjects : list[PackedEstimationResponse]
+
+RequestC = dataclassC(Request, ModeC, listC(PackedEstimationResponseC))
 
 InstanceRepr = NewType('InstanceRepr', bytes)
 InstanceReprC = bytesC

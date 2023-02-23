@@ -275,7 +275,7 @@ class ExperimentalData(Dataset):
         with Core() as core:
             worker.interrupt = lambda: core.shutdown()  # register interrupt hook
 
-            rows : list[estimation_result.PackedResponse] = []
+            rows : list[estimation_result.PackedEstimationResponse] = []
             worker.set_work_size(len(self.subjects))
             for i in range(0, len(self.subjects), CHUNK_SIZE):
                 request = estimation_result.Request(
@@ -288,7 +288,7 @@ class ExperimentalData(Dataset):
                 responses = core.call(
                     'estimation',
                     estimation_result.RequestC,
-                    estimation_result.PackedResponsesC,
+                    estimation_result.PackedEstimationResponsesC,
                     request
                 )
                 rows.extend(responses)

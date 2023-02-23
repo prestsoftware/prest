@@ -1,5 +1,5 @@
-from typing import Iterable, TypeVar, Generic, Iterator, Callable, Optional, cast, overload, Union
-from util.codec import Codec, List, FileIn, FileOut, EOF, listC, bytesC
+from typing import Iterable, TypeVar, Generic, Iterator, Callable, overload, Union
+from util.codec import Codec, FileIn, FileOut, listC, bytesC
 
 T = TypeVar('T')
 
@@ -7,7 +7,7 @@ class PackedList(Generic[T]):
     def __init__(self, codec : Codec, elms : Iterable[T] = ()) -> None:
         self.enc : Callable[[T], bytes] = codec.encode_to_memory
         self.dec : Callable[[bytes], T] = codec.decode_from_memory
-        self.blocks : List[bytes] = []
+        self.blocks : list[bytes] = []
 
         self.extend(elms)
 
@@ -33,11 +33,11 @@ class PackedList(Generic[T]):
         return len(self.blocks)
 
     @overload
-    def __getitem__(self, idx : int) -> T:
+    def __getitem__(self, _idx : int) -> T:
         pass
 
     @overload
-    def __getitem__(self, idx : slice) -> Iterable[T]:
+    def __getitem__(self, _idx : slice) -> Iterable[T]:
         pass
 
     def __getitem__(self, idx : Union[int, slice]) -> Union[T, Iterable[T]]:

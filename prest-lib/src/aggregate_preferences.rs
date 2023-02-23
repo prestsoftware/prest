@@ -1,7 +1,9 @@
 use std::fmt;
-use std::ops::{Add,Mul,AddAssign};
+use std::ops::{Add,Mul,AddAssign,MulAssign};
 use std::io::{Read,Write};
 use std::iter::Sum;
+use num_rational::Ratio;
+use num_traits::identities::{Zero,One};
 
 use model;
 use estimation;
@@ -76,10 +78,12 @@ impl From<precomputed::Error> for Error {
     }
 }
 
+type Score = Ratio<u32>;
+
 struct KemenyScore {
-    lt : u32,
-    eq : u32,
-    gt : u32,
+    lt : Score,
+    eq : Score,
+    gt : Score,
 }
 
 impl Add<&KemenyScore> for &KemenyScore {
@@ -102,11 +106,22 @@ impl AddAssign<&KemenyScore> for KemenyScore {
 }
 
 impl Mul<&KemenyScore> for &KemenyScore {
-    type Output = u32;
-    fn mul(self, other : &KemenyScore) -> u32 {
+    type Output = Score;
+    fn mul(self, other : &KemenyScore) -> Score {
         self.lt*other.lt
         + self.eq*other.eq
         + self.gt*other.gt
+    }
+}
+
+impl Mul<Score> for &KemenyScore {
+    type Output = KemenyScore;
+    fn mul(self, other : Score) -> KemenyScore {
+        KemenyScore {
+            lt : self.lt * other,
+            eq : self.eq * other,
+            gt : self.gt * other,
+        }
     }
 }
 
@@ -119,9 +134,9 @@ impl KemenyTable {
         KemenyTable {
             scores: Alt::distinct_pairs(p.size).map(
                 |(u, v)| KemenyScore {
-                    lt : p.lt(u, v) as u32,
-                    eq : p.eq(u, v) as u32,
-                    gt : p.gt(u, v) as u32,
+                    lt : if p.lt(u, v) { One::one() } else { Zero::zero() },
+                    eq : if p.eq(u, v) { One::one() } else { Zero::zero() },
+                    gt : if p.gt(u, v) { One::one() } else { Zero::zero() },
                 }
             ).collect()
         }
@@ -149,12 +164,21 @@ impl AddAssign<&KemenyTable> for KemenyTable {
 }
 
 impl Mul<&KemenyTable> for &KemenyTable {
-    type Output = u32;
-    fn mul(self, other : &KemenyTable) -> u32 {
+    type Output = Score;
+    fn mul(self, other : &KemenyTable) -> Score {
         assert_eq!(self.scores.len(), other.scores.len());
         self.scores.iter().zip(&other.scores).map(
             |(x, y)| x * y
         ).sum()
+    }
+}
+
+impl Mul<Score> for &KemenyTable {
+    type Output = KemenyTable;
+    fn mul(self, other : Score) -> KemenyTable {
+        KemenyTable {
+            scores: self.scores.iter().map(|ks| ks * other).collect()
+        }
     }
 }
 

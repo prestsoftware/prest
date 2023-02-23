@@ -33,3 +33,23 @@ impl<S : Ord, T> Winners<S, T> {
         Some((self.best_score?, self.winners))
     }
 }
+
+pub fn run_iter<S, T, I>(it : I) -> Option<(S, Vec<T>)>
+    where S : Ord, I : IntoIterator<Item = (S, T)>
+{
+    let mut winners = Winners::new();
+    for (score, candidate) in it {
+        winners.add(score, candidate);
+    }
+    winners.into_result()
+}
+
+pub fn run_iter_with_score<S, T, I, F>(it : I, get_score : F) -> Option<(S, Vec<T>)>
+    where S : Ord, I : IntoIterator<Item=T>, F : Fn(&T) -> S
+{
+    let mut winners = Winners::new();
+    for candidate in it {
+        winners.add(get_score(&candidate), candidate);
+    }
+    winners.into_result()
+}

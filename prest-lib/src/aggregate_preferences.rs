@@ -5,11 +5,11 @@ use std::iter::Sum;
 
 use model;
 use estimation;
+use winners;
 use alt::Alt;
 use preorder::Preorder;
 use codec::{self,Packed};
 use precomputed::{self,Precomputed};
-use winners::Winners;
 
 #[derive(Debug, Clone)]
 pub struct Request {
@@ -185,16 +185,11 @@ fn aggregate(ps : &[Preorder]) -> Result<Preorder, Error> {
     let precomputed = Precomputed::precomputed(alt_count, None)?;
     let tbl_aggregated : KemenyTable = ps.iter().map(KemenyTable::from_preorder).sum();
 
-    let mut winners = Winners::new();
-    for p in &precomputed.get(alt_count)?.weak_orders {
-        winners.add(
-            &tbl_aggregated * &KemenyTable::from_preorder(p),
-            p,
-        )
-    }
-
     // we assert non-emptiness at the beginning of the function
-    let (_best_score, best_preorders) = winners.into_result().unwrap();
+    let (_best_score, best_preorders) = winners::run_iter_with_score(
+        &precomputed.get(alt_count)?.weak_orders,
+        |p| &tbl_aggregated * &KemenyTable::from_preorder(p),
+    ).unwrap();
 
     if best_preorders.len() > 1 {
         Err(Error::Ambiguous)

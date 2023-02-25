@@ -237,9 +237,7 @@ fn aggregate(ps : &[(Score, Preorder)]) -> Result<Vec<Preorder>, Error> {
         |p| &tbl_aggregated * &KemenyTable::from_preorder(p),
     ).unwrap();
 
-    Ok(
-        best_preorders.into_iter().cloned().collect()
-    )
+    Ok(best_preorders.into_iter().cloned().collect())
 }
 
 fn aggregate_iterated(ps : &[Preorder]) -> Result<Vec<Preorder>, Error> {
@@ -249,14 +247,16 @@ fn aggregate_iterated(ps : &[Preorder]) -> Result<Vec<Preorder>, Error> {
         let new_preorders : HashSet<Preorder> = HashSet::from_iter(
             aggregate(
                 &std::iter::repeat(One::one())
-                    .zip(preorders)
-                    .collect::<Vec<_>>()
+                    .zip(preorders.iter().cloned())
+                    .collect::<Vec<(Score, Preorder)>>()
             )?
         );
 
         if new_preorders == preorders {
             // we're done
             break;
+        } else {
+            preorders = new_preorders;
         }
     }
 
@@ -330,6 +330,7 @@ pub fn run(req : Request) -> Result<Response, Error> {
         }
 
         Mode::Iterated => {
+            // first, aggregate each subject into a set of preorders
             let subjects : Vec<Vec<Preorder>> = req.subjects.into_iter().map(
                 |Packed(subj)| {
                     Ok(
@@ -344,7 +345,17 @@ pub fn run(req : Request) -> Result<Response, Error> {
                 }
             ).collect::<Result<_, Error>>()?;
 
-            unimplemented!()
+            // aggregate each section across subjects
+            let sections = combos(&subjects).map(
+                |section| aggregate_iterated(
+                    &section.into_iter().cloned().collect::<Vec<Preorder>>()
+                ) as Result<Vec<Preorder>, Error>
+            ).collect::<Result<Vec<Vec<Preorder>>, Error>>()?;
+
+            // finally, aggregate all sections
+            aggregate_iterated(
+                &sections.into_iter().flatten().collect::<Vec<Preorder>>()
+            )?
         }
     };
 

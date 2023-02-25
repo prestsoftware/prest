@@ -1,13 +1,13 @@
 import logging
-from typing import NamedTuple, List, Sequence, Iterator, Tuple, Optional, Set, FrozenSet, Union, cast
-from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView
+from typing import NamedTuple, List, Sequence, Iterator, Tuple, Optional, Set, FrozenSet
+from PyQt5.QtWidgets import QDialog, QHeaderView
 
 import uic.view_dataset
 import util.tree_model
 from gui.progress import Worker
 from dataset import Dataset, DatasetHeaderC, Analysis, ExportVariant
-from util.codec import Codec, FileIn, FileOut, listC, strC, intC, \
-    tupleC, namedtupleC, setC, frozensetC
+from util.codec import FileIn, FileOut, listC, strC, intC, \
+    namedtupleC, setC, frozensetC
 from util.codec_progress import CodecProgress, listCP, oneCP
 
 log = logging.getLogger(__name__)

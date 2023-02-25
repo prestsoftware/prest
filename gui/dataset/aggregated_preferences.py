@@ -5,18 +5,24 @@ import logging
 import subprocess
 from enum import Enum
 
+from PyQt5.QtCore import QModelIndex, Qt
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
+from PyQt5.QtWidgets import QDialog, QHeaderView
 
 import platform_specific
 
+import gui
 from core import Core
 from gui.progress import Worker
+import uic.view_dataset
 from dataclasses import dataclass
 from dataset import Dataset, Analysis, ExportVariant, DatasetHeaderC
 from typing import Sequence, NewType, Optional, cast
 from util.codec import FileIn, FileOut, dataclassC, bytesC, listC, frozensetC, \
     intC, tupleC, strC, Codec, pythonEnumC
 from util.codec_progress import CodecProgress, oneCP
+import util.tree_model
 
 log = logging.getLogger(__name__)
 
@@ -42,9 +48,9 @@ InstanceReprC = bytesC
 
 @dataclass
 class Response:
-    instance_repr : InstanceRepr
+    instance_reprs : list[InstanceRepr]
 
-ResponseC = dataclassC(Response, InstanceReprC)
+ResponseC = dataclassC(Response, listC(InstanceReprC))
 
 @dataclass
 class InstVizRequest:
@@ -213,6 +219,29 @@ def display_instance(alternatives : Sequence[str], instance_code : str) -> None:
             with open(fname, 'wb') as f:
                 f.write(info.graphs[0].png_bytes)
 
+class InstanceNode(util.tree_model.Node):
+    def __init__(self, parent_node : RootNode, row: int, alternatives : list[str], instance_repr : InstanceRepr) -> None:
+        self.alternatives = alternatives
+        self.instance_code = instance_repr_to_code(instance_repr)
+
+        help_icon = QIcon(platform_specific.get_embedded_file_path('images/qm-16.png'))
+        util.tree_model.Node.__init__(
+            self, parent_node, row,
+            fields=(
+                self.instance_code,
+                util.tree_model.Field(icon=help_icon, user_data=self.instance_code),
+            ),
+        )
+
+class RootNode(util.tree_model.RootNode):
+    def __init__(self, alternatives : list[str], reprs : list[InstanceRepr]) -> None:
+        util.tree_model.RootNode.__init__(self, len(reprs))
+        self.reprs = reprs
+        self.alternatives = alternatives
+
+    def create_child(self, row : int) -> InstanceNode:
+        return InstanceNode(self, row, self.alternatives, self.reprs[row])
+
 class AggregatedPreferences(Dataset):
     def __init__(
         self,
@@ -223,15 +252,33 @@ class AggregatedPreferences(Dataset):
         Dataset.__init__(self, name, alternatives)
         self.response = response
 
-    def dlg_view(self, _flag : Optional[bool] = None) -> None:
-        display_instance(
-            self.alternatives,
-            instance_repr_to_code(self.response.instance_repr),
-        )
+    class ViewDialog(gui.ExceptionDialog, QDialog, uic.view_dataset.Ui_ViewDataset):
+        def __init__(self, ds : AggregatedPreferences) -> None:
+            QDialog.__init__(self)
+            self.setupUi(self)
+
+            self.ds = ds
+            self.model = util.tree_model.TreeModel(
+                RootNode(ds.alternatives, ds.response.instance_reprs),
+                headers=(
+                    'Instance',
+                    '',
+                ),
+            )
+            self.twRows.setModel(self.model)
+
+            self.twRows.header().setSectionResizeMode(QHeaderView.ResizeToContents)
+            self.twRows.header().setStretchLastSection(False)
+
+            self.twRows.clicked.connect(self.catch_exc(self.dlg_item_clicked))
+
+        def dlg_item_clicked(self, idx : QModelIndex) -> None:
+            instance_code = cast(str, self.model.data(idx, Qt.UserRole))
+            if instance_code:
+                display_instance(self.ds.alternatives, instance_code)
 
     def label_size(self) -> str:
-        # not meaningful for this dataset
-        return ''
+        return f'{len(self.response.instance_reprs)} instances'
 
     def get_analyses(self) -> Sequence[Analysis]:
         return ()

@@ -381,7 +381,14 @@ pub fn run<L : Log>(mut log : L, subject : Subject) -> Result<Response> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use rpc::DummyLogger;
+    use common::LogLevel;
+
+    struct DummyLogger;
+
+    impl Log for DummyLogger {
+        fn log(&mut self, _level : LogLevel, _message : String) {}
+        fn progress(&mut self, _position : u32) {}
+    }
 
     #[test]
     fn basic() {

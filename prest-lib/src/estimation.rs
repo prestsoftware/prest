@@ -380,7 +380,8 @@ mod test {
     use model;
     use preorder;
     use fast_preorder;
-    use base64;
+    use base64::Engine;
+    use base64::prelude::BASE64_STANDARD;
     use model::{Instance,Penalty,DistanceScore};
     use codec;
     use alt_set::AltSet;
@@ -426,7 +427,7 @@ mod test {
 
     #[test]
     fn undominated_detail() {
-        let bytes = base64::decode("AgUBAgQPHwE=").unwrap();
+        let bytes = BASE64_STANDARD.decode("AgUBAgQPHwE=").unwrap();
         let inst : Instance = codec::decode_from_memory(&bytes).unwrap();
 
         let rows = choices![

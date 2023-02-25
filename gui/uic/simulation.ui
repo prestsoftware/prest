@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>291</width>
-    <height>245</height>
+    <height>299</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Generate random subjects</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
@@ -88,6 +88,27 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="gbFilter">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="title">
+      <string>Filter generated subjects</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="SubjectFilter" name="subjectFilter" native="true"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -110,6 +131,12 @@
    <class>GenChoices</class>
    <extends>QWidget</extends>
    <header>gui/gen_choices.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SubjectFilter</class>
+   <extends>QWidget</extends>
+   <header>gui/subject_filter.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
@@ -144,6 +171,22 @@
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>gbFilter</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>subjectFilter</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>231</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>145</x>
+     <y>241</y>
     </hint>
    </hints>
   </connection>

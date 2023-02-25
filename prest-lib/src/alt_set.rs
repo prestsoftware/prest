@@ -7,6 +7,7 @@ use alt::Alt;
 use std::fmt;
 use rand::Rng;
 use std::string::String;
+use itertools::Itertools;
 
 pub type Block = u32;
 
@@ -143,6 +144,12 @@ impl<'a> AltSetView<'a> {
 
     pub fn size(&self) -> u32 {
         self.blocks.iter().map(|b| b.count_ones()).sum()
+    }
+
+    pub fn combinations(&self, k : u32) -> impl Iterator<Item=AltSet> + 'a {
+        self.iter().combinations(k as usize).map(
+            FromIterator::from_iter
+        )
     }
 
     pub fn is_singleton(&self) -> bool {
@@ -296,6 +303,12 @@ impl AltSet {
     pub fn powerset(n : u32) -> Powerset {
         assert!(n < 32);
         Powerset{ next_val: Some(1), last_val: (1 << n) - 1 }
+    }
+
+    pub fn combinations(n : u32, k : u32) -> impl Iterator<Item=AltSet> {
+        Alt::all(n).combinations(k as usize).map(
+            FromIterator::from_iter
+        )
     }
 
     pub fn singleton(x : Alt) -> AltSet {

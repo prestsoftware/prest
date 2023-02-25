@@ -273,8 +273,10 @@ fn extract_preorder(instance : model::Instance) -> Result<Preorder, Error> {
     }
 }
 
+/* TODO
 fn combos<'a, T>(xs : &'a Vec<Vec<T>>) -> Vec<Vec<&'a T>> {
 }
+*/
 
 pub fn run(req : Request) -> Result<Response, Error> {
     // collect preorders from all subjects

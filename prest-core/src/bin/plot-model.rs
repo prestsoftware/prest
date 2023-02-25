@@ -120,7 +120,7 @@ fn main() {
         Instance::TopTwo(ref p) => {
             assert_eq!(p.size, alt_names.len() as u32, "preorder size ({}) does not match the number of alternatives ({})", p.size, alt_names.len());
 
-            let order : Vec<&str> = p.as_linear_order().into_iter().map(
+            let order : Vec<&str> = p.as_linear_order().unwrap().into_iter().map(
                 |Alt(i)| alt_names[i as usize].as_ref()
             ).collect();
 

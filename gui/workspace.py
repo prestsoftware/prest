@@ -1,7 +1,6 @@
-import json
 import bz2
 import logging
-from typing import cast, List, Any, Iterable, BinaryIO
+from typing import cast
 
 import dataset
 import dataset.budgetary
@@ -11,14 +10,14 @@ import dataset.consistency_result
 import dataset.experiment_stats
 
 import branding
-from gui.progress import Worker, Cancelled
-from util.codec import Codec, FileIn, FileOut, strC, intC, listC
-from util.codec_progress import CodecProgress, listCP, oneCP, enum_by_typenameCP
+from gui.progress import Worker
+from util.codec import FileIn, FileOut, strC, intC
+from util.codec_progress import CodecProgress, listCP, enum_by_typenameCP
 
 log = logging.getLogger(__name__)
 
 PREST_SIGNATURE = b'Prest Workspace\0'
-FILE_FORMAT_VERSION = 16
+FILE_FORMAT_VERSION = 17
 
 DatasetCP : CodecProgress = enum_by_typenameCP('Dataset', [
     (cls, cls.get_codec_progress())
@@ -30,7 +29,7 @@ class PersistenceError(Exception):
 
 class Workspace:
     def __init__(self):
-        self.datasets: List[dataset.Dataset] = []
+        self.datasets : list[dataset.Dataset] = []
 
     def save_to_file(self, worker : Worker, fname: str) -> None:
         with bz2.open(fname, 'wb') as f_raw:

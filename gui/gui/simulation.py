@@ -2,7 +2,8 @@ import time
 import random
 import logging
 import collections
-from typing import List, FrozenSet, Set, NamedTuple
+from typing import Optional
+from dataclasses import dataclass
 
 from PyQt5.QtCore import Qt, QCoreApplication
 from PyQt5.QtWidgets import QDialog, QMessageBox, QProgressDialog
@@ -10,26 +11,31 @@ from PyQt5.QtWidgets import QDialog, QMessageBox, QProgressDialog
 import gui
 import simulation
 import uic.simulation
+import gui.subject_filter
 import dataset.experimental_data
 from gui.progress import Worker, Cancelled
 
 log = logging.getLogger(__name__)
 
-class Options(NamedTuple):
+@dataclass
+class Options:
     dataset_name : str
-    alternatives : List[str]
+    alternatives : list[str]
     subject_count : int
     gen_menus : simulation.GenMenus
     gen_choices : simulation.GenChoices
+    subject_filter : Optional[gui.subject_filter.Options]
 
 class Simulation(uic.simulation.Ui_Simulation, gui.ExceptionDialog):
-    def __init__(self) -> None:
+    def __init__(self, experimental_features : bool) -> None:
         QDialog.__init__(self)
         self.setupUi(self)
 
         self.leAlternatives.textChanged.connect(self.catch_exc(self.update_alternatives))
         self.update_alternatives('')
 
+        if not experimental_features:
+            self.gbFilter.setVisible(False)
         self.genMenus.cbDefault.currentIndexChanged.connect(
             self.catch_exc(self.default_changed)
         )
@@ -41,7 +47,7 @@ class Simulation(uic.simulation.Ui_Simulation, gui.ExceptionDialog):
             not self.genMenus.value().defaults,
         )
 
-    def get_alternatives(self) -> List[str]:
+    def get_alternatives(self) -> list[str]:
         return [alt.strip() for alt in self.leAlternatives.text().split(',')]
 
     def update_alternatives(self, _text : str):
@@ -59,4 +65,8 @@ class Simulation(uic.simulation.Ui_Simulation, gui.ExceptionDialog):
             subject_count=self.sbSubjects.value(),
             gen_menus=self.genMenus.value(),
             gen_choices=self.genChoices.value(),
+            subject_filter=
+                self.subjectFilter.value()
+                if self.gbFilter.isChecked()
+                else None
         )

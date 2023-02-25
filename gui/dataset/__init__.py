@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-import openpyxl
-
 import csv
 import logging
-from typing import Sequence, Any, List, Type, NamedTuple, Callable, Iterator, \
-    Optional, FrozenSet, Iterable, NewType, Union, cast, TypeVar
+from dataclasses import dataclass
+from typing import Sequence, Any, NamedTuple, Callable, Iterator, \
+    Optional, Iterable, NewType, Union, cast, TypeVar, \
+    Generic, TYPE_CHECKING
 
+import openpyxl
 import openpyxl.utils.cell
 from PyQt5.QtWidgets import QMessageBox
 
@@ -16,6 +17,9 @@ from gui.progress import Worker, Cancelled
 from util.codec import Codec, tupleC, strC, listC, namedtupleC, frozensetC, \
     intC, maybe, bytesC
 from util.codec_progress import CodecProgress
+
+if TYPE_CHECKING:
+    from gui.main_window import MainWindow
 
 log = logging.getLogger(__name__)
 
@@ -41,13 +45,16 @@ class ShowMessageBox(NamedTuple):
 
 AnalysisResult = Union[None, ShowMessageBox, 'Dataset']
 
-class Analysis(NamedTuple):
+ConfigT = TypeVar('ConfigT')
+
+@dataclass
+class Analysis(Generic[ConfigT]):
     name : str
-    config : Optional[Callable[[], Optional[Any]]]  # display config dialog, return config | can be None
-    run : Callable[[Worker, Any], AnalysisResult]  # (worker, config) -> result
+    config : Optional[Callable[[bool], Optional[ConfigT]]]  # display config dialog, return config | can be None
+    run : Callable[[Worker, ConfigT], AnalysisResult]  # (worker, config) -> result
     is_hidden : bool = False
 
-AltSet = FrozenSet[int]
+AltSet = frozenset[int]
 AltSetC = frozensetC(intC)
 
 Menu = AltSet
@@ -65,8 +72,8 @@ PackedSubjectC = cast(Codec[PackedSubject], bytesC)
 
 class Subject(NamedTuple):
     name : str
-    alternatives : List[str]
-    choices : List[ChoiceRow]
+    alternatives : list[str]
+    choices : list[ChoiceRow]
 
     def csv_set(self, alt_set: Iterable[int]) -> str:
         return ','.join(self.alternatives[i] for i in sorted(alt_set))
@@ -120,12 +127,12 @@ class Dataset:
         raise NotImplementedError()
 
     @classmethod
-    def get_codec_progress(cls : Type[T]) -> CodecProgress[T]:
+    def get_codec_progress(cls : type[T]) -> CodecProgress[T]:
         raise NotImplementedError()
 
-    def analyse(self, analysis : Analysis, main_win : Any) -> Optional['Dataset']:
+    def analyse(self, analysis : Analysis, main_win : MainWindow) -> Optional[Dataset]:
         if analysis.config is not None:
-            config = analysis.config()
+            config = analysis.config(main_win.hidden_features_enabled)
             if config is None:
                 return None  # dialog cancelled
         else:

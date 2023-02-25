@@ -4,9 +4,10 @@ import struct
 import logging
 import typing
 import dataclasses
+import numpy as np
 from io import BytesIO
 from enum import Enum
-import numpy as np
+from fractions import Fraction
 from dataclasses import dataclass
 from typing import Any, BinaryIO, NewType, NamedTuple, \
     Tuple, Callable, TypeVar, Optional, Dict, Sequence, Generic, cast
@@ -249,7 +250,7 @@ def setC(codec : Codec[E]) -> Codec[set[E]]:
     def decode(f : FileIn) -> set[E]:
         return set(_decode(f))
 
-    return Codec(_encode, decode) # type: ignore
+    return Codec(_encode, decode)  # type: ignore
 
 def frozensetC(codec : Codec[E]) -> Codec[frozenset[E]]:
     _encode, _decode = listC(codec).enc_dec()
@@ -258,6 +259,18 @@ def frozensetC(codec : Codec[E]) -> Codec[frozenset[E]]:
         return frozenset(_decode(f))
 
     return Codec(_encode, decode)  # type: ignore
+
+EnumTy = TypeVar('EnumTy', bound=Enum)
+def pyEnumC(cls : type[EnumTy], valC : Codec) -> Codec[EnumTy]:
+    _encode, _decode = valC.enc_dec()
+
+    def encode(f : FileOut, x : EnumTy) -> None:
+        _encode(f, x.value)
+
+    def decode(f : FileIn) -> EnumTy:
+        return cls(Enum(_decode(f)))
+
+    return Codec(encode, decode)
 
 def enumC(name : str, alts : Dict[type, Tuple[Codec, ...]]) -> Codec:
     codecs_enc_get = {
@@ -324,10 +337,10 @@ def enum_by_typenameC(name : str, alts : Sequence[Tuple[type, Codec]]) -> Codec:
     return Codec(encode, decode)
 
 def _noneC() -> Codec[None]:
-    def encode(f : FileOut, x : None) -> None:
+    def encode(_f : FileOut, _x : None) -> None:
         pass
 
-    def decode(f : FileIn) -> None:
+    def decode(_f : FileIn) -> None:
         return None
 
     return Codec(encode, decode)
@@ -413,3 +426,20 @@ def pythonEnumC(cls : type[ET], valueC : Codec) -> Codec[ET]:
         return cls(valueC_dec(f))
 
     return Codec(encode, decode)
+
+def _fractionC() -> Codec[Fraction]:
+    intC_enc, intC_dec = intC.enc_dec()
+
+    def encode(f : FileOut, x : Fraction) -> None:
+        intC_enc(f, x.numerator)
+        intC_enc(f, x.denominator)
+
+    def decode(f : FileIn) -> Fraction:
+        return Fraction(
+            numerator=intC_dec(f),
+            denominator=intC_dec(f),
+        )
+
+    return Codec(encode, decode)
+
+fractionC = _fractionC()

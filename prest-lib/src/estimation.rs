@@ -1,5 +1,5 @@
 use std::collections::HashSet;
-use model::{self,Penalty,Model,Instance,PreorderParams};
+use model::{self,Penalty,Model,Instance,PreorderParams,DistanceScore};
 use precomputed::{self,Precomputed};
 use std::result;
 use std::fmt;
@@ -9,6 +9,8 @@ use common::{Subject,ChoiceRow};
 use codec::{self,Encode,Decode,Packed};
 use std::iter::FromIterator;
 use rayon::prelude::*;
+use num_rational::Ratio;
+use num_traits::identities::Zero;
 
 pub type Result<T> = result::Result<T, EstimationError>;
 
@@ -54,6 +56,7 @@ pub struct Request {
     models : Vec<model::Model>,
     disable_parallelism : bool,
     disregard_deferrals : bool,
+    distance_score : DistanceScore,
 }
 
 impl Decode for Request {
@@ -63,6 +66,7 @@ impl Decode for Request {
             models: Decode::decode(f)?,
             disable_parallelism: Decode::decode(f)?,
             disregard_deferrals: Decode::decode(f)?,
+            distance_score: Decode::decode(f)?,
         })
     }
 }
@@ -139,7 +143,7 @@ impl BestInstances {
         }
     }
 
-    fn upper_bound_for(&self, model : Model) -> Option<u32> {
+    fn upper_bound_for(&self, model : Model) -> Option<Ratio<u32>> {
         self.instances.iter().filter_map(|inst|
             if inst.model == model {
                 Some(inst.penalty.upper_bound)
@@ -255,6 +259,7 @@ impl BestInstances {
 
 fn evaluate_model(
     precomputed : &Precomputed,
+    distance_score : DistanceScore,
     model : Model,
     alt_count : u32,
     choices : &[ChoiceRow],
@@ -264,7 +269,7 @@ fn evaluate_model(
     model::traverse_all(precomputed, model, alt_count, choices, &mut |inst| {
         model_instances.add_instance(
             model,
-            inst.penalty(choices),
+            inst.penalty(distance_score, choices),
             inst,
         )
     })?;
@@ -272,7 +277,10 @@ fn evaluate_model(
     Ok(model_instances)
 }
 
-pub fn run_one(precomputed : &Precomputed, subject : &Subject, models : &[Model]) -> Result<Response> {
+pub fn run_one(
+    precomputed : &Precomputed, distance_score : DistanceScore,
+    subject : &Subject, models : &[Model],
+) -> Result<Response> {
     let alt_count = subject.alternatives.len() as u32;
 
     let mut best_instances = BestInstances::new();
@@ -283,7 +291,7 @@ pub fn run_one(precomputed : &Precomputed, subject : &Subject, models : &[Model]
         }
 
         best_instances = best_instances.combine(
-            evaluate_model(precomputed, model, alt_count, &subject.choices)?
+            evaluate_model(precomputed, distance_score, model, alt_count, &subject.choices)?
         );
     }
 
@@ -291,11 +299,11 @@ pub fn run_one(precomputed : &Precomputed, subject : &Subject, models : &[Model]
     // 1) it was chosen by the user
     if models.contains(&Model::SequentiallyRationalizableChoice)
         // 2) and there's no perfect rationalisation by UC
-        && best_instances.upper_bound_for(Model::UndominatedChoice{strict:true}) != Some(0)
+        && best_instances.upper_bound_for(Model::UndominatedChoice{strict:true}) != Some(Zero::zero())
         // 3) and there's no perfect rationalisation by UM, either
         && best_instances.upper_bound_for(Model::PreorderMaximization(
             PreorderParams{strict: Some(true), total: Some(true)}
-        )) != Some(0)
+        )) != Some(Zero::zero())
         // Note that we don't need to check non-strict models
         // because if non-strict models rationalise perfectly
         // then we have a multi-choice somewhere,
@@ -304,6 +312,7 @@ pub fn run_one(precomputed : &Precomputed, subject : &Subject, models : &[Model]
         best_instances = best_instances.combine(
             evaluate_model(
                 precomputed,
+                distance_score,
                 Model::SequentiallyRationalizableChoice,
                 alt_count,
                 &subject.choices
@@ -335,13 +344,23 @@ pub fn run(precomputed : &mut Precomputed, request : &Request) -> Result<Vec<Pac
     let results : Vec<Result<Response>> = if request.disable_parallelism {
         // run estimation sequentially
         request.subjects.iter().map(
-            |subj| run_one(precomputed, &subj.unpack().drop_deferrals(request.disregard_deferrals), &request.models)
+            |subj| run_one(
+                precomputed,
+                request.distance_score,
+                &subj.unpack().drop_deferrals(request.disregard_deferrals),
+                &request.models,
+            )
         ).collect()
     } else {
         // run estimation in parallel
         let mut results = Vec::new();
         request.subjects.par_iter().map(
-            |subj| run_one(precomputed, &subj.unpack().drop_deferrals(request.disregard_deferrals), &request.models)
+            |subj| run_one(
+                precomputed,
+                request.distance_score,
+                &subj.unpack().drop_deferrals(request.disregard_deferrals),
+                &request.models
+            )
         ).collect_into_vec(&mut results);
         results
     };
@@ -362,7 +381,7 @@ mod test {
     use preorder;
     use fast_preorder;
     use base64;
-    use model::{Instance,Penalty};
+    use model::{Instance,Penalty,DistanceScore};
     use codec;
     use alt_set::AltSet;
     use alt::Alt;
@@ -399,7 +418,7 @@ mod test {
         let models = [Model::TopTwo];
         let mut precomputed = Precomputed::new(None);
         precomputed.precompute(4).unwrap();
-        let response = super::run_one(&precomputed, &subject, &models).unwrap();
+        let response = super::run_one(&precomputed, DistanceScore::HoutmanMaks, &subject, &models).unwrap();
 
         assert_eq!(response.score, Penalty::exact(0));
         assert_eq!(response.best_instances.len(), 2);
@@ -458,7 +477,7 @@ mod test {
 
         let mut precomputed = Precomputed::new(None);
         precomputed.precompute(4).unwrap();
-        let response = super::run_one(&precomputed, &subject, &models).unwrap();
+        let response = super::run_one(&precomputed, DistanceScore::HoutmanMaks, &subject, &models).unwrap();
 
         assert_eq!(response.score, Penalty::exact(0));
         assert_eq!(response.best_instances.len(), 11);
@@ -499,7 +518,7 @@ mod test {
                 [0,2] -> [0,2],
                 [0,2,3] -> [0],
                 [0,2,4] -> [2],
-                
+
                 [0,3] -> [0],
                 [1,3] -> [1],
                 [2,3] -> [2],
@@ -510,7 +529,7 @@ mod test {
                 [3,4] -> [3]
         ]);
 
-        let response = super::run_one(&precomputed, &subject, &models).unwrap();
+        let response = super::run_one(&precomputed, DistanceScore::HoutmanMaks, &subject, &models).unwrap();
         assert_eq!(response.score, Penalty::exact(2));
         assert_eq!(response.best_instances.len(), 3);
 
@@ -520,6 +539,58 @@ mod test {
             II{ model: m, penalty: Penalty::exact(2), instance: vec![2, 5, 1, 2, 5, 15, 31] },
             II{ model: m, penalty: Penalty::exact(2), instance: vec![2, 5, 5, 2, 4, 15, 31] },
         ]);
+    }
+
+    #[test]
+    fn jaccard_menu() {
+        use model::PreorderParams as PP;
+        use model::Model::PreorderMaximization as PM;
+
+        let mut precomputed = Precomputed::new(None);
+        precomputed.precompute(5).unwrap();
+
+        let models = [PM(PP{strict:Some(true),total:Some(true)})];
+        let subject = testsubj(5, choices![
+                [0,1] -> [0],
+                [1,2] -> [1],
+                [2,3] -> [2],
+                [3,4] -> [3],
+                [4,0] -> [0]
+        ]);
+
+        let response_hm = super::run_one(&precomputed, DistanceScore::HoutmanMaks, &subject, &models).unwrap();
+        assert_eq!(response_hm.score, Penalty::exact(0));
+        assert_eq!(response_hm.best_instances.len(), 1);
+
+        let response_jm = super::run_one(&precomputed, DistanceScore::JaccardPerMenu, &subject, &models).unwrap();
+        assert_eq!(response_jm.score, Penalty::exact(0));
+        assert_eq!(response_jm.best_instances.len(), 1);
+    }
+
+    #[test]
+    fn jaccard_dataset() {
+        use model::PreorderParams as PP;
+        use model::Model::PreorderMaximization as PM;
+
+        let mut precomputed = Precomputed::new(None);
+        precomputed.precompute(5).unwrap();
+
+        let models = [PM(PP{strict:Some(true),total:Some(true)})];
+        let subject = testsubj(5, choices![
+                [0,1] -> [0],
+                [1,2] -> [1],
+                [2,3] -> [2],
+                [3,4] -> [3],
+                [4,0] -> [0]
+        ]);
+
+        let response_hm = super::run_one(&precomputed, DistanceScore::HoutmanMaks, &subject, &models).unwrap();
+        assert_eq!(response_hm.score, Penalty::exact(0));
+        assert_eq!(response_hm.best_instances.len(), 1);
+
+        let response_jd = super::run_one(&precomputed, DistanceScore::JaccardPerDataset, &subject, &models).unwrap();
+        assert_eq!(response_jd.score, Penalty::exact(0));
+        assert_eq!(response_jd.best_instances.len(), 1);
     }
 
     #[test]
@@ -587,7 +658,7 @@ mod test {
         let instance = model::Instance::PreorderMaximization(p);
         assert_eq!(instance.choice(alts![0,1].view(), None), alts![]);
 
-        let response = super::run_one(&precomputed, &subject, &models).unwrap();
+        let response = super::run_one(&precomputed, DistanceScore::HoutmanMaks, &subject, &models).unwrap();
         assert_eq!(response.score, Penalty::exact(0));
         assert_eq!(response.best_instances, vec![super::InstanceInfo{
             model: PM(PP{ strict: None, total: None }),

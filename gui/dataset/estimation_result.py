@@ -18,6 +18,7 @@ from dataset.aggregated_preferences import InstanceRepr, InstanceReprC, \
     PackedEstimationResponse, PackedEstimationResponseC, \
     PackedEstimationResponsesC  # noqa: F401 (used as public reexport)
 from core import Core
+import gui.aggregate
 from gui.progress import Worker
 from gui.estimation import DistanceScore, distanceScoreC
 from model import get_name as model_get_name
@@ -197,7 +198,14 @@ class EstimationResult(Dataset):
         Dataset.__init__(self, name, alternatives)
         self.subjects: List[PackedEstimationResponse] = []
 
-    def analysis_aggregate_preferences(self, worker : Worker, _config : None) -> dataset.AnalysisResult:
+    def config_aggregate_preferences(self, _experimental_features : bool) -> Optional[gui.aggregate.Mode]:
+        dlg = gui.aggregate.ConfigAggregated()
+        if dlg.exec() == QDialog.Accepted:
+            return dlg.value()
+        else:
+            return None
+
+    def analysis_aggregate_preferences(self, worker : Worker, config : gui.aggregate.Mode) -> dataset.AnalysisResult:
         worker.set_work_size(1)
 
         with Core() as core:
@@ -208,7 +216,7 @@ class EstimationResult(Dataset):
                 dataset.aggregated_preferences.RequestC,
                 dataset.aggregated_preferences.ResponseC,
                 dataset.aggregated_preferences.Request(
-                    mode=dataset.aggregated_preferences.Mode.Iterated,
+                    mode=config,
                     subjects=self.subjects,
                 )
             )
@@ -226,7 +234,7 @@ class EstimationResult(Dataset):
         return (
             Analysis(
                 name='Aggregate preferences',
-                config=None,
+                config=self.config_aggregate_preferences,
                 run=self.analysis_aggregate_preferences,
             ),
         )

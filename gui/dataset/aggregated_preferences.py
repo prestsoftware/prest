@@ -3,7 +3,6 @@ from __future__ import annotations
 import base64
 import logging
 import subprocess
-from enum import Enum
 
 from PyQt5.QtCore import QModelIndex, Qt
 from PyQt5.QtGui import QIcon
@@ -13,6 +12,7 @@ from PyQt5.QtWidgets import QDialog, QHeaderView
 import platform_specific
 
 import gui
+import gui.aggregate
 from core import Core
 from gui.progress import Worker
 import uic.view_dataset
@@ -20,7 +20,7 @@ from dataclasses import dataclass
 from dataset import Dataset, Analysis, ExportVariant, DatasetHeaderC
 from typing import Sequence, NewType, Optional, cast
 from util.codec import FileIn, FileOut, dataclassC, bytesC, listC, frozensetC, \
-    intC, tupleC, strC, Codec, pythonEnumC
+    intC, tupleC, strC, Codec
 from util.codec_progress import CodecProgress, oneCP
 import util.tree_model
 
@@ -30,18 +30,12 @@ PackedEstimationResponse = NewType('PackedEstimationResponse', bytes)
 PackedEstimationResponseC = cast(Codec[PackedEstimationResponse], bytesC)
 PackedEstimationResponsesC = listC(PackedEstimationResponseC)
 
-class Mode(Enum):
-    Weighted = 'weighted'
-    Iterated = 'iterated'
-
-ModeC = pythonEnumC(Mode, strC)
-
 @dataclass
 class Request:
-    mode : Mode
+    mode : gui.aggregate.Mode
     subjects : list[PackedEstimationResponse]
 
-RequestC = dataclassC(Request, ModeC, listC(PackedEstimationResponseC))
+RequestC = dataclassC(Request, gui.aggregate.ModeC, listC(PackedEstimationResponseC))
 
 InstanceRepr = NewType('InstanceRepr', bytes)
 InstanceReprC = bytesC

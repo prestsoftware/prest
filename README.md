@@ -22,7 +22,7 @@ documentation at https://prestsoftware.com.
 
 Dependencies:
 * Rust 1.26 stable + Cargo
-* Python 3 (we use 3.6 and 3.7) + pip
+* Python 3.10 + pip
 
 Install the dependencies, compile everything and run:
 

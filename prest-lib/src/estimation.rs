@@ -384,6 +384,7 @@ mod test {
     use base64::prelude::BASE64_STANDARD;
     use model::{Instance,Penalty,DistanceScore};
     use codec;
+    use codec::{Packed,decode_from_memory};
     use alt_set::AltSet;
     use alt::Alt;
     use common::{ChoiceRow,Subject};
@@ -486,17 +487,17 @@ mod test {
         let model = Model::SequentiallyRationalizableChoice;
         let penalty = Penalty::exact(0);
         assert_eq!(response.best_instances, vec![
-            II{ model, penalty: penalty.clone(), instance: vec![7, 4, 1, 2, 5, 9, 4, 7, 6, 4, 14] },
-            II{ model, penalty: penalty.clone(), instance: vec![7, 4, 1, 2, 5, 11, 4, 7, 6, 4, 12] },
-            II{ model, penalty: penalty.clone(), instance: vec![7, 4, 1, 2, 5, 11, 4, 7, 6, 4, 14] },
-            II{ model, penalty: penalty.clone(), instance: vec![7, 4, 1, 2, 5, 11, 4, 15, 6, 4, 12] },
-            II{ model, penalty: penalty.clone(), instance: vec![7, 4, 1, 2, 5, 13, 4, 7, 6, 4, 14] },
-            II{ model, penalty: penalty.clone(), instance: vec![7, 4, 1, 2, 5, 15, 4, 7, 6, 4, 8] },
-            II{ model, penalty: penalty.clone(), instance: vec![7, 4, 1, 2, 5, 15, 4, 7, 6, 4, 12] },
-            II{ model, penalty: penalty.clone(), instance: vec![7, 4, 1, 2, 5, 15, 4, 7, 6, 4, 14] },
-            II{ model, penalty: penalty.clone(), instance: vec![7, 4, 1, 2, 5, 15, 4, 15, 6, 4, 8] },
-            II{ model, penalty: penalty.clone(), instance: vec![7, 4, 1, 2, 5, 15, 4, 15, 6, 4, 12] },
-            II{ model, penalty: penalty.clone(), instance: vec![7, 4, 1, 2, 5, 15, 4, 15, 14, 4, 8] }
+            II{ model, penalty: penalty.clone(), instance: Packed(decode_from_memory(&[7, 4, 1, 2, 5, 9, 4, 7, 6, 4, 14]).unwrap()) },
+            II{ model, penalty: penalty.clone(), instance: Packed(decode_from_memory(&[7, 4, 1, 2, 5, 11, 4, 7, 6, 4, 12]).unwrap()) },
+            II{ model, penalty: penalty.clone(), instance: Packed(decode_from_memory(&[7, 4, 1, 2, 5, 11, 4, 7, 6, 4, 14]).unwrap()) },
+            II{ model, penalty: penalty.clone(), instance: Packed(decode_from_memory(&[7, 4, 1, 2, 5, 11, 4, 15, 6, 4, 12]).unwrap()) },
+            II{ model, penalty: penalty.clone(), instance: Packed(decode_from_memory(&[7, 4, 1, 2, 5, 13, 4, 7, 6, 4, 14]).unwrap()) },
+            II{ model, penalty: penalty.clone(), instance: Packed(decode_from_memory(&[7, 4, 1, 2, 5, 15, 4, 7, 6, 4, 8]).unwrap()) },
+            II{ model, penalty: penalty.clone(), instance: Packed(decode_from_memory(&[7, 4, 1, 2, 5, 15, 4, 7, 6, 4, 12]).unwrap()) },
+            II{ model, penalty: penalty.clone(), instance: Packed(decode_from_memory(&[7, 4, 1, 2, 5, 15, 4, 7, 6, 4, 14]).unwrap()) },
+            II{ model, penalty: penalty.clone(), instance: Packed(decode_from_memory(&[7, 4, 1, 2, 5, 15, 4, 15, 6, 4, 8]).unwrap()) },
+            II{ model, penalty: penalty.clone(), instance: Packed(decode_from_memory(&[7, 4, 1, 2, 5, 15, 4, 15, 6, 4, 12]).unwrap()) },
+            II{ model, penalty: penalty.clone(), instance: Packed(decode_from_memory(&[7, 4, 1, 2, 5, 15, 4, 15, 14, 4, 8]).unwrap()) }
         ]);
     }
 
@@ -536,9 +537,9 @@ mod test {
 
         let m = Model::UndominatedChoice{strict: true};
         assert_eq!(response.best_instances, vec![
-            II{ model: m, penalty: Penalty::exact(2), instance: vec![2, 5, 1, 2, 4, 15, 31] },
-            II{ model: m, penalty: Penalty::exact(2), instance: vec![2, 5, 1, 2, 5, 15, 31] },
-            II{ model: m, penalty: Penalty::exact(2), instance: vec![2, 5, 5, 2, 4, 15, 31] },
+            II{ model: m, penalty: Penalty::exact(2), instance: Packed(decode_from_memory(&[2, 5, 1, 2, 4, 15, 31]).unwrap()) },
+            II{ model: m, penalty: Penalty::exact(2), instance: Packed(decode_from_memory(&[2, 5, 1, 2, 5, 15, 31]).unwrap()) },
+            II{ model: m, penalty: Penalty::exact(2), instance: Packed(decode_from_memory(&[2, 5, 5, 2, 4, 15, 31]).unwrap()) },
         ]);
     }
 
@@ -664,7 +665,7 @@ mod test {
         assert_eq!(response.best_instances, vec![super::InstanceInfo{
             model: PM(PP{ strict: None, total: None }),
             penalty: Penalty::exact(0),
-            instance: vec![0, 5, 1, 2, 4, 8, 16],
+            instance: Packed(decode_from_memory(&[0, 5, 1, 2, 4, 8, 16]).unwrap()),
         }]);
     }
 }

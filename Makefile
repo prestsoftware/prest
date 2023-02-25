@@ -8,6 +8,8 @@ all: build
 
 $(CORE): prest-core/src/*.rs prest-core/src/*/*.rs prest-core/Cargo.toml
 	(cd prest-core; cargo build --release --bin prest-core)
+	(cd prest-core; cargo build --release --bin plot-model)
+	(cd prest-core; cargo build --release --bin list-preorders)
 
 $(DOCS):
 	make -C docs build/html/index.html

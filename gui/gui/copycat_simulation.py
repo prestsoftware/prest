@@ -1,38 +1,46 @@
+from __future__ import annotations
+
 import random
 import logging
 import collections
-from typing import List, FrozenSet, Set, NamedTuple
+from typing import Optional, TYPE_CHECKING
+from dataclasses import dataclass
 
 from PyQt5.QtCore import Qt, QCoreApplication
 from PyQt5.QtWidgets import QDialog, QMessageBox, QProgressDialog
 
 import gui
 import simulation
+import gui.subject_filter
 import uic.copycat_simulation
 from dataset import SubjectC
 from gui.progress import Worker, Cancelled
 
+if TYPE_CHECKING:
+    from dataset.experimental_data import ExperimentalData
+
 log = logging.getLogger(__name__)
 
-class Options(NamedTuple):
+@dataclass
+class Options:
     name : str
     multiplicity : int
-    gen_choices : 'simulation.GenChoices'
+    gen_choices : simulation.GenChoices
     preserve_deferrals : bool
+    subject_filter : Optional[gui.subject_filter.Options]
 
 class CopycatSimulation(uic.copycat_simulation.Ui_CopycatSimulation, gui.ExceptionDialog):
-    def __init__(self, ds) -> None:
+    def __init__(self, ds : ExperimentalData, experimental_features : bool) -> None:
         QDialog.__init__(self)
         self.setupUi(self)
 
-        # this will be ExperimentalData but due to cyclic references,
-        # we can't say that
-        # ...and I want to keep this dialog in a separate file so whatever
         self.ds = ds
 
         self.update_counts(self.sbMultiplicity.value())
         self.sbMultiplicity.valueChanged.connect(self.catch_exc(self.update_counts))
         self.leName.setText(ds.name + ' (random choices)')
+        if not experimental_features:
+            self.gbFilter.setVisible(False)
 
         class MyWorker(Worker):
             def work(self):
@@ -83,4 +91,8 @@ class CopycatSimulation(uic.copycat_simulation.Ui_CopycatSimulation, gui.Excepti
             multiplicity=self.sbMultiplicity.value(),
             gen_choices=self.genChoices.value(),
             preserve_deferrals=self.cbPreserveDeferrals.isChecked(),
+            subject_filter=
+                self.subjectFilter.value()
+                if self.gbFilter.isChecked()
+                else None
         )

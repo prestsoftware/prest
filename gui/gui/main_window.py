@@ -27,6 +27,7 @@ import gui.about
 import gui.simulation
 import gui.estimation
 import gui.import_csv
+import gui.subject_filter
 
 log = logging.getLogger(__name__)
 
@@ -34,6 +35,8 @@ class MainWindowError(Exception):
     pass
 
 class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog):
+    hidden_features_enabled : bool = False
+
     def __init__(self):
 
         # window setup
@@ -83,7 +86,6 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
         )
         self.enableDebuggingTools.activated.connect(self.enable_debugging_tools)
         self.menuDebugging_tools.menuAction().setVisible(False)
-        self.hidden_features_enabled = False
 
         try:
             doc.start_daemon(
@@ -375,7 +377,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
             return False
 
     def dlg_simulation(self, _flag):
-        dlg = gui.simulation.Simulation()
+        dlg = gui.simulation.Simulation(self.hidden_features_enabled)
         if dlg.exec() != QDialog.Accepted:
             return
 
@@ -392,18 +394,30 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
                     self.interrupt = lambda: core.shutdown()
 
                     for subj_nr in range(1, options.subject_count+1):
-                        response = simulation.run(core, simulation.Request(
-                            name='random%d' % subj_nr,
-                            alternatives=options.alternatives,
-                            gen_menus=options.gen_menus,
-                            gen_choices=options.gen_choices,
-                            preserve_deferrals=False,
-                        ))
+                        while True:
+                            response = simulation.run(core, simulation.Request(
+                                name='random%d' % subj_nr,
+                                alternatives=options.alternatives,
+                                gen_menus=options.gen_menus,
+                                gen_choices=options.gen_choices,
+                                preserve_deferrals=False,
+                            ))
 
-                        ds.subjects.append(response.subject_packed)
-                        ds.observ_count += response.observation_count
+                            subject_accepted = gui.subject_filter.accepts(
+                                options.subject_filter,
+                                core,
+                                response.subject_packed,
+                            )
 
-                        self.set_progress(subj_nr)
+                            if subject_accepted:
+                                ds.subjects.append(response.subject_packed)
+                                ds.observ_count += response.observation_count
+                                self.set_progress(subj_nr)
+                                # move on to the next subject
+                                break
+                            else:
+                                # retry
+                                continue
 
                 return ds
 
@@ -421,6 +435,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
 
     def enable_hidden_features(self, enable: bool):
         self.hidden_features_enabled = enable
+        self.actionGenerate_subjects_with_filtering.setVisible(True)
 
     def shutdown(self):
         log.debug('shutting GUI down')

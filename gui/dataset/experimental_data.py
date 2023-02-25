@@ -157,15 +157,15 @@ class ExperimentalData(Dataset):
     def label_size(self):
         return '%d subjs, %d observations' % (len(self.subjects), self.observ_count)
 
-    def config_estimation(self) -> Optional[gui.estimation.Options]:
+    def config_estimation(self, _experimental_features : bool) -> Optional[gui.estimation.Options]:
         dlg = gui.estimation.Estimation()
         if dlg.exec() == QDialog.Accepted:
             return dlg.value()
         else:
             return None
 
-    def config_simulation(self) -> Optional['gui.copycat_simulation.Options']:
-        dlg = gui.copycat_simulation.CopycatSimulation(self)
+    def config_simulation(self, experimental_features : bool) -> Optional[gui.copycat_simulation.Options]:
+        dlg = gui.copycat_simulation.CopycatSimulation(self, experimental_features)
         if dlg.exec() == QDialog.Accepted:
             return dlg.value()
         else:
@@ -179,24 +179,37 @@ class ExperimentalData(Dataset):
 
             worker.set_work_size(len(self.subjects) * options.multiplicity)
             position = 0
+            iteration_counter = 0
             for subject_packed in self.subjects:
                 for j in range(options.multiplicity):
-                    response = simulation.run(core, simulation.Request(
-                        name='random%d' % (j+1),
-                        alternatives=self.alternatives,  # we don't use subject.alternatives here
-                        gen_menus=simulation.GenMenus(
-                            generator=simulation.Copycat(subject_packed),
-                            defaults=False,  # this will be ignored, anyway
-                        ),
-                        gen_choices=options.gen_choices,
-                        preserve_deferrals=options.preserve_deferrals,
-                    ))
+                    while True:
+                        iteration_counter += 1
+                        response = simulation.run(core, simulation.Request(
+                            name='random%d' % (j+1),
+                            alternatives=self.alternatives,  # we don't use subject.alternatives here
+                            gen_menus=simulation.GenMenus(
+                                generator=simulation.Copycat(subject_packed),
+                                defaults=False,  # this will be ignored, anyway
+                            ),
+                            gen_choices=options.gen_choices,
+                            preserve_deferrals=options.preserve_deferrals,
+                        ))
 
-                    subjects.append(response.subject_packed)
+                        subject_accepted = gui.subject_filter.accepts(
+                            options.subject_filter,
+                            core,
+                            response.subject_packed,
+                        )
 
-                    position += 1
-                    if position % 1024 == 0:
-                        worker.set_progress(position)
+                        if subject_accepted:
+                            subjects.append(response.subject_packed)
+
+                            position += 1
+                            if iteration_counter % 256 == 0:
+                                worker.set_progress(position)
+                            break
+                        else:
+                            continue
 
         ds = ExperimentalData(name=options.name, alternatives=self.alternatives)
         ds.subjects = subjects

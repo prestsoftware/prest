@@ -403,6 +403,11 @@
     <string>Import &amp;budgetary dataset...</string>
    </property>
   </action>
+  <action name="actionGenerate_subjects_with_filtering">
+   <property name="text">
+    <string>Generate subjects with filtering...</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

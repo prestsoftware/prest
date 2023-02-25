@@ -1,37 +1,42 @@
 import logging
-import collections
-from typing import List, Tuple, NamedTuple
 
-from PyQt5.QtGui import QIcon, QCursor
-from PyQt5.QtCore import Qt, QCoreApplication, QSize
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHeaderView, QDialog, QMessageBox, QTreeWidgetItem, \
-    QProgressDialog, QToolTip, QLabel, QCheckBox, QHBoxLayout, QWidget, \
-    QPushButton, QSizePolicy
+    QPushButton, QLabel, QCheckBox, QHBoxLayout, QWidget
 
 import doc
 import gui
 import model
 import uic.estimation
 import platform_specific
-from core import Core
-from gui.progress import Worker, Cancelled
+from util.codec import pyEnumC, strC
 from model import Model
 from dataclasses import dataclass
+from enum import Enum
 
 log = logging.getLogger(__name__)
 
+class DistanceScore(Enum):
+    HOUTMAN_MAKS = 'houtman-maks'
+    JACCARD_PER_MENU = 'jaccard-menu'
+    JACCARD_PER_DATASET = 'jaccard-dataset'
+
+distanceScoreC = pyEnumC(DistanceScore, strC)
+
 @dataclass
 class Options:
-    models : List[Model]
+    models : list[Model]
     disable_parallelism : bool
     disregard_deferrals : bool
+    distance_score : DistanceScore
 
 class Estimation(uic.estimation.Ui_Estimation, gui.ExceptionDialog):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
 
-        self.checkboxes : List[Tuple[QCheckBox, Model]] = []
+        self.checkboxes : list[tuple[QCheckBox, Model]] = []
 
         self.fill_table()
         self.twModels.expandAll()
@@ -59,7 +64,7 @@ class Estimation(uic.estimation.Ui_Estimation, gui.ExceptionDialog):
 
                 cell = QWidget()
                 layout = QHBoxLayout(cell)
-                layout.setContentsMargins(4,2,4,2) # l,t,r,b
+                layout.setContentsMargins(4,2,4,2)  # l,t,r,b
 
                 lblName = QLabel(item.name)
                 layout.addWidget(lblName, alignment=Qt.AlignVCenter)
@@ -80,7 +85,9 @@ class Estimation(uic.estimation.Ui_Estimation, gui.ExceptionDialog):
                     self.twModels.setItemWidget(twi, 0, btn)
 
                 for i, name_model in enumerate(item.variants, 2):
-                    if name_model is None: continue
+                    if name_model is None:
+                        continue
+
                     # the identifier "model" would clash with the module import
                     name_html, model_def = name_model
 
@@ -91,7 +98,7 @@ class Estimation(uic.estimation.Ui_Estimation, gui.ExceptionDialog):
                     cell = QWidget()
                     layout = QHBoxLayout(cell)
                     layout.setSpacing(4)
-                    layout.setContentsMargins(4,0,4,0) # l,t,r,b
+                    layout.setContentsMargins(4,0,4,0)  # l,t,r,b
                     layout.addWidget(cb, stretch=0, alignment=Qt.AlignVCenter)
                     layout.addWidget(label, stretch=1, alignment=Qt.AlignVCenter)
                     # all extra space (stretch) goes to the label because stretch ratio is 1:0
@@ -111,6 +118,11 @@ class Estimation(uic.estimation.Ui_Estimation, gui.ExceptionDialog):
             models=[model for cb, model in self.checkboxes if cb.isChecked()],
             disable_parallelism=self.cbDisableParallelism.isChecked(),
             disregard_deferrals=self.cbDisregardDeferrals.isChecked(),
+            distance_score=[
+                DistanceScore.HOUTMAN_MAKS,
+                DistanceScore.JACCARD_PER_MENU,
+                DistanceScore.JACCARD_PER_DATASET,
+            ][self.cbDistanceScore.currentIndex()],
         )
 
     # override from QDialog

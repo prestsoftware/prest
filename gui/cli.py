@@ -12,6 +12,7 @@ from model import *
 from dataset import load_raw_csv
 from gui.progress import Worker, MockWorker
 from gui.estimation import Options as EstimationOpts
+from gui.estimation import DistanceScore
 from dataset.experimental_data import ExperimentalData
 
 logging.basicConfig(level=logging.DEBUG)
@@ -48,7 +49,7 @@ def consistency(args):
 def estimate(args):
     rows = load_raw_csv(args.fname_in)
     ds = ExperimentalData.from_csv('dataset', rows[1:], (0, 1, None, 2))
-    
+
     AVAILABLE_MODELS = [
         preorder(strict=True, total=True),
         preorder(strict=False, total=True),
@@ -91,6 +92,7 @@ def estimate(args):
         models=models,
         disable_parallelism=args.sequential,
         disregard_deferrals=args.disregard_deferrals,
+        distance_score=DistanceScore.HOUTMAN_MAKS,
     ))
     variant = dsm._get_export_variant(args.export_variant)
     dsm.export(args.fname_out, '*.csv', variant, MockWorker())

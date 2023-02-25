@@ -2,8 +2,9 @@ import struct
 import logging
 import typing
 import dataclasses
-from io import BytesIO
 import numpy as np
+from enum import Enum
+from io import BytesIO
 from fractions import Fraction
 from dataclasses import dataclass
 from typing import Any, BinaryIO, NewType, NamedTuple, \
@@ -257,6 +258,18 @@ def frozensetC(codec : Codec[E]) -> Codec[frozenset[E]]:
 
     return Codec(_encode, decode)  # type: ignore
 
+EnumTy = TypeVar('EnumTy', bound=Enum)
+def pyEnumC(cls : type[EnumTy], valC : Codec) -> Codec[EnumTy]:
+    _encode, _decode = valC.enc_dec()
+
+    def encode(f : FileOut, x : EnumTy) -> None:
+        _encode(f, x.value)
+
+    def decode(f : FileIn) -> EnumTy:
+        return cls(Enum(_decode(f)))
+
+    return Codec(encode, decode)
+
 def enumC(name : str, alts : Dict[type, Tuple[Codec, ...]]) -> Codec:
     codecs_enc_get = {
         ty._field_defaults['tag']: tupleC(*codecs).encode  # type: ignore
@@ -322,10 +335,10 @@ def enum_by_typenameC(name : str, alts : Sequence[Tuple[type, Codec]]) -> Codec:
     return Codec(encode, decode)
 
 def _noneC() -> Codec[None]:
-    def encode(f : FileOut, x : None) -> None:
+    def encode(_f : FileOut, _x : None) -> None:
         pass
 
-    def decode(f : FileIn) -> None:
+    def decode(_f : FileIn) -> None:
         return None
 
     return Codec(encode, decode)

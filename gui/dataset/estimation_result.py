@@ -16,6 +16,7 @@ import platform_specific
 from dataclasses import dataclass
 from core import Core
 from gui.progress import Worker
+from gui.estimation import DistanceScore, distanceScoreC
 from model import get_name as model_get_name
 from model import Model as ModelRepr
 from model import ModelC
@@ -31,7 +32,7 @@ def from_fraction(x : Fraction) -> int | float:
     if x.denominator == 1:
         return x.numerator
     else:
-        return float(x)
+        return round(float(x), 3)  # sounds about appropriate
 
 class Penalty(NamedTuple):
     # both bounds are inclusive
@@ -54,8 +55,9 @@ class Request(NamedTuple):
     models : Sequence[model.Model]
     disable_parallelism : bool
     disregard_deferrals : bool
+    distance_score : DistanceScore
 
-RequestC = namedtupleC(Request, listC(dataset.PackedSubjectC), listC(ModelC), boolC, boolC)
+RequestC = namedtupleC(Request, listC(dataset.PackedSubjectC), listC(ModelC), boolC, boolC, distanceScoreC)
 
 InstanceRepr = NewType('InstanceRepr', bytes)
 InstanceReprC = bytesC

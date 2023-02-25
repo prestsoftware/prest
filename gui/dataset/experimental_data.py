@@ -283,7 +283,6 @@ class ExperimentalData(Dataset):
         return ds
 
     def analysis_estimation(self, worker : Worker, options : gui.estimation.Options) -> EstimationResult:
-
         CHUNK_SIZE = 64
         with Core() as core:
             worker.interrupt = lambda: core.shutdown()  # register interrupt hook
@@ -296,6 +295,7 @@ class ExperimentalData(Dataset):
                     models=options.models,
                     disable_parallelism=options.disable_parallelism,
                     disregard_deferrals=options.disregard_deferrals,
+                    distance_score=options.distance_score,
                 )
 
                 responses = core.call(
@@ -308,8 +308,13 @@ class ExperimentalData(Dataset):
 
                 worker.set_progress(len(rows))
 
+            if options.distance_score != gui.estimation.DistanceScore.HOUTMAN_MAKS:
+                suffix = f' (model est., {options.distance_score.value})'
+            else:
+                suffix = ' (model est.)'
+
             ds = EstimationResult(
-                self.name + ' (model est.)',
+                self.name + suffix,
                 self.alternatives,
             )
             ds.subjects = rows

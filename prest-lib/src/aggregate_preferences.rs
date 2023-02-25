@@ -273,10 +273,45 @@ fn extract_preorder(instance : model::Instance) -> Result<Preorder, Error> {
     }
 }
 
-/* TODO
-fn combos<'a, T>(xs : &'a Vec<Vec<T>>) -> Vec<Vec<&'a T>> {
+fn combos<'a, T>(xs : &'a Vec<Vec<T>>) -> impl Iterator<Item=Vec<&'a T>> {
+    let mut state = None;
+
+    std::iter::from_fn(move || match state {
+        // first iteration
+        None => {
+            state = Some(vec![0; xs.len()]);
+            Some(xs.iter().map(|x| &x[0]).collect())
+        },
+
+        Some(ref mut indexes) => {
+            // advance the indexes
+            let mut i = 0;
+            loop {
+                if i >= indexes.len() {
+                    // we're done
+                    return None;
+                }
+
+                indexes[i] += 1;
+                if indexes[i] >= xs[i].len() {
+                    // carry
+                    indexes[i] = 0;
+                    i += 1;
+                    continue;
+                } else {
+                    // no need to carry anymore,
+                    // we're done
+                    break;
+                }
+            }
+
+            // return the result
+            Some(indexes.iter().zip(xs).map(
+                |(&j, x)| &x[j]
+            ).collect())
+        },
+    })
 }
-*/
 
 pub fn run(req : Request) -> Result<Response, Error> {
     // collect preorders from all subjects

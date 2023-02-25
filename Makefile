@@ -36,6 +36,8 @@ run: build
 	python gui/main.py
 
 test: build
+	(cd prest-lib; cargo test --release)
+	(cd prest-core; cargo test --release)
 	pytest -v -m "not long" gui
 
 bench: build
@@ -44,6 +46,5 @@ bench: build
 longtest: fulltest
 
 fulltest: check
-	(cd prest-core; cargo test --release)
 	[ "$(TRAVIS_OS_NAME)" = windows ] || pytest -v -m "not benchmark" gui
 

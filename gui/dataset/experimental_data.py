@@ -220,7 +220,7 @@ class ExperimentalData(Dataset):
     class MergeOptions:
         track_deferrals_separately : bool
 
-    def config_merge_choices(self) -> Optional[MergeOptions]:
+    def config_merge_choices(self, _experimental_features : bool) -> Optional[MergeOptions]:
         # hardwire this without UI for now
         return ExperimentalData.MergeOptions(
             track_deferrals_separately=False

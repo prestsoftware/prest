@@ -7,6 +7,7 @@ extern crate num_traits;
 extern crate base64;
 extern crate rand;
 extern crate rayon;
+extern crate itertools;
 
 #[macro_use]
 pub mod alt_set;

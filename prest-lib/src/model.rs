@@ -464,7 +464,13 @@ impl Instance {
                                 union.size()
                             };
 
-                            Ratio::new(union - intersection, union)
+                            if union == 0 {
+                                // this means that the model predicts deferral
+                                // and the observed choice is also a deferral
+                                Ratio::from(0)
+                            } else {
+                                Ratio::new(union - intersection, union)
+                            }
                         }).sum()
                     }
 
@@ -493,8 +499,14 @@ impl Instance {
                             (intersection, union)
                         }).fold((0, 0), |(ni, nu), (i, u)| (ni+i, nu+u));
 
-                        let n = crs.len() as u32;
-                        Ratio::new(n*(u-i), u)  // scale into the same range of [0..n]
+                        if u == 0 {
+                            // model predicts deferral in all menus
+                            // the observed choice was deferral in all menus
+                            Ratio::from(0)
+                        } else {
+                            let n = crs.len() as u32;
+                            Ratio::new(n*(u-i), u)  // scale into the same range of [0..n]
+                        }
                     }
                 }
             };

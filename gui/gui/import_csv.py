@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import os
 import logging
-from typing import Set, Sequence, List, Optional
+from typing import Optional
 
 from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView, QDialog, QFileDialog, QMessageBox
 
@@ -22,10 +24,10 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
         self.tblPreview.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         self.tblPreview.horizontalHeader().setStretchLastSection(False)
 
-        self.rows: Optional[List[List[str]]] = None
-        self.column_names: Optional[List[str]] = None
+        self.rows: Optional[list[list[str]]] = None
+        self.column_names: Optional[list[str]] = None
 
-    def fill_rows(self, rows: List[List[str]]):
+    def fill_rows(self, rows: list[list[str]]):
         # the UI will have warned the user otherwise so this must be true
         assert rows
 
@@ -44,8 +46,9 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
         def preview(_arg=None):
             try:
                 ds = self.make_dataset()
-            except Exception as e:
-                QMessageBox.warning(self, 'Bad CSV format', str(e))
+            except Exception:
+                # This is probably more confusing than useful
+                # QMessageBox.warning(self, 'Bad CSV format', str(e))
                 self.lwAlternatives.clear()
                 self.tblPreview.setRowCount(0)
                 return
@@ -95,7 +98,7 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
         self.cbMenu.setCurrentIndex(indices[1])
         self.cbDefault.setCurrentIndex(indices[2])
         self.cbChoice.setCurrentIndex(indices[3])
-        
+
         self.cbSubject.currentIndexChanged.connect(self.catch_exc(preview))
         self.cbMenu.currentIndexChanged.connect(self.catch_exc(preview))
         self.cbDefault.currentIndexChanged.connect(self.catch_exc(preview))
@@ -113,7 +116,7 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
             self.cbDefault.currentIndex() if self.cbDefault.currentIndex() < len(self.column_names) else None,
             self.cbChoice.currentIndex(),
         )
-        
+
         ds = dataset.experimental_data.ExperimentalData.from_csv(
             name=name,
             rows=self.rows,
@@ -128,9 +131,13 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
     # override
     def accept(self) -> None:
         try:
-            ds = self.make_dataset()
+            _ = self.make_dataset()
         except Exception as e:
-            QMessageBox.warning(self, 'Bad CSV format', str(e))
+            QMessageBox.warning(
+                self,
+                'Bad CSV format',
+                'Is the column assignment correct? ' + str(e)
+            )
         else:
             QDialog.accept(self)
 
@@ -141,7 +148,7 @@ class ImportCsv(uic.import_csv.Ui_ImportCsv, gui.ExceptionDialog):
             assert fname is not None
             ds = self.make_dataset(name=os.path.basename(fname))
             self.main_win.add_dataset(ds)
-            
+
         fname, _something = QFileDialog.getOpenFileName(self, "Import CSV", filter="CSV files (*.csv)")
         if not fname:
             return

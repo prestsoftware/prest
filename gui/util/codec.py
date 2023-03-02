@@ -415,18 +415,6 @@ def numpyC(dtype : type) -> Codec[np.ndarray]:
 
     return Codec(encode, decode)
 
-ET = TypeVar('ET', bound=Enum)
-def pythonEnumC(cls : type[ET], valueC : Codec) -> Codec[ET]:
-    valueC_enc, valueC_dec = valueC.enc_dec()
-
-    def encode(f : FileOut, x : ET) -> None:
-        valueC_enc(f, x.value)
-
-    def decode(f : FileIn) -> ET:
-        return cls(valueC_dec(f))
-
-    return Codec(encode, decode)
-
 def _fractionC() -> Codec[Fraction]:
     intC_enc, intC_dec = intC.enc_dec()
 

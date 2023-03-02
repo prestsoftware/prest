@@ -2,13 +2,13 @@ from PyQt5.QtWidgets import QDialog
 
 from enum import Enum
 from uic.aggregate import Ui_Aggregate
-from util.codec import pythonEnumC, strC
+from util.codec import pyEnumC, strC
 
 class Mode(Enum):
     Weighted = 'weighted'
     Iterated = 'iterated'
 
-ModeC = pythonEnumC(Mode, strC)
+ModeC = pyEnumC(Mode, strC)
 
 class ConfigAggregated(QDialog, Ui_Aggregate):
     def __init__(self) -> None:

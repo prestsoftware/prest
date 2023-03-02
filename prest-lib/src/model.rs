@@ -113,8 +113,7 @@ impl Decode for Model {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum DistanceScore {
     HoutmanMaks,
-    JaccardPerMenu,
-    JaccardPerDataset,
+    Jaccard,
 }
 
 impl Decode for DistanceScore {
@@ -123,8 +122,7 @@ impl Decode for DistanceScore {
         let tag : String = Decode::decode(f)?;
         match tag.as_str() {
             "houtman-maks" => Ok(HoutmanMaks),
-            "jaccard-menu" => Ok(JaccardPerMenu),
-            "jaccard-dataset" => Ok(JaccardPerDataset),
+            "jaccard" => Ok(Jaccard),
             _ => Err(codec::Error::BadEnumTag),
         }
     }
@@ -442,7 +440,7 @@ impl Instance {
                         }).sum()
                     }
 
-                    DistanceScore::JaccardPerMenu => {
+                    DistanceScore::Jaccard => {
                         crs.iter().map(|cr| {
                             // PDC should not be penalised for deferring at singletons
                             if let Instance::PartiallyDominantChoice{p:_,fc:_} = self {
@@ -472,41 +470,6 @@ impl Instance {
                                 Ratio::new(union - intersection, union)
                             }
                         }).sum()
-                    }
-
-                    DistanceScore::JaccardPerDataset => {
-                        let (i, u) = crs.iter().map(|cr| {
-                            // PDC should not be penalised for deferring at singletons
-                            if let Instance::PartiallyDominantChoice{p:_,fc:_} = self {
-                                if cr.menu.view().is_singleton() {
-                                    return (0, 1)
-                                }
-                            }
-
-                            let model_choice = self.choice(cr.menu.view(), cr.default);
-                            let intersection = {
-                                let mut intersection = cr.choice.clone();
-                                intersection &= model_choice.view();
-                                intersection.size()
-                            };
-
-                            let union = {
-                                let mut union = cr.choice.clone();
-                                union |= model_choice.view();
-                                union.size()
-                            };
-
-                            (intersection, union)
-                        }).fold((0, 0), |(ni, nu), (i, u)| (ni+i, nu+u));
-
-                        if u == 0 {
-                            // model predicts deferral in all menus
-                            // the observed choice was deferral in all menus
-                            Ratio::from(0)
-                        } else {
-                            let n = crs.len() as u32;
-                            Ratio::new(n*(u-i), u)  // scale into the same range of [0..n]
-                        }
                     }
                 }
             };

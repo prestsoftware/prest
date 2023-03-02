@@ -41,17 +41,17 @@
      </column>
      <column>
       <property name="text">
-       <string> </string>
+       <string/>
       </property>
      </column>
      <column>
       <property name="text">
-       <string> </string>
+       <string/>
       </property>
      </column>
      <column>
       <property name="text">
-       <string> </string>
+       <string/>
       </property>
      </column>
     </widget>
@@ -74,12 +74,7 @@
        </item>
        <item>
         <property name="text">
-         <string>Jaccard (per menu)</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Jaccard (per dataset)</string>
+         <string>Jaccard</string>
         </property>
        </item>
       </widget>

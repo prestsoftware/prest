@@ -19,8 +19,7 @@ log = logging.getLogger(__name__)
 
 class DistanceScore(Enum):
     HOUTMAN_MAKS = 'houtman-maks'
-    JACCARD_PER_MENU = 'jaccard-menu'
-    JACCARD_PER_DATASET = 'jaccard-dataset'
+    JACCARD = 'jaccard'
 
 distanceScoreC = pyEnumC(DistanceScore, strC)
 
@@ -120,8 +119,7 @@ class Estimation(uic.estimation.Ui_Estimation, gui.ExceptionDialog):
             disregard_deferrals=self.cbDisregardDeferrals.isChecked(),
             distance_score=[
                 DistanceScore.HOUTMAN_MAKS,
-                DistanceScore.JACCARD_PER_MENU,
-                DistanceScore.JACCARD_PER_DATASET,
+                DistanceScore.JACCARD,
             ][self.cbDistanceScore.currentIndex()],
         )
 

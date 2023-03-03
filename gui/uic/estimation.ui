@@ -41,17 +41,17 @@
      </column>
      <column>
       <property name="text">
-       <string/>
+       <string> </string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string/>
+       <string> </string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string/>
+       <string> </string>
       </property>
      </column>
     </widget>
@@ -74,7 +74,7 @@
        </item>
        <item>
         <property name="text">
-         <string>Jaccard</string>
+         <string>Houtman-Maks-Jaccard</string>
         </property>
        </item>
       </widget>

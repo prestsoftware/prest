@@ -21,23 +21,12 @@ documentation at https://prestsoftware.com.
 ## Building and running Prest
 
 Dependencies:
-* Rust 1.26 stable + Cargo
+* Rust 1.67 stable + Cargo
 * Python 3.10+
 
 Install the dependencies, compile everything and run:
 
 ```bash
-$ pip install --user -r gui/requirements.txt
-$ make run
-```
-
-Optionally, work in a virtual environment:
-
-```bash
-$ python3 -m venv prest.env
-$ source prest.env/bin/activate
-# The next line is different from the previous installation command.
-$ pip install -r gui/requirements.txt
 $ make run
 ```
 

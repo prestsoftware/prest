@@ -12,3 +12,4 @@ prest-*-gui.zip
 .pytest_cache/
 /*.csv
 *.spec
+poetry.lock

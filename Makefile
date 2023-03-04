@@ -19,6 +19,7 @@ $(GUI):
 
 # build everything there is to build or generate
 build: $(GUI) version.txt preorders-7.bin $(CORE) $(DOCS)
+	poetry -C gui install
 
 preorders-7.bin:
 	(cd prest-core; cargo run --release --bin list-preorders)
@@ -33,15 +34,15 @@ clean:
 	(cd prest-core; cargo clean --release)
 
 run: build
-	python gui/main.py
+	poetry -C gui run python gui/main.py
 
 test: build
 	(cd prest-lib; cargo test --release)
 	(cd prest-core; cargo test --release)
-	pytest -v -m "not long" gui
+	poetry -C gui run pytest -v -m "not long" gui
 
 bench: build
-	pytest -v -m benchmark gui
+	poetry -C gui run pytest -v -m benchmark gui
 
 longtest: fulltest
 

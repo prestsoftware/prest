@@ -5,10 +5,10 @@ description = "The GUI frontend of Prest"
 authors = ["Matus Tejiscak <ziman@functor.sk>, Georgios Gerasimou <gerasimou@outlook.com>"]
 license = "GPLv3"
 readme = "README.md"
-packages = [{include = "prest_gui"}]
+packages = []
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10,<3.12"  # bounded by pyinstaller
 numpy = "^1.24.2"
 openpyxl = "^3.1.1"
 pytest = "^7.2.2"

@@ -12,10 +12,10 @@ $(CORE): prest-core/src/*.rs prest-core/src/*/*.rs prest-core/Cargo.toml
 	(cd prest-core; cargo build --release --bin list-preorders)
 
 $(DOCS):
-	make -C docs build/html/index.html
+	poetry -C gui run -- make -C docs build/html/index.html
 
 $(GUI):
-	make -C gui .typecheck-ts
+	poetry -C gui run -- make -C gui .typecheck-ts
 
 # build everything there is to build or generate
 build: $(GUI) version.txt preorders-7.bin $(CORE) $(DOCS)
@@ -29,23 +29,23 @@ version.txt:
 	bash update-version.sh
 
 clean:
-	make -C docs clean
+	poetry -C gui run -- make -C docs clean
 	-rm -f $(UIC_PY) $(GUI)
 	(cd prest-core; cargo clean --release)
 
 run: build
-	poetry -C gui run python gui/main.py
+	poetry -C gui run -- python gui/main.py
 
 test: build
 	(cd prest-lib; cargo test --release)
 	(cd prest-core; cargo test --release)
-	poetry -C gui run pytest -v -m "not long" gui
+	poetry -C gui run -- pytest -v -m "not long" gui
 
 bench: build
-	poetry -C gui run pytest -v -m benchmark gui
+	poetry -C gui run -- pytest -v -m benchmark gui
 
 longtest: fulltest
 
 fulltest: check
-	[ "$(TRAVIS_OS_NAME)" = windows ] || pytest -v -m "not benchmark" gui
+	[ "$(TRAVIS_OS_NAME)" = windows ] || poetry -C gui run -- pytest -v -m "not benchmark" gui
 

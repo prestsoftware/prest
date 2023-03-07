@@ -208,7 +208,8 @@ class EstimationResult(Dataset):
         n_chains = 1
         for subj_packed in self.subjects:
             subj = subject_from_response_bytes(subj_packed)
-            n_chains *= len(subj.best_models)
+            for _model, _penalty, instances in subj.best_models:
+                n_chains *= len(instances)
 
         return ChainStats(
             count=n_chains,

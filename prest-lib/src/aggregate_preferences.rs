@@ -221,7 +221,9 @@ impl Sum for KemenyTable {
 }
 
 // using the Kemeny method
-fn aggregate(ps : &[(Score, Preorder)]) -> Result<Vec<Preorder>, Error> {
+fn aggregate<T>(ps : &[(Score, Preorder)]) -> Result<T, Error>
+    where T : FromIterator<Preorder>
+{
     assert!(!ps.is_empty(), "cannot aggregate an empty set of preferences");
     let alt_count = ps[0].1.size;
 
@@ -238,29 +240,6 @@ fn aggregate(ps : &[(Score, Preorder)]) -> Result<Vec<Preorder>, Error> {
     ).unwrap();
 
     Ok(best_preorders.into_iter().cloned().collect())
-}
-
-fn aggregate_iterated(ps : &[Preorder]) -> Result<Vec<Preorder>, Error> {
-    let mut preorders : HashSet<Preorder> = ps.iter().cloned().collect();
-
-    loop {
-        let new_preorders : HashSet<Preorder> = HashSet::from_iter(
-            aggregate(
-                &std::iter::repeat(One::one())
-                    .zip(preorders.iter().cloned())
-                    .collect::<Vec<(Score, Preorder)>>()
-            )?
-        );
-
-        if new_preorders == preorders {
-            // we're done
-            break;
-        } else {
-            preorders = new_preorders;
-        }
-    }
-
-    Ok(Vec::from_iter(preorders))
 }
 
 fn extract_preorder(instance : model::Instance) -> Result<Preorder, Error> {
@@ -330,31 +309,34 @@ pub fn run(req : Request) -> Result<Response, Error> {
         }
 
         Mode::Iterated => {
-            // first, aggregate each subject into a set of preorders
+            // collect best instances for each subject
             let subjects : Vec<Vec<Preorder>> = req.subjects.into_iter().map(
-                |Packed(subj)| {
-                    Ok(
-                        aggregate_iterated(
-                            &subj.best_instances.into_iter().map(
-                                move |info| Ok(
-                                    extract_preorder(info.instance.into_unpacked())?
-                                )
-                            ).collect::<Result<Vec<Preorder>, Error>>()?
-                        )?,
-                    )
-                }
+                |Packed(subj)|
+                    subj.best_instances.into_iter().map(
+                        |info| extract_preorder(
+                            info.instance.into_unpacked()
+                        )
+                    ).collect()
             ).collect::<Result<_, Error>>()?;
 
-            // aggregate each section across subjects
-            let sections = combos(&subjects).map(
-                |section| aggregate_iterated(
-                    &section.into_iter().cloned().collect::<Vec<Preorder>>()
-                ) as Result<Vec<Preorder>, Error>
-            ).collect::<Result<Vec<Vec<Preorder>>, Error>>()?;
+            // aggregate each chain
+            let mut chain_orders : HashSet<Preorder> = HashSet::new();
+            combos(&subjects).try_for_each(
+                |chain| Ok(chain_orders.extend(
+                    aggregate::<Vec<Preorder>>(&{
+                        let x : Vec<(Score, Preorder)> = chain.into_iter().map(
+                            |p| (Score::from(1), p.clone())
+                        ).collect::<Vec<(Score, Preorder)>>();
+                        x
+                    })?
+                )) as Result<(), Error>
+            )?;
 
-            // finally, aggregate all sections
-            aggregate_iterated(
-                &sections.into_iter().flatten().collect::<Vec<Preorder>>()
+            // finally, aggregate across all chains
+            aggregate(
+                &std::iter::repeat(Score::from(1))
+                    .zip(chain_orders)
+                    .collect::<Vec<_>>()
             )?
         }
     };

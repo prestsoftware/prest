@@ -11,9 +11,11 @@ class Mode(Enum):
 ModeC = pyEnumC(Mode, strC)
 
 class ConfigAggregated(QDialog, Ui_Aggregate):
-    def __init__(self) -> None:
+    def __init__(self, chain_count : int, chain_length : int) -> None:
         QDialog.__init__(self)
         self.setupUi(self)
+        self.lCount.setText(str(chain_count))
+        self.lLength.setText(str(chain_length))
 
     def value(self) -> Mode:
         if self.rbIterated.isChecked():

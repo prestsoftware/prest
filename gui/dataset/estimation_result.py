@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from fractions import Fraction
 from typing import NamedTuple, Sequence, List, Iterator, \
     Optional, Any, NewType, cast, Callable
@@ -126,6 +127,11 @@ def subject_from_response_bytes(response_bytes : PackedEstimationResponse) -> Su
         ],
     )
 
+@dataclass
+class ChainStats:
+    count : int
+    length : int
+
 class EstimationResult(Dataset):
     class Subject(Node):
         def __init__(self, parent_node, row: int, subject: Subject) -> None:
@@ -198,8 +204,23 @@ class EstimationResult(Dataset):
         Dataset.__init__(self, name, alternatives)
         self.subjects: List[PackedEstimationResponse] = []
 
+    def get_stats(self) -> ChainStats:
+        n_chains = 1
+        for subj_packed in self.subjects:
+            subj = subject_from_response_bytes(subj_packed)
+            n_chains *= len(subj.best_models)
+
+        return ChainStats(
+            count=n_chains,
+            length=len(self.subjects),
+        )
+
     def config_aggregate_preferences(self, _experimental_features : bool) -> Optional[gui.aggregate.Mode]:
-        dlg = gui.aggregate.ConfigAggregated()
+        chains = self.get_stats()
+        dlg = gui.aggregate.ConfigAggregated(
+            chain_count=chains.count,
+            chain_length=chains.length,
+        )
         if dlg.exec() == QDialog.Accepted:
             return dlg.value()
         else:

@@ -33,7 +33,7 @@ clean:
 	(cd prest-core; cargo clean --release)
 
 run: build
-	python gui/main.py
+	python3 gui/main.py
 
 test: build
 	(cd prest-lib; cargo test --release)

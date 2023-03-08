@@ -14,3 +14,4 @@ sphinxcontrib-websupport
 sphinxjp-themes-basicstrap
 sphinx-mathjax-offline
 pyinstaller
+types-typing-extensions

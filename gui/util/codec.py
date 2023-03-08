@@ -8,7 +8,9 @@ from io import BytesIO
 from fractions import Fraction
 from dataclasses import dataclass
 from typing import Any, BinaryIO, NewType, NamedTuple, \
-    Tuple, Callable, TypeVar, Optional, Dict, Sequence, Generic, cast
+    Tuple, Callable, TypeVar, Optional, Dict, Sequence, \
+    Generic, cast
+from typing.extensions import DataclassInstance  # type: ignore
 
 log = logging.getLogger(__name__)
 
@@ -192,7 +194,7 @@ def namedtupleC(cls : type[NT], *codecs : Codec) -> Codec[NT]:
 
     return Codec(encode, decode)
 
-DC = TypeVar('DC')
+DC = TypeVar('DC', bound=DataclassInstance)
 def dataclassC(cls : type[DC], *codecs : Codec) -> Codec[DC]:
     encodes = [c.encode for c in codecs]
     decodes = [c.decode for c in codecs]
@@ -212,7 +214,7 @@ def dataclassC(cls : type[DC], *codecs : Codec) -> Codec[DC]:
             encode(f, x)
 
     def decode(f : FileIn) -> DC:
-        return cls(*[decode(f) for decode in decodes])
+        return cast(DC, cls(*[decode(f) for decode in decodes]))
 
     return Codec(encode, decode)
 

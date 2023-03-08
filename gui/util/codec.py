@@ -10,7 +10,6 @@ from dataclasses import dataclass
 from typing import Any, BinaryIO, NewType, NamedTuple, \
     Tuple, Callable, TypeVar, Optional, Dict, Sequence, \
     Generic, cast
-from typing.extensions import DataclassInstance  # type: ignore
 
 log = logging.getLogger(__name__)
 
@@ -194,19 +193,27 @@ def namedtupleC(cls : type[NT], *codecs : Codec) -> Codec[NT]:
 
     return Codec(encode, decode)
 
-DC = TypeVar('DC', bound=DataclassInstance)
+
+# there are a couple of type: ignore comments here
+# because DC should be TypeVar('DC', bound=DataclassInstance),
+# according to mypy's error message,
+# but i cannot figure out how on earth we're supposed to import DataclassInstance.
+#
+# let's ignore this for now
+
+DC = TypeVar('DC')
 def dataclassC(cls : type[DC], *codecs : Codec) -> Codec[DC]:
     encodes = [c.encode for c in codecs]
     decodes = [c.decode for c in codecs]
 
-    if len(codecs) != len(dataclasses.fields(cls)):
+    if len(codecs) != len(dataclasses.fields(cls)):  # type: ignore
         raise CodecError('dataclassC: %d codecs provided for dataclass %s' % (
             len(codecs),
             cls,
         ))
 
     def encode(f : FileOut, xs : DC) -> None:
-        xs_tuple = dataclasses.astuple(xs)
+        xs_tuple = dataclasses.astuple(xs)  # type: ignore
         if len(encodes) != len(xs_tuple):
             raise CodecError('tuple length mismatch')
 
@@ -214,7 +221,7 @@ def dataclassC(cls : type[DC], *codecs : Codec) -> Codec[DC]:
             encode(f, x)
 
     def decode(f : FileIn) -> DC:
-        return cast(DC, cls(*[decode(f) for decode in decodes]))
+        return cast(DC, cls(*[decode(f) for decode in decodes]))  # type: ignore
 
     return Codec(encode, decode)
 

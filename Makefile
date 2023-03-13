@@ -30,6 +30,7 @@ version.txt:
 clean:
 	make -C docs clean
 	-rm -f $(UIC_PY) $(GUI)
+	(cd prest-lib; cargo clean --release)
 	(cd prest-core; cargo clean --release)
 
 run: build

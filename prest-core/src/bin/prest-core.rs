@@ -43,16 +43,20 @@ fn rpc_loop(args : &args::Args) {
                 rpc.write_result(estimation::run(&mut precomp, &req)).unwrap();
             }
 
-            ActionRequest::Consistency(req) => {
-                rpc.write_result(consistency::run(&req)).unwrap();
+            ActionRequest::ConsistencyDeterministic(req) => {
+                rpc.write_result(consistency::deterministic::run(&req)).unwrap();
+            }
+
+            ActionRequest::ConsistencyStochastic(req) => {
+                rpc.write_result(consistency::stochastic::run(&req)).unwrap();
             }
 
             ActionRequest::TupleIntransMenus(req) => {
-                rpc.write_result(consistency::tuple_intrans::run_menus(&req)).unwrap();
+                rpc.write_result(consistency::deterministic::tuple_intrans::run_menus(&req)).unwrap();
             }
 
             ActionRequest::TupleIntransAlts(req) => {
-                rpc.write_result(consistency::tuple_intrans::run_alts(&req)).unwrap();
+                rpc.write_result(consistency::deterministic::tuple_intrans::run_alts(&req)).unwrap();
             }
 
             ActionRequest::SetRngSeed(seed) => {

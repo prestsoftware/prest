@@ -68,7 +68,7 @@ def test_consistency_analysis(tmpdir, name, alts, subj_count):
     assert ds.alternatives == alts.split()
     assert len(ds.subjects) == subj_count
 
-    dsc = ds.analysis_consistency(MockWorker(), None)
+    dsc = ds.analysis_consistency_deterministic(MockWorker(), None)
     assert len(dsc.subjects) == len(ds.subjects)
 
     check_export(tmpdir, dsc, 'summary', 'gui/test/expected/%s-cons-summary.csv' % name)

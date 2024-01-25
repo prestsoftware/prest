@@ -16,11 +16,11 @@ from dataset import Dataset, DatasetHeaderC, ChoiceRow, \
     Subject, SubjectC, ExportVariant, Analysis, PackedSubject, PackedSubjectC
 from gui.progress import Worker
 from dataset.estimation_result import EstimationResult
-from dataset.consistency_result import ConsistencyResult
+from dataset.deterministic_consistency_result import DeterministicConsistencyResult
 from dataset.experiment_stats import ExperimentStats
 from dataset.tuple_intrans_alts import TupleIntransAlts
 from dataset.tuple_intrans_menus import TupleIntransMenus
-import dataset.consistency_result
+import dataset.deterministic_consistency_result
 import dataset.experiment_stats
 import dataset.tuple_intrans_alts
 import dataset.tuple_intrans_menus
@@ -321,8 +321,7 @@ class ExperimentalData(Dataset):
 
         return ds
 
-    # detailed consistency
-    def analysis_consistency(self, worker : Worker, _config : None) -> ConsistencyResult:
+    def analysis_consistency_deterministic(self, worker : Worker, _config : None) -> DeterministicConsistencyResult:
         with Core() as core:
             worker.interrupt = lambda: core.shutdown()  # interrupt hook
 
@@ -333,15 +332,40 @@ class ExperimentalData(Dataset):
                 response = core.call(
                     'consistency',
                     PackedSubjectC,
-                    dataset.consistency_result.SubjectRawC,
+                    dataset.deterministic_consistency_result.SubjectRawC,
                     subject
                 )
                 rows.append(response)
 
                 worker.set_progress(i+1)
 
-        ds = ConsistencyResult(
-            self.name + ' (consistency)',
+        ds = DeterministicConsistencyResult(
+            self.name + ' (det. consistency)',
+            self.alternatives,
+        )
+        ds.load_from_core(rows)
+        return ds
+
+    def analysis_consistency_stochastic(self, worker : Worker, _config : None) -> DeterministicConsistencyResult:
+        with Core() as core:
+            worker.interrupt = lambda: core.shutdown()  # interrupt hook
+
+            rows = []
+
+            worker.set_work_size(len(self.subjects))
+            for i, subject in enumerate(self.subjects):
+                response = core.call(
+                    'consistency',
+                    PackedSubjectC,
+                    dataset.deterministic_consistency_result.SubjectRawC,
+                    subject
+                )
+                rows.append(response)
+
+                worker.set_progress(i+1)
+
+        ds = DeterministicConsistencyResult(
+            self.name + ' (det. consistency)',
             self.alternatives,
         )
         ds.load_from_core(rows)
@@ -481,9 +505,9 @@ class ExperimentalData(Dataset):
                 run=self.analysis_summary_stats,
             ),
             Analysis(
-                name='Consistency analysis',
+                name='Deterministic consistency analysis',
                 config=None,
-                run=self.analysis_consistency,
+                run=self.analysis_consistency_deterministic,
             ),
             Analysis(
                 name='Inconsistent tuples of menus',

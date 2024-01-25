@@ -1,18 +1,14 @@
-import time
-import random
 import logging
-import collections
 from dataclasses import dataclass
 from typing import Any, Optional
 
-from PyQt5.QtCore import Qt, QCoreApplication
-from PyQt5.QtWidgets import QWidget, QMessageBox, QProgressDialog
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget
 
 import gui
 import uic.subject_filter
 import dataset.experimental_data
-import dataset.consistency_result
-from gui.progress import Worker, Cancelled
+import dataset.deterministic_consistency_result
 
 import dataset
 from core import Core
@@ -34,7 +30,7 @@ def accepts(options : Optional[Options], core : Core, subject_packed : dataset.P
         env['consistency'] = core.call(
             'consistency',
             dataset.PackedSubjectC,
-            dataset.consistency_result.SubjectRawC,
+            dataset.deterministic_consistency_result.SubjectRawC,
             subject_packed
         )
 
@@ -56,11 +52,11 @@ class SubjectFilter(QWidget, uic.subject_filter.Ui_SubjectFilter):
         env = {}
 
         if options.run_consistency_analysis:
-            env['consistency'] = dataset.consistency_result.SubjectRaw(
+            env['consistency'] = dataset.deterministic_consistency_result.SubjectRaw(
                 name='subject',
                 warp_pairs=0,
                 warp_all=0,
-                rows=[dataset.consistency_result.Row(
+                rows=[dataset.deterministic_consistency_result.Row(
                     cycle_length=2,
                     garp=0,
                     sarp=0,

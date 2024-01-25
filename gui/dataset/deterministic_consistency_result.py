@@ -1,22 +1,21 @@
-import logging
-import collections
-from typing import NamedTuple, List, Dict, Iterator, Tuple, FrozenSet, \
-    Sequence, Optional, Union, Set, cast
+from __future__ import annotations
 
-from PyQt5.QtCore import Qt, QModelIndex, QAbstractItemModel
-from PyQt5.QtGui import QIcon, QCursor
-from PyQt5.QtWidgets import QDialog, QTreeWidgetItem, QHeaderView, QToolTip
+import logging
+from typing import NamedTuple, List, Iterator, Tuple, \
+    Sequence, Optional, Union
+
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QDialog, QHeaderView
 
 import doc
-import dataset
 import uic.view_dataset
 import util.tree_model
 import platform_specific
 from gui.progress import Worker
 from dataset import Dataset, DatasetHeaderC, ExportVariant, Analysis
-from util.codec import Codec, FileIn, FileOut, namedtupleC, strC, intC, \
-    frozensetC, listC, bytesC, tupleC, dictC, setC
+from util.codec import FileIn, FileOut, namedtupleC, strC, intC, listC
 from util.codec_progress import CodecProgress, listCP, oneCP
+from util.tree_model import Node
 
 log = logging.getLogger(__name__)
 
@@ -66,7 +65,7 @@ class RootNode(util.tree_model.RootNode):
         return SubjectNode(self, row, self.subjects[row])
 
 class SubjectNode(util.tree_model.Node):
-    def __init__(self, parent_node, row: int, subject: Subject) -> None:
+    def __init__(self, parent_node : Node, row: int, subject: Subject) -> None:
         self.subject = subject
 
         if len(subject.raw.rows) == 0:
@@ -115,7 +114,7 @@ class SubjectNode(util.tree_model.Node):
         return RowNode(self, row, self.subject.raw.rows[row])
 
 class RowNode(util.tree_model.Node):
-    def __init__(self, parent_node, row_no: int, row: Row) -> None:
+    def __init__(self, parent_node : Node, row_no: int, row: Row) -> None:
         util.tree_model.Node.__init__(
             self, parent_node, row_no,
             fields=(
@@ -132,9 +131,9 @@ class RowNode(util.tree_model.Node):
 
 Cycles = List[Tuple[int, int]]
 
-class ConsistencyResult(Dataset):
+class DeterministicConsistencyResult(Dataset):
     class ViewDialog(QDialog, uic.view_dataset.Ui_ViewDataset):
-        def __init__(self, ds: 'ConsistencyResult') -> None:
+        def __init__(self, ds: DeterministicConsistencyResult) -> None:
             QDialog.__init__(self)
             self.setupUi(self)
 
@@ -157,7 +156,7 @@ class ConsistencyResult(Dataset):
                     F('Congruence', help_icon,
                         'consistency/cons_general.html#congruence'),
                     F('Strict general cycles', help_icon,
-                        'consistency/cons_general.html#strict-choice-consistency'), # SARP
+                        'consistency/cons_general.html#strict-choice-consistency'),  # SARP
                     F('Binary cycles', help_icon,
                         'consistency/cons_general.html#binary-choice-consistency'),
                     F('Strict binary cycles', help_icon,
@@ -174,9 +173,10 @@ class ConsistencyResult(Dataset):
             hdr.setSectionResizeMode(QHeaderView.ResizeToContents)
             hdr.setStretchLastSection(False)
 
-        def header_clicked(self, idx) -> None:
+        def header_clicked(self, idx : int) -> None:
             name = self.model.headers[idx].user_data
-            if not name: return
+            if not name:
+                return
 
             doc.open_in_browser(name)
 
@@ -251,7 +251,7 @@ class ConsistencyResult(Dataset):
             yield (subject.raw.name, subject.raw.warp_pairs, subject.raw.warp_all)
             yield None  # bump progress
 
-    def export_wide(self, column_name) -> Iterator[Optional[Tuple[Union[int, str], ...]]]:
+    def export_wide(self, column_name : str) -> Iterator[Optional[Tuple[Union[int, str], ...]]]:
         index = Row._fields.index(column_name)
 
         for subject in self.subjects:
@@ -279,21 +279,21 @@ class ConsistencyResult(Dataset):
             yield None
 
     @classmethod
-    def get_codec_progress(_cls) -> CodecProgress['ConsistencyResult']:
+    def get_codec_progress(_cls) -> CodecProgress[DeterministicConsistencyResult]:
         DatasetHeaderC_encode, DatasetHeaderC_decode = DatasetHeaderC.enc_dec()
         subjects_size, subjects_encode, subjects_decode = listCP(oneCP(SubjectC)).enc_dec()
         intC_encode, intC_decode = intC.enc_dec()
 
-        def get_size(x : 'ConsistencyResult') -> int:
+        def get_size(x : DeterministicConsistencyResult) -> int:
             return subjects_size(x.subjects)
 
-        def encode(worker : Worker, f : FileOut, x : 'ConsistencyResult') -> None:
+        def encode(worker : Worker, f : FileOut, x : DeterministicConsistencyResult) -> None:
             DatasetHeaderC_encode(f, (x.name, x.alternatives))
             subjects_encode(worker, f, x.subjects)
             intC_encode(f, x.max_cycle_length)
 
-        def decode(worker : Worker, f : FileIn) -> 'ConsistencyResult':
-            ds = ConsistencyResult(*DatasetHeaderC_decode(f))
+        def decode(worker : Worker, f : FileIn) -> DeterministicConsistencyResult:
+            ds = DeterministicConsistencyResult(*DatasetHeaderC_decode(f))
             ds.subjects = subjects_decode(worker, f)
             ds.max_cycle_length = intC_decode(f)
             return ds

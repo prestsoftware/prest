@@ -6,7 +6,7 @@ import dataset
 import dataset.budgetary
 import dataset.experimental_data
 import dataset.estimation_result
-import dataset.consistency_result
+import dataset.deterministic_consistency_result
 import dataset.experiment_stats
 
 import branding
@@ -17,7 +17,7 @@ from util.codec_progress import CodecProgress, listCP, enum_by_typenameCP
 log = logging.getLogger(__name__)
 
 PREST_SIGNATURE = b'Prest Workspace\0'
-FILE_FORMAT_VERSION = 17
+FILE_FORMAT_VERSION = 18
 
 DatasetCP : CodecProgress = enum_by_typenameCP('Dataset', [
     (cls, cls.get_codec_progress())

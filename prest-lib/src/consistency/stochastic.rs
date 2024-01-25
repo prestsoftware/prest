@@ -3,7 +3,6 @@ use std::fmt::{self, Display};
 use std::collections::{BTreeMap,HashSet};
 use std::collections::btree_map::Entry;
 use std::io::{Read,Write};
-use std::iter::FromIterator;
 
 use alt::Alt;
 use common::{ChoiceRow,Subject};
@@ -66,18 +65,35 @@ impl Encode for Response {
     }
 }
 
+struct Transitivity {
+    weak : u32,
+    moderate : u32,
+    strong : u32,
+}
+
+fn transitivity(_alt_count : u32, _subject : &[ChoiceRow]) -> Transitivity {
+    let mut weak = 0;
+    let mut moderate = 0;
+    let mut strong = 0;
+
+    Transitivity {
+        weak,
+        moderate,
+        strong,
+    }
+}
+
 pub fn run(request : &Request) -> Result<Response> {
-    let ref subject = request.subject.unpack();
+    let subject = request.subject.unpack();
     let alt_count = subject.alternatives.len() as u32;
-    let choices = &subject.choices;
 
-
+    let transitivity = transitivity(alt_count, &subject.choices);
 
     Ok(Response {
         subject_name: subject.name.clone(),
-        weak_stochastic_transitivity: 0,
-        moderate_stochastic_transitivity: 0,
-        strong_stochastic_transitivity: 0,
+        weak_stochastic_transitivity: transitivity.weak,
+        moderate_stochastic_transitivity: transitivity.moderate,
+        strong_stochastic_transitivity: transitivity.strong,
         weak_regularity: 0,
         strong_regularity: 0,
     })

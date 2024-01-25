@@ -8,10 +8,8 @@ tqdm
 PyQt5
 PyQt5-stubs
 sphinx
-sphinx-rtd-theme
 sphinxcontrib-bibtex
 sphinxcontrib-websupport
 sphinxjp-themes-basicstrap
 sphinx-mathjax-offline
 pyinstaller
-types-typing-extensions

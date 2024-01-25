@@ -115,7 +115,7 @@ todo_include_todos = True
 # a list of builtin themes.
 
 extensions.append("sphinxjp.themes.basicstrap")
-html_theme = 'basicstrap'
+# html_theme = 'basicstrap'
 
 
 # Theme options are theme-specific and customize the look and feel of a theme

@@ -331,7 +331,7 @@ class ExperimentalData(Dataset):
             worker.set_work_size(len(self.subjects))
             for i, subject in enumerate(self.subjects):
                 response = core.call(
-                    'consistency',
+                    'consistency-deterministic',
                     PackedSubjectC,
                     dataset.deterministic_consistency_result.SubjectRawC,
                     subject
@@ -356,9 +356,9 @@ class ExperimentalData(Dataset):
             worker.set_work_size(len(self.subjects))
             for i, subject in enumerate(self.subjects):
                 response = core.call(
-                    'consistency',
+                    'consistency-stochastic',
                     PackedSubjectC,
-                    dataset.stochastic_consistency_result.SubjectRawC,
+                    dataset.stochastic_consistency_result.SubjectC,
                     subject
                 )
                 rows.append(response)

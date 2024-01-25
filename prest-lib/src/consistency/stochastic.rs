@@ -71,6 +71,8 @@ pub fn run(request : &Request) -> Result<Response> {
     let alt_count = subject.alternatives.len() as u32;
     let choices = &subject.choices;
 
+
+
     Ok(Response {
         subject_name: subject.name.clone(),
         weak_stochastic_transitivity: 0,

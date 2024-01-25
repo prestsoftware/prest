@@ -369,7 +369,7 @@ class ExperimentalData(Dataset):
             self.name + ' (stochastic consistency)',
             self.alternatives,
         )
-        ds.load_from_core(rows)
+        ds.subjects = rows
         return ds
 
     def analysis_summary_stats(self, worker : Worker, _config : None) -> ExperimentStats:

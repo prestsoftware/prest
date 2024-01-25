@@ -5,7 +5,7 @@ use std::fmt::Display;
 
 use prest::codec::{self,Encode,Decode};
 use prest::common::{Log,LogLevel};
-use prest::{estimation,consistency,simulation,experiment_stats,budgetary,integrity,instviz};
+use prest::{estimation,simulation,consistency,experiment_stats,budgetary,integrity,instviz};
 
 #[derive(Debug)]
 pub enum ActionRequest {
@@ -15,9 +15,10 @@ pub enum ActionRequest {
     Summary(experiment_stats::Request),
     SetRngSeed(Vec<u8>),
     Simulation(simulation::Request),
-    Consistency(consistency::Request),
-    TupleIntransMenus(consistency::Request),
-    TupleIntransAlts(consistency::Request),
+    ConsistencyDeterministic(consistency::deterministic::Request),
+    ConsistencyStochastic(consistency::stochastic::Request),
+    TupleIntransMenus(consistency::deterministic::Request),
+    TupleIntransAlts(consistency::deterministic::Request),
     Estimation(estimation::Request),
     Echo(String),
     Crash(String),
@@ -36,7 +37,8 @@ impl Decode for ActionRequest {
             "summary" => Ok(Summary(Decode::decode(f)?)),
             "set-rng-seed" => Ok(SetRngSeed(Decode::decode(f)?)),
             "simulation" => Ok(Simulation(Decode::decode(f)?)),
-            "consistency" => Ok(Consistency(Decode::decode(f)?)),
+            "consistency-deterministic" => Ok(ConsistencyDeterministic(Decode::decode(f)?)),
+            "consistency-stochastic" => Ok(ConsistencyStochastic(Decode::decode(f)?)),
             "tuple-intrans-menus" => Ok(TupleIntransMenus(Decode::decode(f)?)),
             "tuple-intrans-alts" => Ok(TupleIntransAlts(Decode::decode(f)?)),
             "estimation" => Ok(Estimation(Decode::decode(f)?)),

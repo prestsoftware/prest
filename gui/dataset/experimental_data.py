@@ -341,7 +341,7 @@ class ExperimentalData(Dataset):
                 worker.set_progress(i+1)
 
         ds = DeterministicConsistencyResult(
-            self.name + ' (det. consistency)',
+            self.name + ' (deterministic consistency)',
             self.alternatives,
         )
         ds.load_from_core(rows)
@@ -366,7 +366,7 @@ class ExperimentalData(Dataset):
                 worker.set_progress(i+1)
 
         ds = StochasticConsistencyResult(
-            self.name + ' (det. consistency)',
+            self.name + ' (stochastic consistency)',
             self.alternatives,
         )
         ds.load_from_core(rows)

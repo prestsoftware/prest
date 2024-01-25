@@ -16,6 +16,7 @@ from dataset import Dataset, DatasetHeaderC, ChoiceRow, \
     Subject, SubjectC, ExportVariant, Analysis, PackedSubject, PackedSubjectC
 from gui.progress import Worker
 from dataset.estimation_result import EstimationResult
+from dataset.stochastic_consistency_result import StochasticConsistencyResult
 from dataset.deterministic_consistency_result import DeterministicConsistencyResult
 from dataset.experiment_stats import ExperimentStats
 from dataset.tuple_intrans_alts import TupleIntransAlts
@@ -346,7 +347,7 @@ class ExperimentalData(Dataset):
         ds.load_from_core(rows)
         return ds
 
-    def analysis_consistency_stochastic(self, worker : Worker, _config : None) -> DeterministicConsistencyResult:
+    def analysis_consistency_stochastic(self, worker : Worker, _config : None) -> StochasticConsistencyResult:
         with Core() as core:
             worker.interrupt = lambda: core.shutdown()  # interrupt hook
 
@@ -357,14 +358,14 @@ class ExperimentalData(Dataset):
                 response = core.call(
                     'consistency',
                     PackedSubjectC,
-                    dataset.deterministic_consistency_result.SubjectRawC,
+                    dataset.stochastic_consistency_result.SubjectRawC,
                     subject
                 )
                 rows.append(response)
 
                 worker.set_progress(i+1)
 
-        ds = DeterministicConsistencyResult(
+        ds = StochasticConsistencyResult(
             self.name + ' (det. consistency)',
             self.alternatives,
         )
@@ -508,6 +509,11 @@ class ExperimentalData(Dataset):
                 name='Deterministic consistency analysis',
                 config=None,
                 run=self.analysis_consistency_deterministic,
+            ),
+            Analysis(
+                name='Stochastic consistency analysis',
+                config=None,
+                run=self.analysis_consistency_stochastic,
             ),
             Analysis(
                 name='Inconsistent tuples of menus',

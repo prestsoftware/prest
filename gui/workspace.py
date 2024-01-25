@@ -7,6 +7,7 @@ import dataset.budgetary
 import dataset.experimental_data
 import dataset.estimation_result
 import dataset.deterministic_consistency_result
+import dataset.stochastic_consistency_result
 import dataset.experiment_stats
 
 import branding

@@ -50,8 +50,7 @@ pub struct Response {
     weak_stochastic_transitivity : u32,
     moderate_stochastic_transitivity : u32,
     strong_stochastic_transitivity : u32,
-    weak_regularity : u32,
-    strong_regularity : u32,
+    regularity : u32,
 }
 
 impl Encode for Response {
@@ -61,8 +60,7 @@ impl Encode for Response {
             &self.weak_stochastic_transitivity,
             &self.moderate_stochastic_transitivity,
             &self.strong_stochastic_transitivity,
-            &self.weak_regularity,
-            &self.strong_regularity,
+            &self.regularity,
         ).encode(f)
     }
 }
@@ -140,16 +138,8 @@ fn transitivity(alt_count : u32, freq : &Frequencies) -> Transitivity {
     result
 }
 
-struct Regularity {
-    weak : u32,
-    strong : u32,
-}
-
-fn regularity(freq : &Frequencies) -> Regularity {
-    let mut result = Regularity {
-        weak: 0,
-        strong: 0,
-    };
+fn regularity(freq : &Frequencies) -> u32 {
+    let mut violations = 0;
 
     for (menu_b, p_b) in freq.iter() {
         for (menu_a, p_a) in freq.iter() {
@@ -162,14 +152,15 @@ fn regularity(freq : &Frequencies) -> Regularity {
                 let pa_a = p_a[a.index() as usize];
                 let pa_b = p_b[a.index() as usize];
 
-                result.weak += (pa_a < pa_b) as u32;
-                result.strong += (pa_a <= pa_b) as u32;
+                violations += (pa_a < pa_b) as u32;
             }
         }
     }
 
-    result
+    violations
 }
+
+type Regularity = u32;
 
 fn analyse(alt_count : u32, choices : &[ChoiceRow]) -> (Transitivity, Regularity) {
     let frequencies = frequencies(alt_count, &choices);
@@ -190,8 +181,7 @@ pub fn run(request : &Request) -> Result<Response> {
         weak_stochastic_transitivity: transitivity.weak,
         moderate_stochastic_transitivity: transitivity.moderate,
         strong_stochastic_transitivity: transitivity.strong,
-        weak_regularity: regularity.weak,
-        strong_regularity: regularity.strong,
+        regularity: regularity,
     })
 }
 
@@ -214,8 +204,7 @@ mod test {
         assert_eq!(t.moderate, 3);
         assert_eq!(t.strong, 3);
 
-        assert_eq!(r.weak, 0);
-        assert_eq!(r.strong, 0);
+        assert_eq!(r, 0);
     }
 
     #[test]
@@ -229,8 +218,7 @@ mod test {
         assert_eq!(t.moderate, 0);
         assert_eq!(t.strong, 0);
 
-        assert_eq!(r.weak, 1);
-        assert_eq!(r.strong, 1);
+        assert_eq!(r, 1);
     }
 
     #[test]
@@ -244,8 +232,7 @@ mod test {
         assert_eq!(t.moderate, 0);
         assert_eq!(t.strong, 0);
 
-        assert_eq!(r.weak, 0);
-        assert_eq!(r.strong, 2);
+        assert_eq!(r, 0);
     }
 
     #[test]
@@ -259,7 +246,6 @@ mod test {
         assert_eq!(t.moderate, 0);
         assert_eq!(t.strong, 0);
 
-        assert_eq!(r.weak, 1);
-        assert_eq!(r.strong, 2);
+        assert_eq!(r, 1);
     }
 }

@@ -22,14 +22,14 @@ log = logging.getLogger(__name__)
 class Subject:
     name : str
 
+    # violation counts
     weak_stochastic_transitivity : int
     moderate_stochastic_transitivity : int
     strong_stochastic_transitivity : int
 
-    weak_regularity : int
-    strong_regularity : int
+    regularity : int
 
-SubjectC = dataclassC(Subject, strC, intC, intC, intC, intC, intC)
+SubjectC = dataclassC(Subject, strC, intC, intC, intC, intC)
 
 class RootNode(util.tree_model.RootNode):
     def __init__(self, subjects: list[Subject]) -> None:
@@ -50,8 +50,7 @@ class SubjectNode(util.tree_model.Node):
                 subject.weak_stochastic_transitivity,
                 subject.moderate_stochastic_transitivity,
                 subject.strong_stochastic_transitivity,
-                subject.weak_regularity,
-                subject.strong_regularity,
+                subject.regularity,
             ),
         )
 
@@ -70,8 +69,7 @@ class StochasticConsistencyResult(Dataset):
                     'Weak Stochastic Transitivity',
                     'Moderate Stochastic Transitivity',
                     'Strong Stochastic Transitivity',
-                    'Weak Regularity',
-                    'Strong Regularity',
+                    'Regularity',
                 ),
             )
             self.twRows.setModel(self.model)
@@ -109,8 +107,7 @@ class StochasticConsistencyResult(Dataset):
                     'weak_stochastic_transitivity',
                     'moderate_stochastic_transitivity',
                     'strong_stochastic_transitivity',
-                    'weak_regularity',
-                    'strong_regularity',
+                    'regularity',
                 ),
                 get_rows=self.export_summary,
                 size=len(self.subjects),
@@ -121,7 +118,7 @@ class StochasticConsistencyResult(Dataset):
         return '%d subjects' % len(self.subjects)
 
     def export_summary(self) -> Iterator[Optional[
-        tuple[str,int,int,int,int,int]
+        tuple[str,int,int,int,int]
     ]]:
         for subject in self.subjects:
             yield (
@@ -129,8 +126,7 @@ class StochasticConsistencyResult(Dataset):
                 subject.weak_stochastic_transitivity,
                 subject.moderate_stochastic_transitivity,
                 subject.strong_stochastic_transitivity,
-                subject.weak_regularity,
-                subject.strong_regularity,
+                subject.regularity,
             )
 
             yield None

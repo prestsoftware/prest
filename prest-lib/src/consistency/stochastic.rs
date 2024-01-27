@@ -82,8 +82,9 @@ type MenuStats = Vec<Ratio<u32>>;
 
 impl MenuStatsRaw {
     fn finalise(self) -> MenuStats {
+        let total = self.total;
         self.alt_counts.into_iter().map(
-            |num| Ratio::new(num, self.total)
+            |num| Ratio::new(num, total)
         ).collect()
     }
 }

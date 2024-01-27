@@ -171,13 +171,19 @@ fn regularity(freq : &Frequencies) -> Regularity {
     result
 }
 
+fn analyse(alt_count : u32, choices : &[ChoiceRow]) -> (Transitivity, Regularity) {
+    let frequencies = frequencies(alt_count, &choices);
+    let transitivity = transitivity(alt_count, &frequencies);
+    let regularity = regularity(&frequencies);
+
+    (transitivity, regularity)
+}
+
 pub fn run(request : &Request) -> Result<Response> {
     let subject = request.subject.unpack();
     let alt_count = subject.alternatives.len() as u32;
 
-    let frequencies = frequencies(alt_count, &subject.choices);
-    let transitivity = transitivity(alt_count, &frequencies);
-    let regularity = regularity(&frequencies);
+    let (transitivity, regularity) = analyse(alt_count, &subject.choices);
 
     Ok(Response {
         subject_name: subject.name.clone(),
@@ -191,4 +197,24 @@ pub fn run(request : &Request) -> Result<Response> {
 
 #[cfg(test)]
 mod test {
+    use alt::Alt;
+    use alt_set::AltSet;
+    use common::ChoiceRow;
+    use std::iter::FromIterator;
+
+    #[test]
+    fn basic_test_1() {
+        let (t, r) = super::analyse(3, &choices![
+            [0,1] -> [0],
+            [0,2] -> [2],
+            [1,2] -> [1]
+        ]);
+
+        assert_eq!(t.weak, 3);
+        assert_eq!(t.moderate, 3);
+        assert_eq!(t.strong, 3);
+
+        assert_eq!(r.weak, 0);
+        assert_eq!(r.strong, 0);
+    }
 }

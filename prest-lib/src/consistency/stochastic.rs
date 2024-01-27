@@ -94,15 +94,15 @@ type Frequencies<'a> = HashMap<&'a AltSet, MenuStats>;
 fn frequencies<'a>(alt_count : u32, choice_rows : &'a [ChoiceRow]) -> Frequencies<'a> {
     let mut freq  : HashMap<&AltSet, MenuStatsRaw> = HashMap::new();
     for cr in choice_rows {
-        if let Some(choice) = cr.choice.view().as_singleton() {
-            let stats = freq.entry(&cr.menu).or_insert_with(|| MenuStatsRaw {
-                alt_counts: vec![0; alt_count as usize],
-                total: 0,
-            });
+        let stats = freq.entry(&cr.menu).or_insert_with(|| MenuStatsRaw {
+            alt_counts: vec![0; alt_count as usize],
+            total: 0,
+        });
 
+        for choice in cr.choice.view() {
             stats.alt_counts[choice.index() as usize] += 1;
-            stats.total += 1;
         }
+        stats.total += 1;
     }
 
     freq.into_iter().map(
@@ -245,6 +245,21 @@ mod test {
         assert_eq!(t.strong, 0);
 
         assert_eq!(r.weak, 0);
+        assert_eq!(r.strong, 2);
+    }
+
+    #[test]
+    fn deferrals() {
+        let (t, r) = super::analyse(3, &choices![
+            [0,1] -> [],
+            [0,1,2] -> [0]
+        ]);
+
+        assert_eq!(t.weak, 0);
+        assert_eq!(t.moderate, 0);
+        assert_eq!(t.strong, 0);
+
+        assert_eq!(r.weak, 1);
         assert_eq!(r.strong, 2);
     }
 }

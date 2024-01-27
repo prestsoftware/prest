@@ -203,7 +203,7 @@ mod test {
     use std::iter::FromIterator;
 
     #[test]
-    fn basic_test_1() {
+    fn transitivity_1() {
         let (t, r) = super::analyse(3, &choices![
             [0,1] -> [0],
             [0,2] -> [2],
@@ -216,5 +216,35 @@ mod test {
 
         assert_eq!(r.weak, 0);
         assert_eq!(r.strong, 0);
+    }
+
+    #[test]
+    fn regularity_weak() {
+        let (t, r) = super::analyse(3, &choices![
+            [0,1] -> [0],
+            [0,1,2] -> [1]
+        ]);
+
+        assert_eq!(t.weak, 0);
+        assert_eq!(t.moderate, 0);
+        assert_eq!(t.strong, 0);
+
+        assert_eq!(r.weak, 1);
+        assert_eq!(r.strong, 1);
+    }
+
+    #[test]
+    fn regularity_strong() {
+        let (t, r) = super::analyse(3, &choices![
+            [0,1] -> [0],
+            [0,1,2] -> [0]
+        ]);
+
+        assert_eq!(t.weak, 0);
+        assert_eq!(t.moderate, 0);
+        assert_eq!(t.strong, 0);
+
+        assert_eq!(r.weak, 0);
+        assert_eq!(r.strong, 2);
     }
 }

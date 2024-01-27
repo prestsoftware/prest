@@ -89,30 +89,32 @@ impl MenuStatsRaw {
     }
 }
 
-fn transitivity(alt_count : u32, choice_rows : &[ChoiceRow]) -> Transitivity {
-    let mut weak = 0;
-    let mut moderate = 0;
-    let mut strong = 0;
-    const HALF : Ratio<u32> = Ratio::new_raw(1, 2);
+type Frequencies<'a> = HashMap<&'a AltSet, MenuStats>;
 
-    let freq : HashMap<&AltSet, MenuStats> = {
-        let mut freq  : HashMap<&AltSet, MenuStatsRaw> = HashMap::new();
-        for cr in choice_rows {
-            if let Some(choice) = cr.choice.view().as_singleton() {
-                let stats = freq.entry(&cr.menu).or_insert_with(|| MenuStatsRaw {
-                    alt_counts: vec![0; alt_count as usize],
-                    total: 0,
-                });
+fn frequencies<'a>(alt_count : u32, choice_rows : &'a [ChoiceRow]) -> Frequencies<'a> {
+    let mut freq  : HashMap<&AltSet, MenuStatsRaw> = HashMap::new();
+    for cr in choice_rows {
+        if let Some(choice) = cr.choice.view().as_singleton() {
+            let stats = freq.entry(&cr.menu).or_insert_with(|| MenuStatsRaw {
+                alt_counts: vec![0; alt_count as usize],
+                total: 0,
+            });
 
-                stats.alt_counts[choice.index() as usize] += 1;
-                stats.total += 1;
-            }
+            stats.alt_counts[choice.index() as usize] += 1;
+            stats.total += 1;
         }
+    }
 
-        freq.into_iter().map(
-            |(menu, stats)| (menu, stats.finalise())
-        ).collect()
+    freq.into_iter().map(
+        |(menu, stats)| (menu, stats.finalise())
+    ).collect()
+}
+
+fn transitivity(alt_count : u32, freq : &Frequencies) -> Transitivity {
+    let mut result = Transitivity {
+        weak: 0, moderate: 0, strong: 0,
     };
+    const HALF : Ratio<u32> = Ratio::new_raw(1, 2);
 
     for a in Alt::all(alt_count) {
         for b in Alt::all(alt_count) {
@@ -124,9 +126,9 @@ fn transitivity(alt_count : u32, choice_rows : &[ChoiceRow]) -> Transitivity {
                         if let Some(pbc) = freq.get(&AltSet::from_iter([b, c])) {
                             let pb_bc = pbc[b.index() as usize];
                             if pa_ab >= HALF && pb_bc >= HALF {
-                                weak += (pa_ac < HALF) as u32;
-                                moderate += (pa_ac < pa_ab && pa_ac < pb_bc) as u32;
-                                strong += (pa_ac < pa_ab || pa_ac < pb_bc) as u32;
+                                result.weak += (pa_ac < HALF) as u32;
+                                result.moderate += (pa_ac < pa_ab && pa_ac < pb_bc) as u32;
+                                result.strong += (pa_ac < pa_ab || pa_ac < pb_bc) as u32;
                             }
                         }
                     }
@@ -135,26 +137,55 @@ fn transitivity(alt_count : u32, choice_rows : &[ChoiceRow]) -> Transitivity {
         }
     }
 
-    Transitivity {
-        weak,
-        moderate,
-        strong,
+    result
+}
+
+struct Regularity {
+    weak : u32,
+    strong : u32,
+}
+
+fn regularity(freq : &Frequencies) -> Regularity {
+    let mut result = Regularity {
+        weak: 0,
+        strong: 0,
+    };
+
+    for (menu_b, p_b) in freq.iter() {
+        for (menu_a, p_a) in freq.iter() {
+            if !menu_a.view().is_strict_subset_of(menu_b.view()) {
+                // only consider A < B
+                continue;
+            }
+
+            for a in menu_a.view() {
+                let pa_a = p_a[a.index() as usize];
+                let pa_b = p_b[a.index() as usize];
+
+                result.weak += (pa_a < pa_b) as u32;
+                result.strong += (pa_a <= pa_b) as u32;
+            }
+        }
     }
+
+    result
 }
 
 pub fn run(request : &Request) -> Result<Response> {
     let subject = request.subject.unpack();
     let alt_count = subject.alternatives.len() as u32;
 
-    let transitivity = transitivity(alt_count, &subject.choices);
+    let frequencies = frequencies(alt_count, &subject.choices);
+    let transitivity = transitivity(alt_count, &frequencies);
+    let regularity = regularity(&frequencies);
 
     Ok(Response {
         subject_name: subject.name.clone(),
         weak_stochastic_transitivity: transitivity.weak,
         moderate_stochastic_transitivity: transitivity.moderate,
         strong_stochastic_transitivity: transitivity.strong,
-        weak_regularity: 0,
-        strong_regularity: 0,
+        weak_regularity: regularity.weak,
+        strong_regularity: regularity.strong,
     })
 }
 

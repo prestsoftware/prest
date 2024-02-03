@@ -1171,6 +1171,26 @@ mod test {
     }
 
     #[test]
+    fn contraction_consistency_basic() {
+        let choices = choices![
+            [0,1,2,3,4] -> [0,1],
+            [0,1,2,3] -> [2,3]
+        ];
+
+        let request = testreq(5, choices);
+        let response = run(&request).unwrap();
+
+        let mut total_binary_intransitivities : BigUint = num::zero();
+        for row in &response.rows {
+            total_binary_intransitivities += &row.binary_intransitivities;
+        }
+
+        assert_eq!(total_binary_intransitivities, BigUint::from(0u32));
+        assert_eq!(response.contraction_consistency_pairs, 1);
+        assert_eq!(response.contraction_consistency_all, 2);
+    }
+
+    #[test]
     fn contraction_consistency_rep1() {
         let choices = choices![
             [0,1,2,3,4] -> [0,1],

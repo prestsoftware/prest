@@ -296,7 +296,7 @@ pub enum Error {
 impl Encode for Error {
     fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
         match self {
-            Error::TooManyTuples => 0u8.encode(f)            
+            Error::TooManyTuples => 0u8.encode(f)
         }
     }
 }
@@ -442,8 +442,8 @@ fn compute_warp_pairs(alt_count : u32, g_strict : &Graph, g_non_strict : &Graph)
 }
 
 fn compute_contraction_consistency_pairs(choices : &[ChoiceRow]) -> (u32, u32) {
-    let mut all = 0;
-    let mut pairs = 0;
+    let mut pairs = HashSet::new();
+    let mut triples = HashSet::new();
 
     #[allow(non_snake_case)]
     for cr_A in choices {
@@ -452,19 +452,16 @@ fn compute_contraction_consistency_pairs(choices : &[ChoiceRow]) -> (u32, u32) {
                 continue;
             }
 
-            let mut violations = 0;
             for a in cr_B.choice.view() {
                 if cr_A.menu.view().contains(a) && !cr_A.choice.view().contains(a) {
-                    violations += 1;
+                    pairs.insert((&cr_A.menu, &cr_B.menu));
+                    triples.insert((&cr_A.menu, &cr_B.menu, a));
                 }
             }
-
-            all += violations;
-            pairs += (violations > 0) as u32;
         }
     }
 
-    (all, pairs)
+    (triples.len() as u32, pairs.len() as u32)
 }
 
 pub fn run(request : &Request) -> Result<Response> {

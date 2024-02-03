@@ -1153,6 +1153,24 @@ mod test {
     }
 
     #[test]
+    fn binary_intransitivities_size2() {
+        let choices = choices![
+            [0,1] -> [0],
+            [0,1] -> []
+        ];
+
+        let request = testreq(5, choices);
+        let response = run(&request).unwrap();
+
+        let mut total_binary_intransitivities : BigUint = num::zero();
+        for row in &response.rows {
+            total_binary_intransitivities += &row.binary_intransitivities;
+        }
+
+        assert_eq!(total_binary_intransitivities, BigUint::from(1u32));
+    }
+
+    #[test]
     fn rotation() {
         assert_eq!(rotate_min(&[3,1,2,4]), &[1,2,4,3]);
         assert_eq!(rotate_min(&[1,2,3,4]), &[1,2,3,4]);

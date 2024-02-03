@@ -170,7 +170,7 @@ impl Cycle {
     }
 }
 
-impl<'a> HasSize for &'a Cycle {
+impl HasSize for Cycle {
     fn size(&self) -> u32 {
         self.len()
     }
@@ -441,7 +441,7 @@ fn compute_warp_pairs(alt_count : u32, g_strict : &Graph, g_non_strict : &Graph)
     menu_pairs.len() as u32
 }
 
-fn compute_contraction_consistency_pairs(choices : &[ChoiceRow]) -> (u32, u32) {
+fn contraction_consistency(choices : &[ChoiceRow]) -> (u32, u32) {
     let mut pairs = HashSet::new();
     let mut triples = HashSet::new();
 
@@ -477,7 +477,7 @@ pub fn run(request : &Request) -> Result<Response> {
     // SARP (includes 2-cycles)
     summarise(
         &mut rows,
-        cycles_strict.iter(),
+        cycles_strict,
         |r : &mut Row, c| r.sarp += c.multiplicity_in(&g_strict)
     );
 
@@ -488,7 +488,7 @@ pub fn run(request : &Request) -> Result<Response> {
     // GARP (includes 2-cycles)
     summarise(
         &mut rows,
-        cycles_non_strict.iter(),
+        cycles_non_strict,
         |r, c| r.garp += c.garp_multiplicity_in(&g_strict, &g_non_strict)
     );
 
@@ -497,7 +497,7 @@ pub fn run(request : &Request) -> Result<Response> {
     let (
         contraction_consistency_all,
         contraction_consistency_pairs,
-    )= compute_contraction_consistency_pairs(choices);
+    ) = contraction_consistency(choices);
 
     let choices_binary = Vec::from_iter(
         choices.iter().filter(|c| c.menu.size() == 2).cloned()
@@ -510,14 +510,14 @@ pub fn run(request : &Request) -> Result<Response> {
     // garp_binary
     summarise(
         &mut rows,
-        cycles_non_strict_binary.iter(),
+        cycles_non_strict_binary,
         |r, c| r.garp_binary_menus += c.garp_multiplicity_in(&g_strict_binary, &g_non_strict_binary)
     );
 
     // sarp_binary
     summarise(
         &mut rows,
-        cycles_strict_binary.iter(),
+        cycles_strict_binary,
         |r, c| r.sarp_binary_menus += c.multiplicity_in(&g_strict_binary)
     );
 

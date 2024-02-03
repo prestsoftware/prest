@@ -1,12 +1,14 @@
 use std::result;
 use std::fmt::{self, Display};
-use std::collections::{BTreeMap,HashSet};
+use std::collections::{BTreeMap,HashSet,HashMap};
 use std::collections::btree_map::Entry;
 use num::{zero, one};
 use std::io::{Read,Write};
 use std::iter::FromIterator;
 
 use alt::Alt;
+use alt_set::AltSet;
+use num_traits::identities::Zero;
 use num_bigint::BigUint;
 use common::{ChoiceRow,Subject};
 use codec::{self,Encode,Decode,Packed};
@@ -470,6 +472,100 @@ fn contraction_consistency(choices : &[ChoiceRow]) -> (u32, u32) {
     (all, pairs)
 }
 
+struct BinaryIntransitivity {
+    length : u32,
+    multiplicity : BigUint,
+}
+
+impl HasSize for BinaryIntransitivity {
+    fn size(&self) -> u32 {
+        self.length
+    }
+}
+
+fn binary_intransitivities(alt_count : u32, g : &Multigraph, choices : &[ChoiceRow]) -> Vec<BinaryIntransitivity> {
+    fn paths_from(prefix : &[Alt], avail : &mut AltSet) -> Vec<Vec<Alt>> {
+        let mut all_paths = Vec::new();
+        let mut path = Vec::from(prefix);
+
+        for x in avail.clone().view() {
+            let only_x = AltSet::singleton(x);
+            path.push(x);
+            *avail -= only_x.view();
+
+            all_paths.extend(
+                paths_from(&path, avail)
+            );
+
+            *avail |= only_x.view();
+            path.pop();
+        }
+
+        all_paths.push(path);
+        all_paths
+    }
+
+    let candidates : HashMap<(Alt, Alt), u32> = {
+        let mut candidates = HashMap::new();
+        for cr in choices {
+            // consider only binary menus
+            if cr.menu.size() != 2 {
+                continue;
+            }
+
+            for x in cr.menu.view() {
+                if cr.choice.view().contains(x) {
+                    // can't cause an intransitivity
+                    continue;
+                }
+
+                // so here we know that x \in A, but x \notin C(A)
+
+                for y in cr.menu.view() {
+                    // if we have a path x > ... > y
+                    // then observation `cr` would constitute intransitivity
+                    // because the subject failed to choose x here
+                    // hence it's a candidate
+                    *candidates.entry((x,y)).or_insert(0) += 1;
+                }
+            }
+        }
+        candidates
+    };
+
+    let mut paths = Vec::new();
+
+    let mut avail = AltSet::from_iter(
+        Alt::all(alt_count)
+    );
+    for path in paths_from(&[], &mut avail) {
+        if path.len() < 2 {
+            continue;
+        }
+
+        let mut multiplicity : BigUint = num::one();
+        for (&x, &y) in path.iter().zip(path.iter().skip(1)) {
+            multiplicity *= g.edges(x, y).len();
+        }
+
+        if multiplicity.is_zero() {
+            continue;
+        }
+
+        let (u, v) = (*path.first().unwrap(), *path.last().unwrap());
+        if let Some(cnt) = candidates.get(&(u,v)) {
+            multiplicity *= *cnt;
+        }
+
+        paths.push(BinaryIntransitivity {
+            length: path.len() as u32,
+            multiplicity,
+        });
+    }
+
+    paths
+}
+
 pub fn run(request : &Request) -> Result<Response> {
     let ref subject = request.subject.unpack();
     let alt_count = subject.alternatives.len() as u32;
@@ -525,6 +621,13 @@ pub fn run(request : &Request) -> Result<Response> {
         &mut rows,
         cycles_strict_binary,
         |r, c| r.sarp_binary_menus += c.multiplicity_in(&g_strict_binary)
+    );
+
+    // binary intransitivities
+    summarise(
+        &mut rows,
+        binary_intransitivities(alt_count, &g_non_strict_binary, choices),
+        |r, bi| r.binary_intransitivities += bi.multiplicity,
     );
 
     Ok(Response {

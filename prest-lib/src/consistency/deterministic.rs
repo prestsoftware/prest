@@ -293,19 +293,24 @@ fn find_cycles(g : &Multigraph) -> HashSet<Cycle> {
 #[derive(Debug)]
 pub enum Error {
     TooManyTuples,
+    RepeatedMenus,
 }
 
 impl Encode for Error {
     fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
         match self {
-            Error::TooManyTuples => 0u8.encode(f)
+            Error::TooManyTuples => 0u8.encode(f),
+            Error::RepeatedMenus => 1u8.encode(f)
         }
     }
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, f : &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "too many tuples")
+        match self {
+            Error::TooManyTuples => write!(f, "too many tuples"),
+            Error::RepeatedMenus => write!(f, "dataset contains repeated menus"),
+        }
     }
 }
 
@@ -577,10 +582,28 @@ fn binary_intransitivities(alt_count : u32, g : &Multigraph, choices : &[ChoiceR
     paths
 }
 
+fn has_repeated_menus(choices : &[ChoiceRow]) -> bool {
+    let mut seen = HashSet::new();
+
+    for cr in choices {
+        if seen.contains(&cr.menu) {
+            return true;
+        }
+
+        seen.insert(&cr.menu);
+    }
+
+    false
+}
+
 pub fn run(request : &Request) -> Result<Response> {
     let ref subject = request.subject.unpack();
     let alt_count = subject.alternatives.len() as u32;
     let choices = &subject.choices;
+
+    if has_repeated_menus(choices) {
+        return Err(Error::RepeatedMenus);
+    }
 
     let (g_strict, g_non_strict) = build_graphs(alt_count, choices);
     let cycles_non_strict = find_cycles(&g_non_strict);  // will be used for GARP

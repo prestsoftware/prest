@@ -359,8 +359,12 @@ impl Encode for Row {
 pub struct Response {
     subject_name : String,
     rows : Vec<Row>,
+
     warp_pairs : u32,
     warp : BigUint,
+
+    contraction_consistency_pairs : u32,
+    contraction_consistency_all : u32,
 }
 
 impl Encode for Response {
@@ -370,6 +374,8 @@ impl Encode for Response {
             &self.rows,
             &self.warp_pairs,
             &self.warp,
+            &self.contraction_consistency_pairs,
+            &self.contraction_consistency_all,
         ).encode(f)
     }
 }
@@ -435,6 +441,32 @@ fn compute_warp_pairs(alt_count : u32, g_strict : &Graph, g_non_strict : &Graph)
     menu_pairs.len() as u32
 }
 
+fn compute_contraction_consistency_pairs(choices : &[ChoiceRow]) -> (u32, u32) {
+    let mut all = 0;
+    let mut pairs = 0;
+
+    #[allow(non_snake_case)]
+    for cr_A in choices {
+        for cr_B in choices {
+            if !cr_A.menu.view().is_strict_subset_of(cr_B.menu.view()) {
+                continue;
+            }
+
+            let mut violations = 0;
+            for a in cr_B.choice.view() {
+                if cr_A.menu.view().contains(a) && !cr_A.choice.view().contains(a) {
+                    violations += 1;
+                }
+            }
+
+            all += violations;
+            pairs += (violations > 0) as u32;
+        }
+    }
+
+    (all, pairs)
+}
+
 pub fn run(request : &Request) -> Result<Response> {
     let ref subject = request.subject.unpack();
     let alt_count = subject.alternatives.len() as u32;
@@ -465,6 +497,11 @@ pub fn run(request : &Request) -> Result<Response> {
 
     let warp_pairs = compute_warp_pairs(alt_count, &g_strict, &g_non_strict);
 
+    let (
+        contraction_consistency_all,
+        contraction_consistency_pairs,
+    )= compute_contraction_consistency_pairs(choices);
+
     let choices_binary = Vec::from_iter(
         choices.iter().filter(|c| c.menu.size() == 2).cloned()
     );
@@ -490,8 +527,12 @@ pub fn run(request : &Request) -> Result<Response> {
     Ok(Response {
         subject_name: subject.name.clone(),
         rows: rows.into_iter().map(|(_l,r)| r).collect(),
+
         warp,
         warp_pairs,
+
+        contraction_consistency_all,
+        contraction_consistency_pairs,
     })
 }
 

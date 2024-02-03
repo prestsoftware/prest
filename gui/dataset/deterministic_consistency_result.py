@@ -33,8 +33,10 @@ class SubjectRaw(NamedTuple):
     rows: List[Row]
     warp_pairs: int
     warp_all: int
+    contraction_consistency_pairs : int
+    contraction_consistency_all : int
 
-SubjectRawC = namedtupleC(SubjectRaw, strC, listC(RowC), intC, intC)
+SubjectRawC = namedtupleC(SubjectRaw, strC, listC(RowC), intC, intC, intC, intC)
 
 class Subject(NamedTuple):
     raw: SubjectRaw
@@ -74,6 +76,8 @@ class SubjectNode(util.tree_model.Node):
                 fields=(
                     subject.raw.name,
                     '',
+                    subject.raw.contraction_consistency_pairs,
+                    subject.raw.contraction_consistency_all,
                     subject.raw.warp_pairs,
                     subject.raw.warp_all,
                     0, 0, 0, 0),
@@ -84,6 +88,8 @@ class SubjectNode(util.tree_model.Node):
                 fields=(
                     subject.raw.name,
                     subject.raw.rows[0].cycle_length,
+                    subject.raw.contraction_consistency_pairs,
+                    subject.raw.contraction_consistency_all,
                     subject.raw.warp_pairs,
                     subject.raw.warp_all,
 
@@ -99,6 +105,8 @@ class SubjectNode(util.tree_model.Node):
                 fields=(
                     subject.raw.name,
                     '',
+                    subject.raw.contraction_consistency_pairs,
+                    subject.raw.contraction_consistency_all,
                     subject.raw.warp_pairs,
                     subject.raw.warp_all,
 
@@ -120,6 +128,8 @@ class RowNode(util.tree_model.Node):
             fields=(
                 '',
                 row.cycle_length,
+                '-',
+                '-',
                 '-',
                 '-',
                 row.garp,
@@ -149,6 +159,8 @@ class DeterministicConsistencyResult(Dataset):
                 headers=(
                     'Subject',
                     'Cycle length',
+                    'Contraction consistency (pairs)',
+                    'Contraction consistency (all)',
                     F('WARP (pairs)', help_icon,
                         'consistency/cons_general.html#weak-axiom-of-revealed-preference-warp'),
                     F('WARP (all)', help_icon,

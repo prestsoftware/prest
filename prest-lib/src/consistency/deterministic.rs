@@ -442,8 +442,8 @@ fn compute_warp_pairs(alt_count : u32, g_strict : &Multigraph, g_non_strict : &M
 }
 
 fn contraction_consistency(choices : &[ChoiceRow]) -> (u32, u32) {
-    let mut pairs = HashSet::new();
-    let mut triples = HashSet::new();
+    let mut all = 0;
+    let mut pairs = 0;
 
     #[allow(non_snake_case)]
     for cr_A in choices {
@@ -452,16 +452,19 @@ fn contraction_consistency(choices : &[ChoiceRow]) -> (u32, u32) {
                 continue;
             }
 
+            let mut violations = 0;
             for a in cr_B.choice.view() {
                 if cr_A.menu.view().contains(a) && !cr_A.choice.view().contains(a) {
-                    pairs.insert((&cr_A.menu, &cr_B.menu));
-                    triples.insert((&cr_A.menu, &cr_B.menu, a));
+                    violations += 1;
                 }
             }
+
+            all += violations;
+            pairs += (violations > 0) as u32;
         }
     }
 
-    (triples.len() as u32, pairs.len() as u32)
+    (all, pairs)
 }
 
 pub fn run(request : &Request) -> Result<Response> {
@@ -579,7 +582,7 @@ pub mod tuple_intrans {
             }
         }
     }
-    
+
     impl Encode for RowMenus {
         fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
             (self.tuple_size, &self.garp_menu_tuples).encode(f)

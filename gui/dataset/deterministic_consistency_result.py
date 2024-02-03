@@ -220,12 +220,15 @@ class DeterministicConsistencyResult(Dataset):
                 name='Summary',
                 column_names=(
                     'subject',
+                    'contraction_consistency_pairs',
+                    'contraction_consistency_all',
                     'warp_pairs',
                     'warp_all',
                     'congruence',
                     'strict_general_cycles',
                     'binary_cycles',
                     'strict_binary_cycles',
+                    'binary_intransitivities',
                 ),
                 get_rows=self.export_summary,
                 size=len(self.subjects),
@@ -260,6 +263,12 @@ class DeterministicConsistencyResult(Dataset):
                 get_rows=lambda: self.export_wide('garp_binary_menus'),
                 size=len(self.subjects),
             ),
+            ExportVariant(
+                name='Binary intransitivities (wide)',
+                column_names=['subject'] + ['cycles_%d' % l for l in range(3,self.max_cycle_length+1)] + ['total'],
+                get_rows=lambda: self.export_wide('binary_intransitivities'),
+                size=len(self.subjects),
+            ),
         )
 
     def label_size(self) -> str:
@@ -282,17 +291,20 @@ class DeterministicConsistencyResult(Dataset):
             yield None  # bump progress
 
     def export_summary(self) -> Iterator[Optional[
-        Tuple[str,int,int,int,int,int,int]
+        Tuple[str,int,int,int,int,int,int,int,int,int]
     ]]:
         for subject in self.subjects:
             yield (
                 subject.raw.name,
+                subject.raw.contraction_consistency_pairs,
+                subject.raw.contraction_consistency_all,
                 subject.raw.warp_pairs,
                 subject.raw.warp_all,
                 sum(row.garp for row in subject.raw.rows),
                 sum(row.sarp for row in subject.raw.rows),
                 sum(row.garp_binary_menus for row in subject.raw.rows),
                 sum(row.sarp_binary_menus for row in subject.raw.rows),
+                subject.total_binary_intransitivities,
             )
 
             yield None

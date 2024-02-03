@@ -64,6 +64,7 @@ class SubjectFilter(QWidget, uic.subject_filter.Ui_SubjectFilter):
                     sarp=0,
                     garp_binary_menus=0,
                     sarp_binary_menus=0,
+                    binary_intransitivities=0,
                 )],
             )
 

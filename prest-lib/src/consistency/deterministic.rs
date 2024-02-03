@@ -330,6 +330,7 @@ pub struct Row {
     sarp : BigUint,
     garp_binary_menus : BigUint,
     sarp_binary_menus : BigUint,
+    binary_intransitivities : BigUint,
 }
 
 impl Row {
@@ -340,6 +341,7 @@ impl Row {
             sarp: zero(),
             garp_binary_menus: zero(),
             sarp_binary_menus: zero(),
+            binary_intransitivities: zero(),
         }
     }
 }
@@ -352,6 +354,7 @@ impl Encode for Row {
             &self.sarp,
             &self.garp_binary_menus,
             &self.sarp_binary_menus,
+            &self.binary_intransitivities,
         ).encode(f)
     }
 }

@@ -25,8 +25,9 @@ class Row(NamedTuple):
     sarp: int
     garp_binary_menus: int
     sarp_binary_menus: int
+    binary_intransitivities : int
 
-RowC = namedtupleC(Row, intC, intC, intC, intC, intC)
+RowC = namedtupleC(Row, intC, intC, intC, intC, intC, intC)
 
 class SubjectRaw(NamedTuple):
     name: str
@@ -45,6 +46,7 @@ class Subject(NamedTuple):
     total_sarp: int
     total_garp_binary_menus: int
     total_sarp_binary_menus: int
+    total_binary_intransitivities: int
 
     @staticmethod
     def from_raw(raw : SubjectRaw) -> 'Subject':
@@ -54,9 +56,10 @@ class Subject(NamedTuple):
             total_sarp=sum(r.sarp for r in raw.rows),
             total_garp_binary_menus=sum(r.garp_binary_menus for r in raw.rows),
             total_sarp_binary_menus=sum(r.sarp_binary_menus for r in raw.rows),
+            total_binary_intransitivities=sum(r.binary_intransitivities for r in raw.rows),
         )
 
-SubjectC = namedtupleC(Subject, SubjectRawC, intC, intC, intC, intC)
+SubjectC = namedtupleC(Subject, SubjectRawC, intC, intC, intC, intC, intC)
 
 class RootNode(util.tree_model.RootNode):
     def __init__(self, subjects: List[Subject]) -> None:
@@ -80,7 +83,7 @@ class SubjectNode(util.tree_model.Node):
                     subject.raw.contraction_consistency_all,
                     subject.raw.warp_pairs,
                     subject.raw.warp_all,
-                    0, 0, 0, 0),
+                    0, 0, 0, 0, 0),
             )
         elif len(subject.raw.rows) == 1:
             util.tree_model.Node.__init__(
@@ -97,6 +100,7 @@ class SubjectNode(util.tree_model.Node):
                     subject.total_sarp,
                     subject.total_garp_binary_menus,
                     subject.total_sarp_binary_menus,
+                    subject.total_binary_intransitivities,
                 )
             )
         else:
@@ -114,6 +118,7 @@ class SubjectNode(util.tree_model.Node):
                     subject.total_sarp,
                     subject.total_garp_binary_menus,
                     subject.total_sarp_binary_menus,
+                    subject.total_binary_intransitivities,
                 ),
                 child_count = len(subject.raw.rows),
             )
@@ -136,6 +141,7 @@ class RowNode(util.tree_model.Node):
                 row.sarp,
                 row.garp_binary_menus,
                 row.sarp_binary_menus,
+                row.binary_intransitivities,
             )
         )
 
@@ -173,6 +179,7 @@ class DeterministicConsistencyResult(Dataset):
                         'consistency/cons_general.html#binary-choice-consistency'),
                     F('Strict binary cycles', help_icon,
                         'consistency/cons_general.html#strict-binary-choice-consistency'),  # SARP-binary
+                    'Binary intransitivities',
                 ),
             )
             self.twRows.setModel(self.model)

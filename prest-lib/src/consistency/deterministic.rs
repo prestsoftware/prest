@@ -15,12 +15,12 @@ use codec::{self,Encode,Decode,Packed};
 struct Edge(pub u32);  // choice row index
 
 #[derive(PartialEq, Eq, Debug)]
-struct Graph {
+struct Multigraph {
     vertices : u32,
     edges : Vec<Vec<Edge>>,  // NxN matrix of edges between (i,j)
 }
 
-impl Display for Graph {
+impl Display for Multigraph {
     fn fmt(&self, f : &mut fmt::Formatter) -> fmt::Result {
         write!(f, "     ")?;
         for j in Alt::all(self.vertices) {
@@ -40,9 +40,9 @@ impl Display for Graph {
     }
 }
 
-impl Graph {
-    fn new(vertices : u32) -> Graph {
-        Graph {
+impl Multigraph {
+    fn new(vertices : u32) -> Multigraph {
+        Multigraph {
             vertices,
             edges: vec![Vec::new(); (vertices*vertices) as usize],
         }
@@ -63,7 +63,7 @@ impl Graph {
     }
 }
 
-fn add_choice_row(strict : &mut Graph, non_strict : &mut Graph, cr : &ChoiceRow, edge : &Edge) {
+fn add_choice_row(strict : &mut Multigraph, non_strict : &mut Multigraph, cr : &ChoiceRow, edge : &Edge) {
     let choice = cr.choice.view();
     let menu = cr.menu.view();
 
@@ -78,9 +78,9 @@ fn add_choice_row(strict : &mut Graph, non_strict : &mut Graph, cr : &ChoiceRow,
     }
 }
 
-fn build_graphs(alt_count : u32, choices : &[ChoiceRow]) -> (Graph, Graph) {
-    let mut strict = Graph::new(alt_count);
-    let mut non_strict = Graph::new(alt_count);
+fn build_graphs(alt_count : u32, choices : &[ChoiceRow]) -> (Multigraph, Multigraph) {
+    let mut strict = Multigraph::new(alt_count);
+    let mut non_strict = Multigraph::new(alt_count);
 
     for (idx, cr) in choices.iter().enumerate() {
         add_choice_row(&mut strict, &mut non_strict, cr, &Edge(idx as u32));
@@ -113,7 +113,7 @@ impl Cycle {
         }
     }
 
-    fn multiplicity_in(&self, g : &Graph) -> BigUint {
+    fn multiplicity_in(&self, g : &Multigraph) -> BigUint {
         let mut result = one();
 
         for (u, v) in self.edges() {
@@ -123,14 +123,14 @@ impl Cycle {
         result
     }
 
-    fn has_edge_in(&self, g : &Graph) -> bool {
+    fn has_edge_in(&self, g : &Multigraph) -> bool {
         self.edges().any(|(u,v)| g.has_edge(u, v))
     }
 
-    fn garp_multiplicity_in(&self, strict : &Graph, non_strict : &Graph) -> BigUint {
+    fn garp_multiplicity_in(&self, strict : &Multigraph, non_strict : &Multigraph) -> BigUint {
         fn multiplicity_from(
-            strict : &Graph,
-            non_strict : &Graph,
+            strict : &Multigraph,
+            non_strict : &Multigraph,
             got_strict_edge : bool,
             edges : &[(Alt, Alt)]
         ) -> BigUint {
@@ -227,7 +227,7 @@ fn find<T : PartialEq>(x : T, xs : &[T]) -> Option<usize> {
 
 fn find_cycles_from(
     untouched : &mut HashSet<Alt>,
-    g : &Graph,
+    g : &Multigraph,
     history : &mut Vec<Alt>,
     root : Alt
 ) -> HashSet<Cycle> {
@@ -271,7 +271,7 @@ fn find_cycles_from(
     result
 }
 
-fn find_cycles(g : &Graph) -> HashSet<Cycle> {
+fn find_cycles(g : &Multigraph) -> HashSet<Cycle> {
     let mut untouched : HashSet<Alt> = Alt::all(g.vertices).collect();
     let mut result = HashSet::new();
 
@@ -415,7 +415,7 @@ fn summarise<I, F, T, R>(rows : &mut BTreeMap<u32, R>, items : I, add_item : F)
     }
 }
 
-fn compute_warp_pairs(alt_count : u32, g_strict : &Graph, g_non_strict : &Graph) -> u32 {
+fn compute_warp_pairs(alt_count : u32, g_strict : &Multigraph, g_non_strict : &Multigraph) -> u32 {
     let mut menu_pairs = HashSet::new();
 
     for v in Alt::all(alt_count) {
@@ -540,7 +540,7 @@ pub fn sort<I : IntoIterator<Item=T>, T : Ord>(items : I) -> Vec<T> {
 }
 
 pub mod tuple_intrans {
-    use super::{Request,Result,Error,Cycle,Graph,Edge,HasSize,MakeEmpty};
+    use super::{Request,Result,Error,Cycle,Multigraph,Edge,HasSize,MakeEmpty};
     use super::{build_graphs,find_cycles,summarise};
     use std::collections::{BTreeSet,HashSet,BTreeMap};
     use alt_set::AltSet;
@@ -654,7 +654,7 @@ pub mod tuple_intrans {
         }
     }
 
-    fn garp_tuples<T>(cycle : &Cycle, g_strict : &Graph, g_non_strict : &Graph) -> HashSet<T>
+    fn garp_tuples<T>(cycle : &Cycle, g_strict : &Multigraph, g_non_strict : &Multigraph) -> HashSet<T>
         where T : AddEdge + Eq + Hash + Debug
     {
         // non-strict paths

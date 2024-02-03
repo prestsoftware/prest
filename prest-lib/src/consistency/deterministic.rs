@@ -153,7 +153,7 @@ impl Cycle {
                 let remaining_edges = non_strict.edges(u, v).len() - strict_edges;  // non_strict includes strict, we want the rest
 
                 strict_edges * multiplicity_from(strict, non_strict, true, &edges[1..])
-                + remaining_edges * multiplicity_from(strict, non_strict, got_strict_edge, &edges[1..]) 
+                + remaining_edges * multiplicity_from(strict, non_strict, got_strict_edge, &edges[1..])
             } else {
                 // we must choose a non-strict edge here
                 //
@@ -523,7 +523,7 @@ fn binary_intransitivities(alt_count : u32, g : &Multigraph, choices : &[ChoiceR
 
                 for y in cr.menu.view() {
                     // if we have a path x > ... > y
-                    // then observation `cr` would constitute intransitivity
+                    // then observation `cr` would cause an intransitivity
                     // because the subject failed to choose x here
                     // hence it's a candidate
                     *candidates.entry((x,y)).or_insert(0) += 1;
@@ -539,26 +539,37 @@ fn binary_intransitivities(alt_count : u32, g : &Multigraph, choices : &[ChoiceR
         Alt::all(alt_count)
     );
     for path in paths_from(&[], &mut avail) {
+        // we're interested only in paths of 1+ edges
         if path.len() < 2 {
             continue;
         }
 
         let mut multiplicity : BigUint = num::one();
         for (&x, &y) in path.iter().zip(path.iter().skip(1)) {
-            multiplicity *= g.edges(x, y).len();
+            multiplicity *= g.edges(y, x).len();  // traverse edges y≤x
         }
 
         if multiplicity.is_zero() {
             continue;
         }
 
+        // check if this is a candidate for intransitivity
         let (u, v) = (*path.first().unwrap(), *path.last().unwrap());
         if let Some(cnt) = candidates.get(&(u,v)) {
             multiplicity *= *cnt;
+        } else {
+            continue;
         }
 
+        /*
+        println!("intrans: {} × {:?}", multiplicity, path);
+        println!("  {},{} -> {:?}", u, v, candidates.get(&(u,v)));
+        for (&x, &y) in path.iter().zip(path.iter().skip(1)) {
+            println!("  {:?}", g.edges(y,x));
+        }
+        */
         paths.push(BinaryIntransitivity {
-            length: path.len() as u32,
+            length: path.len() as u32,  // #vertices to match GARP cycles, etc.
             multiplicity,
         });
     }
@@ -957,6 +968,7 @@ mod test {
                 sarp: BigUint::from(0u32),
                 garp_binary_menus: BigUint::from(0u32),
                 sarp_binary_menus: BigUint::from(0u32),
+                binary_intransitivities: BigUint::from(0u32),
             },
             Row{
                 cycle_length: 3,
@@ -964,6 +976,7 @@ mod test {
                 sarp: BigUint::from(0u32),
                 garp_binary_menus: BigUint::from(1u32),
                 sarp_binary_menus: BigUint::from(0u32),
+                binary_intransitivities: BigUint::from(2u32),
             }
         ]);
     }
@@ -1118,6 +1131,25 @@ mod test {
 
         assert_eq!(response.warp_pairs, 1);
         assert_eq!(response.warp, BigUint::from(2u32));
+    }
+
+    #[test]
+    fn binary_intransitivities_acyclic() {
+        let choices = choices![
+            [0,1] -> [0],
+            [1,2] -> [1],
+            [0,2] -> [2]
+        ];
+
+        let request = testreq(5, choices);
+        let response = run(&request).unwrap();
+
+        let mut total_binary_intransitivities : BigUint = num::zero();
+        for row in &response.rows {
+            total_binary_intransitivities += &row.binary_intransitivities;
+        }
+
+        assert_eq!(total_binary_intransitivities, BigUint::from(3u32));
     }
 
     #[test]

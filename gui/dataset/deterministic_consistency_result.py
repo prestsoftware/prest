@@ -25,16 +25,19 @@ class Row(NamedTuple):
     sarp: int
     garp_binary_menus: int
     sarp_binary_menus: int
+    binary_intransitivities : int
 
-RowC = namedtupleC(Row, intC, intC, intC, intC, intC)
+RowC = namedtupleC(Row, intC, intC, intC, intC, intC, intC)
 
 class SubjectRaw(NamedTuple):
     name: str
     rows: List[Row]
     warp_pairs: int
     warp_all: int
+    contraction_consistency_pairs : int
+    contraction_consistency_all : int
 
-SubjectRawC = namedtupleC(SubjectRaw, strC, listC(RowC), intC, intC)
+SubjectRawC = namedtupleC(SubjectRaw, strC, listC(RowC), intC, intC, intC, intC)
 
 class Subject(NamedTuple):
     raw: SubjectRaw
@@ -43,6 +46,7 @@ class Subject(NamedTuple):
     total_sarp: int
     total_garp_binary_menus: int
     total_sarp_binary_menus: int
+    total_binary_intransitivities: int
 
     @staticmethod
     def from_raw(raw : SubjectRaw) -> 'Subject':
@@ -52,9 +56,10 @@ class Subject(NamedTuple):
             total_sarp=sum(r.sarp for r in raw.rows),
             total_garp_binary_menus=sum(r.garp_binary_menus for r in raw.rows),
             total_sarp_binary_menus=sum(r.sarp_binary_menus for r in raw.rows),
+            total_binary_intransitivities=sum(r.binary_intransitivities for r in raw.rows),
         )
 
-SubjectC = namedtupleC(Subject, SubjectRawC, intC, intC, intC, intC)
+SubjectC = namedtupleC(Subject, SubjectRawC, intC, intC, intC, intC, intC)
 
 class RootNode(util.tree_model.RootNode):
     def __init__(self, subjects: List[Subject]) -> None:
@@ -74,9 +79,11 @@ class SubjectNode(util.tree_model.Node):
                 fields=(
                     subject.raw.name,
                     '',
+                    subject.raw.contraction_consistency_pairs,
+                    subject.raw.contraction_consistency_all,
                     subject.raw.warp_pairs,
                     subject.raw.warp_all,
-                    0, 0, 0, 0),
+                    0, 0, 0, 0, 0),
             )
         elif len(subject.raw.rows) == 1:
             util.tree_model.Node.__init__(
@@ -84,6 +91,8 @@ class SubjectNode(util.tree_model.Node):
                 fields=(
                     subject.raw.name,
                     subject.raw.rows[0].cycle_length,
+                    subject.raw.contraction_consistency_pairs,
+                    subject.raw.contraction_consistency_all,
                     subject.raw.warp_pairs,
                     subject.raw.warp_all,
 
@@ -91,6 +100,7 @@ class SubjectNode(util.tree_model.Node):
                     subject.total_sarp,
                     subject.total_garp_binary_menus,
                     subject.total_sarp_binary_menus,
+                    subject.total_binary_intransitivities,
                 )
             )
         else:
@@ -99,6 +109,8 @@ class SubjectNode(util.tree_model.Node):
                 fields=(
                     subject.raw.name,
                     '',
+                    subject.raw.contraction_consistency_pairs,
+                    subject.raw.contraction_consistency_all,
                     subject.raw.warp_pairs,
                     subject.raw.warp_all,
 
@@ -106,6 +118,7 @@ class SubjectNode(util.tree_model.Node):
                     subject.total_sarp,
                     subject.total_garp_binary_menus,
                     subject.total_sarp_binary_menus,
+                    subject.total_binary_intransitivities,
                 ),
                 child_count = len(subject.raw.rows),
             )
@@ -122,10 +135,13 @@ class RowNode(util.tree_model.Node):
                 row.cycle_length,
                 '-',
                 '-',
+                '-',
+                '-',
                 row.garp,
                 row.sarp,
                 row.garp_binary_menus,
                 row.sarp_binary_menus,
+                row.binary_intransitivities,
             )
         )
 
@@ -149,6 +165,8 @@ class DeterministicConsistencyResult(Dataset):
                 headers=(
                     'Subject',
                     'Cycle length',
+                    'Contraction consistency (pairs)',
+                    'Contraction consistency (all)',
                     F('WARP (pairs)', help_icon,
                         'consistency/cons_general.html#weak-axiom-of-revealed-preference-warp'),
                     F('WARP (all)', help_icon,
@@ -161,6 +179,7 @@ class DeterministicConsistencyResult(Dataset):
                         'consistency/cons_general.html#binary-choice-consistency'),
                     F('Strict binary cycles', help_icon,
                         'consistency/cons_general.html#strict-binary-choice-consistency'),  # SARP-binary
+                    'Binary intransitivities',
                 ),
             )
             self.twRows.setModel(self.model)
@@ -201,12 +220,15 @@ class DeterministicConsistencyResult(Dataset):
                 name='Summary',
                 column_names=(
                     'subject',
+                    'contraction_consistency_pairs',
+                    'contraction_consistency_all',
                     'warp_pairs',
                     'warp_all',
                     'congruence',
                     'strict_general_cycles',
                     'binary_cycles',
                     'strict_binary_cycles',
+                    'binary_intransitivities',
                 ),
                 get_rows=self.export_summary,
                 size=len(self.subjects),
@@ -241,6 +263,12 @@ class DeterministicConsistencyResult(Dataset):
                 get_rows=lambda: self.export_wide('garp_binary_menus'),
                 size=len(self.subjects),
             ),
+            ExportVariant(
+                name='Binary intransitivities (wide)',
+                column_names=['subject'] + ['cycles_%d' % l for l in range(3,self.max_cycle_length+1)] + ['total'],
+                get_rows=lambda: self.export_wide('binary_intransitivities'),
+                size=len(self.subjects),
+            ),
         )
 
     def label_size(self) -> str:
@@ -263,17 +291,20 @@ class DeterministicConsistencyResult(Dataset):
             yield None  # bump progress
 
     def export_summary(self) -> Iterator[Optional[
-        Tuple[str,int,int,int,int,int,int]
+        Tuple[str,int,int,int,int,int,int,int,int,int]
     ]]:
         for subject in self.subjects:
             yield (
                 subject.raw.name,
+                subject.raw.contraction_consistency_pairs,
+                subject.raw.contraction_consistency_all,
                 subject.raw.warp_pairs,
                 subject.raw.warp_all,
                 sum(row.garp for row in subject.raw.rows),
                 sum(row.sarp for row in subject.raw.rows),
                 sum(row.garp_binary_menus for row in subject.raw.rows),
                 sum(row.sarp_binary_menus for row in subject.raw.rows),
+                subject.total_binary_intransitivities,
             )
 
             yield None

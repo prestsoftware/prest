@@ -56,12 +56,15 @@ class SubjectFilter(QWidget, uic.subject_filter.Ui_SubjectFilter):
                 name='subject',
                 warp_pairs=0,
                 warp_all=0,
+                contraction_consistency_pairs=0,
+                contraction_consistency_all=0,
                 rows=[dataset.deterministic_consistency_result.Row(
                     cycle_length=2,
                     garp=0,
                     sarp=0,
                     garp_binary_menus=0,
                     sarp_binary_menus=0,
+                    binary_intransitivities=0,
                 )],
             )
 

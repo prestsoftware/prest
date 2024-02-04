@@ -1,12 +1,14 @@
 use std::result;
 use std::fmt::{self, Display};
-use std::collections::{BTreeMap,HashSet};
+use std::collections::{BTreeMap,HashSet,HashMap};
 use std::collections::btree_map::Entry;
 use num::{zero, one};
 use std::io::{Read,Write};
 use std::iter::FromIterator;
 
 use alt::Alt;
+use alt_set::AltSet;
+use num_traits::identities::Zero;
 use num_bigint::BigUint;
 use common::{ChoiceRow,Subject};
 use codec::{self,Encode,Decode,Packed};
@@ -15,12 +17,12 @@ use codec::{self,Encode,Decode,Packed};
 struct Edge(pub u32);  // choice row index
 
 #[derive(PartialEq, Eq, Debug)]
-struct Graph {
+struct Multigraph {
     vertices : u32,
     edges : Vec<Vec<Edge>>,  // NxN matrix of edges between (i,j)
 }
 
-impl Display for Graph {
+impl Display for Multigraph {
     fn fmt(&self, f : &mut fmt::Formatter) -> fmt::Result {
         write!(f, "     ")?;
         for j in Alt::all(self.vertices) {
@@ -40,9 +42,9 @@ impl Display for Graph {
     }
 }
 
-impl Graph {
-    fn new(vertices : u32) -> Graph {
-        Graph {
+impl Multigraph {
+    fn new(vertices : u32) -> Multigraph {
+        Multigraph {
             vertices,
             edges: vec![Vec::new(); (vertices*vertices) as usize],
         }
@@ -63,7 +65,7 @@ impl Graph {
     }
 }
 
-fn add_choice_row(strict : &mut Graph, non_strict : &mut Graph, cr : &ChoiceRow, edge : &Edge) {
+fn add_choice_row(strict : &mut Multigraph, non_strict : &mut Multigraph, cr : &ChoiceRow, edge : &Edge) {
     let choice = cr.choice.view();
     let menu = cr.menu.view();
 
@@ -78,9 +80,9 @@ fn add_choice_row(strict : &mut Graph, non_strict : &mut Graph, cr : &ChoiceRow,
     }
 }
 
-fn build_graphs(alt_count : u32, choices : &[ChoiceRow]) -> (Graph, Graph) {
-    let mut strict = Graph::new(alt_count);
-    let mut non_strict = Graph::new(alt_count);
+fn build_graphs(alt_count : u32, choices : &[ChoiceRow]) -> (Multigraph, Multigraph) {
+    let mut strict = Multigraph::new(alt_count);
+    let mut non_strict = Multigraph::new(alt_count);
 
     for (idx, cr) in choices.iter().enumerate() {
         add_choice_row(&mut strict, &mut non_strict, cr, &Edge(idx as u32));
@@ -113,7 +115,7 @@ impl Cycle {
         }
     }
 
-    fn multiplicity_in(&self, g : &Graph) -> BigUint {
+    fn multiplicity_in(&self, g : &Multigraph) -> BigUint {
         let mut result = one();
 
         for (u, v) in self.edges() {
@@ -123,14 +125,14 @@ impl Cycle {
         result
     }
 
-    fn has_edge_in(&self, g : &Graph) -> bool {
+    fn has_edge_in(&self, g : &Multigraph) -> bool {
         self.edges().any(|(u,v)| g.has_edge(u, v))
     }
 
-    fn garp_multiplicity_in(&self, strict : &Graph, non_strict : &Graph) -> BigUint {
+    fn garp_multiplicity_in(&self, strict : &Multigraph, non_strict : &Multigraph) -> BigUint {
         fn multiplicity_from(
-            strict : &Graph,
-            non_strict : &Graph,
+            strict : &Multigraph,
+            non_strict : &Multigraph,
             got_strict_edge : bool,
             edges : &[(Alt, Alt)]
         ) -> BigUint {
@@ -151,7 +153,7 @@ impl Cycle {
                 let remaining_edges = non_strict.edges(u, v).len() - strict_edges;  // non_strict includes strict, we want the rest
 
                 strict_edges * multiplicity_from(strict, non_strict, true, &edges[1..])
-                + remaining_edges * multiplicity_from(strict, non_strict, got_strict_edge, &edges[1..]) 
+                + remaining_edges * multiplicity_from(strict, non_strict, got_strict_edge, &edges[1..])
             } else {
                 // we must choose a non-strict edge here
                 //
@@ -170,7 +172,7 @@ impl Cycle {
     }
 }
 
-impl<'a> HasSize for &'a Cycle {
+impl HasSize for Cycle {
     fn size(&self) -> u32 {
         self.len()
     }
@@ -227,7 +229,7 @@ fn find<T : PartialEq>(x : T, xs : &[T]) -> Option<usize> {
 
 fn find_cycles_from(
     untouched : &mut HashSet<Alt>,
-    g : &Graph,
+    g : &Multigraph,
     history : &mut Vec<Alt>,
     root : Alt
 ) -> HashSet<Cycle> {
@@ -271,7 +273,7 @@ fn find_cycles_from(
     result
 }
 
-fn find_cycles(g : &Graph) -> HashSet<Cycle> {
+fn find_cycles(g : &Multigraph) -> HashSet<Cycle> {
     let mut untouched : HashSet<Alt> = Alt::all(g.vertices).collect();
     let mut result = HashSet::new();
 
@@ -291,19 +293,24 @@ fn find_cycles(g : &Graph) -> HashSet<Cycle> {
 #[derive(Debug)]
 pub enum Error {
     TooManyTuples,
+    RepeatedMenus,
 }
 
 impl Encode for Error {
     fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
         match self {
-            Error::TooManyTuples => 0u8.encode(f)            
+            Error::TooManyTuples => 0u8.encode(f),
+            Error::RepeatedMenus => 1u8.encode(f)
         }
     }
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, f : &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "too many tuples")
+        match self {
+            Error::TooManyTuples => write!(f, "too many tuples"),
+            Error::RepeatedMenus => write!(f, "dataset contains repeated menus"),
+        }
     }
 }
 
@@ -330,6 +337,7 @@ pub struct Row {
     sarp : BigUint,
     garp_binary_menus : BigUint,
     sarp_binary_menus : BigUint,
+    binary_intransitivities : BigUint,
 }
 
 impl Row {
@@ -340,6 +348,7 @@ impl Row {
             sarp: zero(),
             garp_binary_menus: zero(),
             sarp_binary_menus: zero(),
+            binary_intransitivities: zero(),
         }
     }
 }
@@ -352,6 +361,7 @@ impl Encode for Row {
             &self.sarp,
             &self.garp_binary_menus,
             &self.sarp_binary_menus,
+            &self.binary_intransitivities,
         ).encode(f)
     }
 }
@@ -359,8 +369,12 @@ impl Encode for Row {
 pub struct Response {
     subject_name : String,
     rows : Vec<Row>,
+
     warp_pairs : u32,
     warp : BigUint,
+
+    contraction_consistency_pairs : u32,
+    contraction_consistency_all : u32,
 }
 
 impl Encode for Response {
@@ -370,6 +384,8 @@ impl Encode for Response {
             &self.rows,
             &self.warp_pairs,
             &self.warp,
+            &self.contraction_consistency_pairs,
+            &self.contraction_consistency_all,
         ).encode(f)
     }
 }
@@ -409,7 +425,7 @@ fn summarise<I, F, T, R>(rows : &mut BTreeMap<u32, R>, items : I, add_item : F)
     }
 }
 
-fn compute_warp_pairs(alt_count : u32, g_strict : &Graph, g_non_strict : &Graph) -> u32 {
+fn compute_warp_pairs(alt_count : u32, g_strict : &Multigraph, g_non_strict : &Multigraph) -> u32 {
     let mut menu_pairs = HashSet::new();
 
     for v in Alt::all(alt_count) {
@@ -435,10 +451,159 @@ fn compute_warp_pairs(alt_count : u32, g_strict : &Graph, g_non_strict : &Graph)
     menu_pairs.len() as u32
 }
 
+fn contraction_consistency(choices : &[ChoiceRow]) -> (u32, u32) {
+    let mut all = 0;
+    let mut pairs = 0;
+
+    #[allow(non_snake_case)]
+    for cr_A in choices {
+        for cr_B in choices {
+            if !cr_A.menu.view().is_strict_subset_of(cr_B.menu.view()) {
+                continue;
+            }
+
+            let mut violations = 0;
+            for a in cr_B.choice.view() {
+                if cr_A.menu.view().contains(a) && !cr_A.choice.view().contains(a) {
+                    violations += 1;
+                }
+            }
+
+            all += violations;
+            pairs += (violations > 0) as u32;
+        }
+    }
+
+    (all, pairs)
+}
+
+struct BinaryIntransitivity {
+    length : u32,
+    multiplicity : BigUint,
+}
+
+impl HasSize for BinaryIntransitivity {
+    fn size(&self) -> u32 {
+        self.length
+    }
+}
+
+fn binary_intransitivities(alt_count : u32, g : &Multigraph, choices : &[ChoiceRow]) -> Vec<BinaryIntransitivity> {
+    fn paths_from(prefix : &[Alt], avail : &mut AltSet) -> Vec<Vec<Alt>> {
+        let mut all_paths = Vec::new();
+        let mut path = Vec::from(prefix);
+
+        for x in avail.clone().view() {
+            let only_x = AltSet::singleton(x);
+            path.push(x);
+            *avail -= only_x.view();
+
+            all_paths.extend(
+                paths_from(&path, avail)
+            );
+
+            *avail |= only_x.view();
+            path.pop();
+        }
+
+        all_paths.push(path);
+        all_paths
+    }
+
+    let candidates : HashMap<(Alt, Alt), u32> = {
+        let mut candidates = HashMap::new();
+        for cr in choices {
+            // consider only binary menus
+            if cr.menu.size() != 2 {
+                continue;
+            }
+
+            for x in cr.menu.view() {
+                if cr.choice.view().contains(x) {
+                    // can't cause an intransitivity
+                    continue;
+                }
+
+                // so here we know that x \in A, but x \notin C(A)
+
+                for y in cr.menu.view() {
+                    // if we have a path x > ... > y
+                    // then observation `cr` would cause an intransitivity
+                    // because the subject failed to choose x here
+                    // hence it's a candidate
+                    *candidates.entry((x,y)).or_insert(0) += 1;
+                }
+            }
+        }
+        candidates
+    };
+
+    let mut paths = Vec::new();
+
+    let mut avail = AltSet::from_iter(
+        Alt::all(alt_count)
+    );
+    for path in paths_from(&[], &mut avail) {
+        // we're interested only in paths of 1+ edges
+        if path.len() < 2 {
+            continue;
+        }
+
+        let mut multiplicity : BigUint = num::one();
+        for (&x, &y) in path.iter().zip(path.iter().skip(1)) {
+            multiplicity *= g.edges(y, x).len();  // traverse edges y≤x
+        }
+
+        if multiplicity.is_zero() {
+            continue;
+        }
+
+        // check if this is a candidate for intransitivity
+        let (u, v) = (*path.first().unwrap(), *path.last().unwrap());
+        if let Some(cnt) = candidates.get(&(u,v)) {
+            multiplicity *= *cnt;
+        } else {
+            continue;
+        }
+
+        /*
+        println!("intrans: {} × {:?}", multiplicity, path);
+        println!("  {},{} -> {:?}", u, v, candidates.get(&(u,v)));
+        for (&x, &y) in path.iter().zip(path.iter().skip(1)) {
+            println!("  {:?}", g.edges(y,x));
+        }
+        */
+        paths.push(BinaryIntransitivity {
+            length: path.len() as u32,  // #vertices to match GARP cycles, etc.
+            multiplicity,
+        });
+    }
+
+    paths
+}
+
+fn has_repeated_menus(choices : &[ChoiceRow]) -> bool {
+    let mut seen = HashSet::new();
+
+    for cr in choices {
+        if seen.contains(&cr.menu) {
+            return true;
+        }
+
+        seen.insert(&cr.menu);
+    }
+
+    false
+}
+
 pub fn run(request : &Request) -> Result<Response> {
     let ref subject = request.subject.unpack();
     let alt_count = subject.alternatives.len() as u32;
     let choices = &subject.choices;
+
+    if has_repeated_menus(choices) {
+        return Err(Error::RepeatedMenus);
+    }
 
     let (g_strict, g_non_strict) = build_graphs(alt_count, choices);
     let cycles_non_strict = find_cycles(&g_non_strict);  // will be used for GARP
@@ -448,7 +613,7 @@ pub fn run(request : &Request) -> Result<Response> {
     // SARP (includes 2-cycles)
     summarise(
         &mut rows,
-        cycles_strict.iter(),
+        cycles_strict,
         |r : &mut Row, c| r.sarp += c.multiplicity_in(&g_strict)
     );
 
@@ -459,11 +624,16 @@ pub fn run(request : &Request) -> Result<Response> {
     // GARP (includes 2-cycles)
     summarise(
         &mut rows,
-        cycles_non_strict.iter(),
+        cycles_non_strict,
         |r, c| r.garp += c.garp_multiplicity_in(&g_strict, &g_non_strict)
     );
 
     let warp_pairs = compute_warp_pairs(alt_count, &g_strict, &g_non_strict);
+
+    let (
+        contraction_consistency_all,
+        contraction_consistency_pairs,
+    ) = contraction_consistency(choices);
 
     let choices_binary = Vec::from_iter(
         choices.iter().filter(|c| c.menu.size() == 2).cloned()
@@ -476,22 +646,33 @@ pub fn run(request : &Request) -> Result<Response> {
     // garp_binary
     summarise(
         &mut rows,
-        cycles_non_strict_binary.iter(),
+        cycles_non_strict_binary,
         |r, c| r.garp_binary_menus += c.garp_multiplicity_in(&g_strict_binary, &g_non_strict_binary)
     );
 
     // sarp_binary
     summarise(
         &mut rows,
-        cycles_strict_binary.iter(),
+        cycles_strict_binary,
         |r, c| r.sarp_binary_menus += c.multiplicity_in(&g_strict_binary)
+    );
+
+    // binary intransitivities
+    summarise(
+        &mut rows,
+        binary_intransitivities(alt_count, &g_non_strict_binary, choices),
+        |r, bi| r.binary_intransitivities += bi.multiplicity,
     );
 
     Ok(Response {
         subject_name: subject.name.clone(),
         rows: rows.into_iter().map(|(_l,r)| r).collect(),
+
         warp,
         warp_pairs,
+
+        contraction_consistency_all,
+        contraction_consistency_pairs,
     })
 }
 
@@ -502,7 +683,7 @@ pub fn sort<I : IntoIterator<Item=T>, T : Ord>(items : I) -> Vec<T> {
 }
 
 pub mod tuple_intrans {
-    use super::{Request,Result,Error,Cycle,Graph,Edge,HasSize,MakeEmpty};
+    use super::{Request,Result,Error,Cycle,Multigraph,Edge,HasSize,MakeEmpty};
     use super::{build_graphs,find_cycles,summarise};
     use std::collections::{BTreeSet,HashSet,BTreeMap};
     use alt_set::AltSet;
@@ -541,7 +722,7 @@ pub mod tuple_intrans {
             }
         }
     }
-    
+
     impl Encode for RowMenus {
         fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
             (self.tuple_size, &self.garp_menu_tuples).encode(f)
@@ -616,7 +797,7 @@ pub mod tuple_intrans {
         }
     }
 
-    fn garp_tuples<T>(cycle : &Cycle, g_strict : &Graph, g_non_strict : &Graph) -> HashSet<T>
+    fn garp_tuples<T>(cycle : &Cycle, g_strict : &Multigraph, g_non_strict : &Multigraph) -> HashSet<T>
         where T : AddEdge + Eq + Hash + Debug
     {
         // non-strict paths
@@ -810,6 +991,7 @@ mod test {
                 sarp: BigUint::from(0u32),
                 garp_binary_menus: BigUint::from(0u32),
                 sarp_binary_menus: BigUint::from(0u32),
+                binary_intransitivities: BigUint::from(0u32),
             },
             Row{
                 cycle_length: 3,
@@ -817,6 +999,7 @@ mod test {
                 sarp: BigUint::from(0u32),
                 garp_binary_menus: BigUint::from(1u32),
                 sarp_binary_menus: BigUint::from(0u32),
+                binary_intransitivities: BigUint::from(2u32),
             }
         ]);
     }
@@ -971,6 +1154,85 @@ mod test {
 
         assert_eq!(response.warp_pairs, 1);
         assert_eq!(response.warp, BigUint::from(2u32));
+    }
+
+    #[test]
+    fn binary_intransitivities_acyclic() {
+        let choices = choices![
+            [0,1] -> [0],
+            [1,2] -> [1],
+            [0,2] -> [2]
+        ];
+
+        let request = testreq(5, choices);
+        let response = run(&request).unwrap();
+
+        let mut total_binary_intransitivities : BigUint = num::zero();
+        for row in &response.rows {
+            total_binary_intransitivities += &row.binary_intransitivities;
+        }
+
+        assert_eq!(total_binary_intransitivities, BigUint::from(3u32));
+    }
+
+    #[test]
+    fn binary_intransitivities_size2() {
+        let choices = choices![
+            [0,1] -> [0],
+            [0,1] -> []
+        ];
+
+        let request = testreq(5, choices);
+        let response = run(&request).unwrap();
+
+        let mut total_binary_intransitivities : BigUint = num::zero();
+        for row in &response.rows {
+            total_binary_intransitivities += &row.binary_intransitivities;
+        }
+
+        assert_eq!(total_binary_intransitivities, BigUint::from(1u32));
+    }
+
+    #[test]
+    fn contraction_consistency_basic() {
+        let choices = choices![
+            [0,1,2,3,4] -> [0,1],
+            [0,1,2,3] -> [2,3]
+        ];
+
+        let request = testreq(5, choices);
+        let response = run(&request).unwrap();
+
+        let mut total_binary_intransitivities : BigUint = num::zero();
+        for row in &response.rows {
+            total_binary_intransitivities += &row.binary_intransitivities;
+        }
+
+        assert_eq!(total_binary_intransitivities, BigUint::from(0u32));
+        assert_eq!(response.contraction_consistency_pairs, 1);
+        assert_eq!(response.contraction_consistency_all, 2);
+    }
+
+    #[test]
+    fn contraction_consistency_rep1() {
+        let choices = choices![
+            [0,1,2,3,4] -> [0,1],
+            [0,1,2,3] -> [2,3],
+            [0,1,2,3,4] -> [0,1],
+            [0,1,2,3] -> [2,3]
+        ];
+
+        let request = testreq(5, choices);
+        let response = run(&request).unwrap();
+
+        let mut total_binary_intransitivities : BigUint = num::zero();
+        for row in &response.rows {
+            total_binary_intransitivities += &row.binary_intransitivities;
+        }
+
+        assert_eq!(total_binary_intransitivities, BigUint::from(0u32));
+        assert_eq!(response.contraction_consistency_pairs, 4);
+        assert_eq!(response.contraction_consistency_all, 8);
     }
 
     #[test]

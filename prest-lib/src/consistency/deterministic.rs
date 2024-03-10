@@ -319,12 +319,14 @@ pub type Result<T> = result::Result<T, Error>;
 #[derive(Debug)]
 pub struct Request {
     subject : Packed<Subject>,
+    allow_repeated_menus : bool,  // for testing
 }
 
 impl Decode for Request {
     fn decode<R : Read>(f : &mut R) -> codec::Result<Request> {
         Ok(Request {
             subject: Decode::decode(f)?,
+            allow_repeated_menus: false,
         })
     }
 }
@@ -601,7 +603,7 @@ pub fn run(request : &Request) -> Result<Response> {
     let alt_count = subject.alternatives.len() as u32;
     let choices = &subject.choices;
 
-    if has_repeated_menus(choices) {
+    if !request.allow_repeated_menus && has_repeated_menus(choices) {
         return Err(Error::RepeatedMenus);
     }
 
@@ -922,7 +924,7 @@ pub mod tuple_intrans {
                 name: String::from("subject"),
                 alternatives: (0..alt_count).map(|s| s.to_string()).collect(),
                 choices,
-            })}
+            }), allow_repeated_menus: true}
         }
 
         #[test]
@@ -970,7 +972,7 @@ mod test {
             name: String::from("subject"),
             alternatives: (0..alt_count).map(|s| s.to_string()).collect(),
             choices,
-        })}
+        }), allow_repeated_menus: true}
     }
 
     #[test]
@@ -1177,6 +1179,10 @@ mod test {
 
     #[test]
     fn binary_intransitivities_size2() {
+        // this test contains repeated menus
+        // which is outside of the scope of the spec
+        // if it breaks, it does not necessarily mean that Prest is broken
+        // because it may break only for repeated-menu datasets
         let choices = choices![
             [0,1] -> [0],
             [0,1] -> []
@@ -1193,14 +1199,14 @@ mod test {
         assert_eq!(total_binary_intransitivities, BigUint::from(1u32));
     }
 
-    #[test]
-    fn contraction_consistency_basic() {
-        let choices = choices![
-            [0,1,2,3,4] -> [0,1],
-            [0,1,2,3] -> [2,3]
-        ];
-
-        let request = testreq(5, choices);
+    fn contraction_consistency(
+        alt_count : u32,
+        e_total_binary_intransitivities : u32,
+        e_contraction_consistency_pairs : u32,
+        e_contraction_consistency_all : u32,
+        choices : Vec<ChoiceRow>,
+    ) {
+        let request = testreq(alt_count, choices);
         let response = run(&request).unwrap();
 
         let mut total_binary_intransitivities : BigUint = num::zero();
@@ -1208,31 +1214,94 @@ mod test {
             total_binary_intransitivities += &row.binary_intransitivities;
         }
 
-        assert_eq!(total_binary_intransitivities, BigUint::from(0u32));
-        assert_eq!(response.contraction_consistency_pairs, 1);
-        assert_eq!(response.contraction_consistency_all, 2);
+        assert_eq!(
+            total_binary_intransitivities,
+            e_total_binary_intransitivities.into(),
+            "total binary intransitivities"
+        );
+        assert_eq!(
+            response.contraction_consistency_pairs,
+            e_contraction_consistency_pairs,
+            "contraction consistency (pairs)"
+        );
+        assert_eq!(
+            response.contraction_consistency_all,
+            e_contraction_consistency_all,
+            "contraction consistency (all)"
+        );
+    }
+
+    #[test]
+    fn contraction_consistency_basic() {
+        contraction_consistency(
+            5,
+            0, 1, 2,
+            choices![
+                [0,1,2,3,4] -> [0,1],
+                [0,1,2,3] -> [2,3]
+            ],
+        );
     }
 
     #[test]
     fn contraction_consistency_rep1() {
-        let choices = choices![
-            [0,1,2,3,4] -> [0,1],
-            [0,1,2,3] -> [2,3],
-            [0,1,2,3,4] -> [0,1],
-            [0,1,2,3] -> [2,3]
-        ];
+        // this test contains repeated menus
+        // which is outside of the scope of the spec
+        // if it breaks, it does not necessarily mean that Prest is broken
+        // because it may break only for repeated-menu datasets
+        contraction_consistency(
+            5,
+            0, 4, 8,
+            choices![
+                [0,1,2,3,4] -> [0,1],
+                [0,1,2,3] -> [2,3],
+                [0,1,2,3,4] -> [0,1],
+                [0,1,2,3] -> [2,3]
+            ],
+        );
+    }
 
-        let request = testreq(5, choices);
-        let response = run(&request).unwrap();
+    #[test]
+    fn contraction_consistency_2() {
+        contraction_consistency(
+            4,
+            0, 2, 2,
+            choices![
+                [0,1,2,3] -> [0],
+                [0,1,2] -> [1],
+                [0,1,3] -> [],
+                [0,2,3] -> [0,2]
+            ],
+        );
+    }
 
-        let mut total_binary_intransitivities : BigUint = num::zero();
-        for row in &response.rows {
-            total_binary_intransitivities += &row.binary_intransitivities;
-        }
+    #[test]
+    fn contraction_consistency_3() {
+        contraction_consistency(
+            4,
+            0, 2, 3,
+            choices![
+                [0,1,2,3] -> [0,1],
+                [0,1,2] -> [1],
+                [0,1,3] -> [],
+                [0,2,3] -> [0,2]
+            ],
+        );
+    }
 
-        assert_eq!(total_binary_intransitivities, BigUint::from(0u32));
-        assert_eq!(response.contraction_consistency_pairs, 4);
-        assert_eq!(response.contraction_consistency_all, 8);
+    #[test]
+    fn contraction_consistency_4() {
+        contraction_consistency(
+            5,
+            0, 5, 6,
+            choices![
+                [0,1,2,3,4] -> [0,1],
+                [0,1,2,3] -> [0],
+                [0,1,2] -> [1],
+                [0,1,3] -> [],
+                [0,2,3] -> [0,2]
+            ],
+        );
     }
 
     #[test]

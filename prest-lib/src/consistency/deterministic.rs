@@ -1311,7 +1311,7 @@ mod test {
         assert_eq!(rotate_min(&[2,3,4,1]), &[1,2,3,4]);
         assert_eq!(rotate_min(&[3,4,1,2]), &[1,2,3,4]);
         assert_eq!(rotate_min(&[2,2,2,2]), &[2,2,2,2]);
-        //assert_eq!(rotate_min::<u32>(&[]), &[]);  // type inference wth?
+        assert_eq!(rotate_min::<u32>(&[]), &[]);
         assert_eq!(rotate_min(&[1]), &[1]);
         assert_eq!(rotate_min(&[1,2]), &[1,2]);
         assert_eq!(rotate_min(&[2,1]), &[1,2]);

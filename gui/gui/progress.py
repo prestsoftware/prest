@@ -78,7 +78,7 @@ class Worker(QThread):
         self.set_progress(self.position+1)
 
     # called from work thread
-    def work(self) -> Any:
+    def work(self, *args : Any) -> Any:
         # this is the method that should be overriden
         raise NotImplementedError()
 

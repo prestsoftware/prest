@@ -325,7 +325,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
             class MyWorker(Worker):
                 def work(self, workspace):
                     workspace.load_from_file(self, fname)
-            
+
             try:
                 MyWorker(self.workspace).run_with_progress(self, "Loading %s..." % fname)
                 self.refresh_datasets()

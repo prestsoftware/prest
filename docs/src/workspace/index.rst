@@ -73,12 +73,11 @@ Workspace area
 Prest's **workspace** is the area where imported/Prest-generated datasets
 are available for analysis and exporting.
 
-The three columns in the workspace area provide the following information about all datasets listed there:
+Its three columns provide the following information about all datasets listed there:
 
 | *"Name"*. The name of the dataset, as imported from file or specified by you through a Prest operation.
    
-| *"Alternatives/Goods"*. Depending on whether the dataset in question is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`, 
-| the total number of alternatives or goods in that dataset is shown, respectively.
+| *"Alternatives/Goods"*. Depending on whether the dataset in question is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`, the total number of alternatives or goods in that dataset is shown, respectively.
    
 | *"Size"*. The total number of subjects and observations in the dataset.
 
@@ -103,17 +102,19 @@ the selected dataset is :ref:`general <general-datasets>` or :ref:`budgetary <bu
 | The dataset resulting from this operation is named after the original dataset following insertion of the "(info)" suffix. 
 | For example, *"DatasetX"* becomes *"DatasetX (info)"*, while *"DatasetX"* is also kept in the workspace.
 			   
-| 3. *"Consistency analysis"*. Details :ref:`here <general-consistency-tip>`. 
+| 3. *"Deterministic consistency analysis"*. Details :ref:`here <general-consistency-tip>`. 
 
-| 4. *"Inconsistent tuples of menus"*. Details :ref:`here <menu-tuples>`. 
+| 4. *"Stochastic consistency analysis"*. Details: :ref:`here <stochastic-consistency-tip>`.
+
+| 5. *"Inconsistent tuples of menus"*. Details :ref:`here <menu-tuples>`. 
 		
-| 5. *"Inconsistent tuples of alternatives"*. Details :ref:`here <alternative-tuples>`.
+| 6. *"Inconsistent tuples of alternatives"*. Details :ref:`here <alternative-tuples>`.
 
-| 6. *"Model estimation"*. Details :ref:`here <estimation>`.
+| 7. *"Model estimation"*. Details :ref:`here <estimation>`.
 
-| 7. *"Merge choices at the same menu"*. Details :ref:`here <merging-tip>`.
+| 8. *"Merge choices at the same menu"*. Details :ref:`here <merging-tip>`.
 
-| 8. *"Generate similar random dataset"*. Details :ref:`here <similar-random-dataset>`.
+| 9. *"Generate similar random dataset"*. Details :ref:`here <similar-random-dataset>`.
        	 
 .. tip::  
      When importing a general-dataset .csv file, you will be prompted to match the column headers in the file 

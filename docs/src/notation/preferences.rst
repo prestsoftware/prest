@@ -1,7 +1,7 @@
 Preference Relations
 ====================
 
-Let the set of choice alternatives being analysed be denoted by `X`. 
+Let the set of choice alternatives being analysed be denoted by `X`.  
 
 
 Weak Preferences

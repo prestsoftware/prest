@@ -24,6 +24,15 @@ Declarations
 *Prest does not collect any data entered by its users.*
 
 
+Recently Added Features
+-----------------------
+
+* Since v1.2.0: new suite of stochastic-consistency tests for datasets with menu repetitions 
+
+* Since v1.2.0: new measure of model proximity for datasets with multiple choices per menu
+
+* Since v1.1.0: visualization of preference-estimation output using `GraphViz <https://graphviz.org>`_ 
+
 Downloads
 ---------
 
@@ -39,9 +48,7 @@ Downloads
   in `Rust <https://www.rust-lang.org/>`_ (core) and `Python
   <https://www.python.org/>`_ (graphical user interface).
 
-* New feature since Prest 1.1.0: visualization of preference-estimation output using `GraphViz <https://graphviz.org>`_ 
-
-* Previous downloadable versions of Prest are available in :ref:`the archive <history>`.
+Previous downloadable versions of Prest are available in :ref:`the archive <history>`.
 
 Documentation
 -------------

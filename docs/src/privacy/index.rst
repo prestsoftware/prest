@@ -1,9 +1,9 @@
-Privacy Notice
-==============
+Website Privacy Notice
+======================
 
 **Does Prest collect any user data?**
 
-No.
+No. 
 
 **Does this website collect any user data?**
 

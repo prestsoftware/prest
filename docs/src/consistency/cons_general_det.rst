@@ -1,9 +1,11 @@
-Consistency Criteria for General Datasets
-=========================================
+Deterministic Consistency Criteria for General Datasets
+=======================================================
 
 
-For every subject whose choices are in the dataset Prest can compute, view and export the 
-total number of violations for each of the axioms/criteria of choice consistency that are listed below.
+For datasets where each menu appears once, Prest can compute, view and 
+export the total number of violations of each of the axioms/criteria 
+of deterministic choice consistency listed below, 
+for every subject in the dataset.
 
 .. note::
      Much of the terminology and notation that follows is introduced and explained in the 
@@ -30,8 +32,8 @@ For any two distinct alternatives `x,y` in `X`
      the latter involving alternatives `x,z` and `y,z`, respectively.
 
 
-Congruence
-----------
+Congruence / Strong Axiom of Revealed Preference
+------------------------------------------------
 
 For any two distinct alternatives `x,y` in `X`
 
@@ -72,11 +74,11 @@ For any two distinct alternatives `x,y` in `X`
 .. _general-consistency-tip:
 
 .. tip::
-     **To use the consistency-analysis feature:** right-click on the dataset of interest [e.g. "DatasetX.csv"] in the workspace and select *"Analysis -> Consistency analysis"*.
+     **To use the deterministic-consistency feature:** right-click on the dataset of interest [e.g. "DatasetX.csv"] in the workspace and select *"Analysis -> Deterministic consistency analysis"*.
 
-     **To view the consistency-analysis output:** right-click on the Prest-generated dataset ["DatasetX.csv (consistency)"] in the workspace and then click on "View".
+     **To view the deterministic-consistency output:** right-click on the Prest-generated dataset ["DatasetX.csv (deterministic consistency)"] in the workspace and then click on "View".
 
-     **To export the consistency-analysis output (in .xslx or .csv format):** right-click on the Prest-generated dataset ["DatasetX.csv (consistency)"] 
+     **To export the deterministic-consistency output (in .xslx or .csv format):** right-click on the Prest-generated dataset ["DatasetX.csv (deterministic consistency)"] 
      in the workspace, click on "Export", and then select one of the following options:
 
      * **Summary**: lists the total number of violations of each axiom (per subject).

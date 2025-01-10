@@ -38,13 +38,25 @@ such as **context-dependent choices**, **cyclic choices**, **status-quo biased c
      To change that, check the *"Disable parallelism"* box at the bottom of the *"Model estimation"* window.
 
 .. note::  
-     If your dataset includes observations where the deferral/outside option was chosen and you wish to ignore
+     If your dataset includes observations where the deferral/outside option was chosen by some agent(s) and you wish to ignore
      these observations, you can do so by checking the *"Disregard deferrals"* box at the bottom of the *"Model estimation"* window.
 
-.. rubric:: Footnotes
+.. note::  
+     If your dataset includes observations where multiple items were chosen by some agent(s) in some menu(s), you can do model estimation 
+     either by selecting either the *"Houtman-Maks"* (default) or the *"Houtman-Maks-Jaccard*" method from the *"Distance score"* scroll-down 
+     menu on the bottom left of the *"Model estimation"* window. The two methods coincide when at most one alternative is chosen at 
+     every menu in the dataset. When this is not the case, the second method is less punitive in its computation of the distance score 
+     by accounting for the (Jaccard [#jaccard]_) (dis)similarity between the agent's actual choices at a menu and what would have been the model-optimal choices
+     at that menu.
 
-.. [#score] The idea of a model's *distance score* as described above was introduced by 
-            :cite:authors:`houtman-maks85` (:cite:year:`houtman-maks85`), who 
-            applied it to the model of rational choice / utility maximization using budgetary datasets.
-            The extension of this idea to other models using general datasets was made in 
-            :cite:authors:`CCGT22` (:cite:year:`CCGT22`).
+.. rubric::   Footnotes
+
+.. [#score]   The idea of a model's *distance score* as described above was introduced by 
+              :cite:authors:`houtman-maks85` (:cite:year:`houtman-maks85`), who 
+              applied it to the model of rational choice / utility maximization using budgetary datasets.
+              The extension of this idea to other models using general datasets was made in 
+              :cite:authors:`CCGT22` (:cite:year:`CCGT22`).
+
+.. [#jaccard] The Jaccard metric identifies the dissimilarity between two finite sets
+              by the elements they have in common relative to their total number of 
+              unique elements (see :cite:author:`levandowsky-winter71`, :cite:year:`levandowsky-winter71`).  

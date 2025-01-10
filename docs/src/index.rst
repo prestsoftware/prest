@@ -3,17 +3,13 @@
 Introduction
 ------------
 
-Prest is an open-source and user-friendly **Windows & macOS desktop application**.
+Prest is an open-source and user-friendly desktop application.
 
-It can be used to analyze choice datasets created by economists, psychologists and marketing researchers. 
+It can be used to analyze choice datasets created by experiments or surveys in economics or psychology. 
 
-Its key novelties pertain to general datasets where choice alternatives are discrete. 
-
-Prest allows for estimating non-parametrically the decision maker's preferences from such general datasets.
-
-It does so by finding out how "close" the observed choices are to being explainable by **rational choice or some model of bounded-rational choice**.
-
-In this way, Prest recovers both the individual's **decision rule** and their **preferences conditional on that rule**.
+Prest's functions enable the analyst to understand the surveyed decision makers' 
+possible behavioural heuristics and preferences using only information about
+their choices at different menus of feasible options.
 
 Declarations
 ------------
@@ -27,11 +23,11 @@ Declarations
 Recently Added Features
 -----------------------
 
-* Since v1.2.0: new suite of stochastic-consistency tests for datasets with menu repetitions 
+* Since v1.2.0: new suite of stochastic-consistency tests for datasets with menu repetitions. 
 
-* Since v1.2.0: new measure of model proximity for datasets with multiple choices per menu
+* Since v1.2.0: new measure of model proximity for datasets with multiple choices per menu.
 
-* Since v1.1.0: visualization of preference-estimation output using `GraphViz <https://graphviz.org>`_ 
+* Since v1.1.0: visualization of preference-estimation output using `GraphViz <https://graphviz.org>`_ .
 
 Downloads
 ---------

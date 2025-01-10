@@ -68,6 +68,7 @@ define the terms used in the graphical user interface, and explain relevant back
    workspace/index
    notation/index
    consistency/index
+   estimation/index
    models/index
    simulations/index
    references

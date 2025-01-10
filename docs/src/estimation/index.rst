@@ -27,27 +27,15 @@ the sense of having a minimum distance score. [#score]_
      of a model used in estimation by right-clicking and viewing the relevant model-estimation dataset in the workspace, locating the subject, model
      and instance of interest from the relevant list, and clicking on the question mark icon that appears next to the code label of that instance.
 
-These model- and preference-estimation features allow you to analyse the available data to test for the proximity of choice behaviour 
-not only with utility maximization but also with several models of general choice that explain well-documented behavioural phenomena 
+These estimation features allow users to test for the proximity of choice behaviour 
+not only with the textbook model of rational choice/utility maximization but also with several 
+models/heuristics that explain well-documented behavioural phenomena 
 such as **context-dependent choices**, **cyclic choices**, **status-quo biased choices**, **choice deferral** and **choice overload**.
 
-|
-
-.. image:: ../_static/images/models1.png
-  :width: 87.21%
-  :target: ../build/html/workspace/index.html
-
-| 
-
-.. image:: ../_static/images/models2.png
-  :width: 87.21%
-  :target: ../build/html/workspace/index.html
-
-| 
 
 .. note::  
-     Prest's core program is designed to utilise all of your computer's CPU power by simultaneously engaging all its cores, by default.
-     You can change that by checking the *"Disable parallelism"* box at the bottom of the *"Model estimation"* window.
+     By default, Prest's core program is designed to utilise all available computing power by simultaneously engaging all CPU cores.
+     To change that, check the *"Disable parallelism"* box at the bottom of the *"Model estimation"* window.
 
 .. note::  
      If your dataset includes observations where the deferral/outside option was chosen and you wish to ignore

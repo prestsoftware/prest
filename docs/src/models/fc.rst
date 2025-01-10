@@ -1,5 +1,5 @@
-Forced-Choice Models (no outside option)
-========================================
+Forced-Choice Models (no deferral/outside option in the data)
+=============================================================
 
 Utility Maximization / Rational Choice
 --------------------------------------
@@ -47,15 +47,14 @@ A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained
      *Note:* this is only possible for forced- and single-valued choice datasets.
 
   
-Incomplete-Preference Maximization: Undominated Choice
-------------------------------------------------------
+Undominated Choice with Incomplete Preferences
+----------------------------------------------
 
 [:cite:authors:`schwartz76`, :cite:year:`schwartz76`; :cite:authors:`bossert-sprumont-suzumura05`, :cite:year:`bossert-sprumont-suzumura05`; :cite:authors:`eliaz-ok06`, :cite:year:`eliaz-ok06`]
 
 
 Strict
 ......
-
 
 A general choice dataset on a set of alternatives `X` is explained by
 **(strict) undominated choice** if there is a strict
@@ -83,8 +82,8 @@ that for every menu `A` in `\mathcal{D}`
 
 |
 
-Incomplete-Preference Maximization: Partially Dominant Choice (forced)
-----------------------------------------------------------------------
+Partially Dominant Choice with Incomplete Preferences (forced-choice variant)
+-----------------------------------------------------------------------------
 
 [:cite:authors:`gerasimou16b`, :cite:year:`gerasimou16b`; :cite:authors:`qin17`, :cite:year:`qin17`]
 
@@ -110,28 +109,13 @@ such that for every menu `A` in `\mathcal{D}`
 
 |
 
-Top-Two Choice
--------------- 
-
-[:cite:authors:`eliaz-richter-rubinstein11`, :cite:year:`eliaz-richter-rubinstein11`]
-
-A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained by 
-**top-two choice** if there exists a strict linear order `\succ` on `X`
-such that for every menu `A` in `\mathcal{D}`
-
-.. math::
-    |C(A)| = 2\;\;\;\;\; \text{and}\;\;\;\;\; C(A)=\{x,y\}\;\; \Longleftrightarrow\;\; x,y\succ z\;\; \text{for all}\;\; z\in A\setminus\{x,y\}
-
-|
-
-
-Sequentially Rationalizable Choice
-----------------------------------
+Shortlisting 
+------------
 
 [:cite:authors:`manzini-mariotti07`, :cite:year:`manzini-mariotti07`; :cite:authors:`dutta-horan15`, :cite:year:`dutta-horan15`; :cite:authors:`declippel-rozen16`, :cite:year:`declippel-rozen16`]
 
-A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained by 
-**sequentially rationalizable choice** if there exist 
+A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained by   
+**shortlisting** if there exist 
 two strict partial orders `\succ_1`, `\succ_2` on `X` such that for every menu 
 `A` in `\mathcal{D}`
 

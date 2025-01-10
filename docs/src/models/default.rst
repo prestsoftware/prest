@@ -1,5 +1,5 @@
-Choice Models with a Default/Status-Quo Alternative
-===================================================
+Choice Models with a Default (Status-Quo) Alternative
+=====================================================
 
 Status-Quo-Biased Undominated Choice (Bewley model)
 ---------------------------------------------------

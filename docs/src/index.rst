@@ -3,7 +3,7 @@
 Introduction
 ------------
 
-Prest is an open-source and user-friendly desktop application.
+Prest is an open-source desktop application for behavioural revealed-preference analysis.
 
 It can be used to analyze choice datasets created by experiments or surveys in economics or psychology. 
 

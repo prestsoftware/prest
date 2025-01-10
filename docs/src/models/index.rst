@@ -1,6 +1,6 @@
-======
-Models
-======
+=================
+Models/Heuristics
+=================
 
 --------------------
 Utility Maximization

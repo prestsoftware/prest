@@ -44,6 +44,8 @@ Downloads
   No installation required: run by double-clicking the :code:`.command` file.
   Select "Open anyway" if prompted. If the "Open anyway" button is not available,
   close the dialog window and double-click the :code:`.command` file again.
+  
+* Prest VERSION for Linux — Follow these `instructions <https://github.com/prestsoftware/prest?tab=readme-ov-file#building-and-running-prest>`_ to build Prest from source code & run it on any Linux distro.
 
 * The `Prest source code <https://github.com/prestsoftware/prest>`_, written
   in `Rust <https://www.rust-lang.org/>`_ (core) and `Python
@@ -87,7 +89,7 @@ Prest Developers
 
 `Georgios Gerasimou <https:georgiosgerasimou.com/>`_ & `Matúš Tejiščák <https://ziman.functor.sk/>`_  
 
-If you use Prest in your work, please cite it as follows: 
+If you use Prest in your work, please cite it: 
 
 Georgios Gerasimou and Matúš Tejiščák (2018) "Prest: Open-Source Software for Computational Revealed Preference Analysis", 
 *Journal of Open Source Software*, 3(30), 1015, `doi:10.21105.joss.01015 <https://doi.org/10.21105/joss.01015>`_.

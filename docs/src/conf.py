@@ -46,7 +46,8 @@ bibtex_bibfiles = ['references_theory.bib','references_psych.bib','references_co
 googleanalytics_id = ''
 
 bibtex_encoding = 'utf-8-sig'
-#bibtex_default_style = 'plain'
+# bibtex_default_style = 'plain'
+# bibtex_default_style = 'unsrt'
 
 #mathjax_path = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'
 #mathjax_path = 'https://prestsoftware.com/_static/mathjax/MathJax.js?config=TeX-MML-AM_CHTML'
@@ -157,13 +158,15 @@ html_sidebars = {
     "**": ["globaltoc.html"]
 }
 
+# Suppress config.cache warning
+suppress_warnings = ["config.cache"]
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 html_favicon = '_static/favicon.png'
-html_css_files = ['my_theme.css']
+# html_css_files = ['my_theme.css']
 
 
 # -- Options for HTMLHelp output ------------------------------------------

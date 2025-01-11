@@ -79,7 +79,7 @@ jobs:
           ls dist
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: prest-${{ runner.os }}
           path: dist/prest-*.exe
@@ -146,7 +146,7 @@ jobs:
           ls dist
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: prest-${{ runner.os }}
           path: dist/prest-*
@@ -221,7 +221,7 @@ jobs:
           rm -f "dist/${PNAME}"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: prest-${{ runner.os }}
           path: dist/prest-*.command

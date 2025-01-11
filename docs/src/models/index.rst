@@ -1,6 +1,6 @@
-=================
-Models/Heuristics
-=================
+===================
+Models & Heuristics
+===================
 
 --------------------
 Utility Maximization
@@ -38,15 +38,15 @@ A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained
 |
 
 .. tip::  
-     When analysing other models that generalize utility maximization/rational choice, 
-     Prest only considers instances of the more general models that do not overlap with those covered by the above two variants of utility maximization.
-     It is therefore recommended that utility maximization/rational choice always be included in all model-estimation tasks.
+     When analysing other models that generalize Utility Maximization, Prest only considers instances of the more general 
+     models that do not overlap with those covered by the above two variants of Utility Maximization.
+     It is therefore recommended that Utility Maximization always be included in all model-estimation tasks.
 
 .. tip::  
      When "Utility Maximization - Swaps" is selected, Prest computes the "Swaps" index 
      that is analyzed in :cite:authors:`apesteguia-ballester15` :cite:yearpar:`apesteguia-ballester15`.
      
-     *Note:* this is only possible for forced- and single-valued choice datasets.
+     *Note:* this is only possible for datasets with nonempty and single choices at every menu.
 
 |
 
@@ -146,6 +146,59 @@ that for every menu `A` in `\mathcal{D}`
 
 .. math::
     x\sim y\;\; \text{for distinct}\; x,y\; \text{in}\; X
+
+|
+
+---------------------------------------------------
+Status-Quo-Biased Undominated Choice (Bewley model)
+---------------------------------------------------
+
+[:cite:authors:`bewley02`, :cite:year:`bewley02`; :cite:authors:`mandler04`, :cite:year:`mandler04`; :cite:authors:`masatlioglu-ok05`, :cite:year:`masatlioglu-ok05`; :cite:authors:`gerasimou16a`, :cite:year:`gerasimou16a`]
+
+A general dataset with default/status quo alternatives `\mathcal{D}` is explained by **status-quo-biased undominated choice (Bewley model)** if 
+there exists a strict partial order `\succ` on `X` such that for every decision problem `(A,s)` in `\mathcal{D}`
+
+.. math::
+	\begin{array}{llc}
+	C(A,s)=\{s\} & \Longleftrightarrow & \text{$x\nsucc s$ for all $x\in A$}\\
+	& &\\
+	C(A,s)\neq \{s\} &\Longleftrightarrow & C(A,s)=
+	\left\{
+	\begin{array}{lc}
+	& z\nsucc x\; \text{for all $z\in A$}\\
+	x\in A:  &\text{and}\\
+	& x\succ s
+	\end{array}
+	\right\}
+	\end{array}
+
+|
+
+---------------------
+Rational Shortlisting 
+---------------------
+
+(experimental implementation)
+-----------------------------
+
+[:cite:authors:`manzini-mariotti07`, :cite:year:`manzini-mariotti07`; :cite:authors:`dutta-horan15`, :cite:year:`dutta-horan15`; :cite:authors:`declippel-rozen21`, :cite:year:`declippel-rozen21`]
+
+A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained by   
+**rational shortlisting** if there exist 
+two strict partial orders `\succ_1`, `\succ_2` on `X` such that for every menu 
+`A` in `\mathcal{D}`
+
+.. math::
+    |C(A)| = 1\;\;\;\;\; \text{and}\;\;\;\;\; C(A) = M_{\succ_1}\Big(M_{\succ_2}(A)\Bigr)
+
+where, for any `A\subseteq X`,
+
+.. math::
+	M_{\succ_i}(A) := \{x\in A: y\not\succ_i x\;\; \text{for all}\;\; y\in A\}.
+
+   
+.. tip::   
+     Prest currently supports only a **Pass/Fail** test for this model, with the output being "0" and ">0", respectively.
 
 |
 
@@ -331,53 +384,3 @@ where
     \mathcal{B}_{\succsim}(A):=\{x\in A: x\succsim y\; \text{for all $y\in A$}\}
 	
 is the set of weakly most preferred alternatives in `A` according to `\succsim`.
-
-|
-
-------------
-Shortlisting 
-------------
-
-[:cite:authors:`manzini-mariotti07`, :cite:year:`manzini-mariotti07`; :cite:authors:`dutta-horan15`, :cite:year:`dutta-horan15`; :cite:authors:`declippel-rozen16`, :cite:year:`declippel-rozen16`]
-
-A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained by   
-**shortlisting** if there exist 
-two strict partial orders `\succ_1`, `\succ_2` on `X` such that for every menu 
-`A` in `\mathcal{D}`
-
-.. math::
-    |C(A)| = 1\;\;\;\;\; \text{and}\;\;\;\;\; C(A) = M_{\succ_1}\Big(M_{\succ_2}(A)\Bigr)
-
-where, for any `A\subseteq X`,
-
-.. math::
-	M_{\succ_i}(A) := \{x\in A: y\not\succ_i x\;\; \text{for all}\;\; y\in A\}.
-
-   
-.. tip::   
-     Prest currently supports only a **Pass/Fail** test for this model, with the output being "0" and ">0", respectively.
-
-|
-
----------------------------------------------------
-Status-Quo-Biased Undominated Choice (Bewley model)
----------------------------------------------------
-
-[:cite:authors:`bewley02`, :cite:year:`bewley02`; :cite:authors:`mandler04`, :cite:year:`mandler04`; :cite:authors:`masatlioglu-ok05`, :cite:year:`masatlioglu-ok05`; :cite:authors:`gerasimou16a`, :cite:year:`gerasimou16a`]
-
-A general dataset with default/status quo alternatives `\mathcal{D}` is explained by **status-quo-biased undominated choice (Bewley model)** if 
-there exists a strict partial order `\succ` on `X` such that for every decision problem `(A,s)` in `\mathcal{D}`
-
-.. math::
-	\begin{array}{llc}
-	C(A,s)=\{s\} & \Longleftrightarrow & \text{$x\nsucc s$ for all $x\in A$}\\
-	& &\\
-	C(A,s)\neq \{s\} &\Longleftrightarrow & C(A,s)=
-	\left\{
-	\begin{array}{lc}
-	& z\nsucc x\; \text{for all $z\in A$}\\
-	x\in A:  &\text{and}\\
-	& x\succ s
-	\end{array}
-	\right\}
-	\end{array}

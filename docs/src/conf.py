@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 #
-# Prest documentation build configuration file, created by
-# sphinx-quickstart on Mon Mar  5 10:18:47 2018.
+# Prest documentation build configuration file
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -25,26 +24,26 @@ sys.path.insert(0, os.path.abspath('extensions'))
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #
-# needs_sphinx = '1.0'
+# needs_sphinx = '8.0'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
     'sphinx.ext.todo',
-    #'sphinx.ext.imgmath',  ## TODO: enable this for production
+  # 'sphinx.ext.imgmath',  ## TODO: enable this for production
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
     'sphinxcontrib.bibtex',
     'sphinx.ext.autosectionlabel',
     'google_analytics',
-    'sphinx-mathjax-offline',
+    'sphinx-mathjax-offline'
 ]
 
 #bibtex_bibliography_header = ".. rubric:: References"
 #bibtex_footbibliography_header = ""
-bibtex_bibfiles = ['references.bib']
-googleanalytics_id = 'UA-125271613-1'
+bibtex_bibfiles = ['references_theory.bib','references_psych.bib','references_comp.bib']
+googleanalytics_id = ''
 
 bibtex_encoding = 'utf-8-sig'
 #bibtex_default_style = 'plain'
@@ -73,7 +72,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Prest'
-copyright = '2018-2022, Georgios Gerasimou, Matúš Tejiščák'
+copyright = '2018-2025, Georgios Gerasimou, Matúš Tejiščák'
 author = 'Georgios Gerasimou, Matúš Tejiščák'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -114,83 +113,50 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 
-extensions.append("sphinxjp.themes.basicstrap")
-# html_theme = 'basicstrap'
-
+html_theme = 'sphinx_material'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#
+
 html_theme_options = {
 
-    # Set the lang attribute of the html tag. Defaults to 'en'
-    'lang': 'en',
-    # Disable showing the sidebar. Defaults to 'false'
-    'nosidebar': False,
-    # Show header searchbox. Defaults to false. works only "nosidebar=True",
-    'header_searchbox': False,
+    # Set the name of the project to appear in the navigation.
+    'nav_title': 'Prest',
 
-    # Put the sidebar on the right side. Defaults to false.
-    'rightsidebar': False,
-    # Set the width of the sidebar. Defaults to 3
-    'sidebar_span': 3,
+    # Set you GA account ID to enable tracking
+    'google_analytics_account': ' ',
 
-    # Fix navbar to top of screen. Defaults to true
-    'nav_fixed_top': False,
-    # Fix the width of the sidebar. Defaults to false
-    'nav_fixed': False,
-    # Set the width of the sidebar. Defaults to '900px'
-    'nav_width': '900px',
-    # Fix the width of the content area. Defaults to false
-    'content_fixed': False,
-    # Set the width of the content area. Defaults to '900px'
-    'content_width': '900px',
-    # Fix the width of the row. Defaults to false
-    'row_fixed': False,
+    # Specify a base_url used to generate sitemap.xml. If not
+    # specified, then no sitemap will be built.
+    'base_url': 'https://prestsoftware.com',
 
-    # Disable the responsive design. Defaults to false
-    'noresponsive': False,
-    # Disable the responsive footer relbar. Defaults to false
-    'noresponsiverelbar': False,
-    # Disable flat design. Defaults to false.
-    # Works only "bootstrap_version = 3"
-    'noflatdesign': False,
+    # Set the color and the accent color
+    'color_primary': 'blue',
+    'color_accent': 'light-blue',
 
-    # Enable Google Web Font. Defaults to false
-    'googlewebfont': False,
-    # Set the URL of Google Web Font's CSS.
-    # Defaults to 'http://fonts.googleapis.com/css?family=Text+Me+One'
-    'googlewebfont_url': 'http://fonts.googleapis.com/css?family=Lily+Script+One',  # NOQA
-    # Set the Style of Google Web Font's CSS.
-    # Defaults to "font-family: 'Text Me One', sans-serif;"
-    'googlewebfont_style': u"font-family: 'Lily Script One' cursive;",
+    # Set the repo location to get a badge with stats
+    'repo_url': 'https://github.com/prestsoftware/prest',
+    'repo_name': 'Prest',
 
-    # Set 'navbar-inverse' attribute to header navbar. Defaults to false.
-    'header_inverse': False,
-    # Set 'navbar-inverse' attribute to relbar navbar. Defaults to false.
-    'relbar_inverse': False,
+    # Visible levels of the global TOC; -1 means unlimited
+    'globaltoc_depth': 1,
+    # If False, expand all TOC entries
+    'globaltoc_collapse': False,
+    # If True, show hidden TOC entries
+    'globaltoc_includehidden': False,
 
-    # Enable inner theme by Bootswatch. Defaults to false
-    'inner_theme': True,
-    # Set the name of innner theme. Defaults to 'bootswatch-simplex'
-    #'inner_theme_name': 'bootswatch-flatly',
-    'inner_theme_name': 'bootswatch-cerulean',
-
-    # Select Twitter bootstrap version 2 or 3. Defaults to '3'
-    'bootstrap_version': '3',
-
-    # Show "theme preview" button in header navbar. Defaults to false.
-    'theme_preview': False,
-
-    # Set the Size of Heading text. Defaults to None
-     #'h1_size': '3.0em',
-     #'h2_size': '2.6em',
-     #'h3_size': '2.2em',
-     #'h4_size': '1.8em',
-     #'h5_size': '1.4em',
-     #'h6_size': '1.1em',
+    # 'html_minify': True,
+    # 'css_minify': True,
 }
+
+# Hide source code link
+html_show_sourcelink = False
+
+html_sidebars = {
+    "**": ["globaltoc.html"]
+}
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -198,24 +164,6 @@ html_theme_options = {
 html_static_path = ['_static']
 html_favicon = '_static/favicon.png'
 html_css_files = ['my_theme.css']
-
-#TEXT-WIDTH CUSTOMISATION
-#def setup(app):
-#    app.add_css_file('my_theme.css')
-
-# Custom sidebar templates, must be a dictionary that maps document names
-# to template names.
-#
-# This is required for the alabaster theme
-# refs: http://alabaster.readthedocs.io/en/latest/installation.html#sidebars
-html_sidebars = {
-    '**': [
-        'globaltoc.html',
-        'localtoc.html',
-#        'relations.html',  # needs 'show_related': True theme option to display
-#        'searchbox.html',
-    ]
-}
 
 
 # -- Options for HTMLHelp output ------------------------------------------
@@ -258,7 +206,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'prest', 'Prest Documentation',
+    (master_doc, 'Prest', 'Prest Documentation',
      [author], 1)
 ]
 
@@ -270,8 +218,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'Prest', 'Prest Documentation',
-     author, 'Prest', 'One line description of project.',
-     'Miscellaneous'),
+     author, 'Prest' 'Georgios Gerasimou', 'Matúš Tejiščák'),
 ]
 
 default_role = 'math'
@@ -285,12 +232,15 @@ imgmath_latex_preamble = r'''
 \usepackage{setspace}
 \usepackage{color}
 \usepackage{microtype}
-\usepackage[bookmarks=true,bookmarksnumbered=true,pdfpagemode=None,pdfstartview=FitH,hidelinks]{hyperref}
+\usepackage[bookmarks=true,
+bookmarksnumbered=true,
+pdfpagemode=None,pdfstartview=FitH,
+hidelinks]{hyperref}
 
 \newcommand{\R}{\mathbb{R}}
 
 \parindent=0pt
-\parskip=2pt
+\parskip=0pt
 '''
 
 language = 'en'

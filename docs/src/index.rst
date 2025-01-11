@@ -11,6 +11,8 @@ Prest's functions enable the analyst to understand the surveyed decision makers'
 possible behavioural heuristics and preferences using only information about
 their choices at different menus of feasible options.
 
+|
+
 Declarations
 ------------
 
@@ -19,6 +21,7 @@ Declarations
 
 *Prest does not collect any data entered by its users.*
 
+|
 
 Recently Added Features
 -----------------------
@@ -28,6 +31,8 @@ Recently Added Features
 * Since v1.2.0: new measure of model proximity for datasets with multiple choices per menu.
 
 * Since v1.1.0: visualization of preference-estimation output using `GraphViz <https://graphviz.org>`_ .
+
+|
 
 Downloads
 ---------
@@ -45,6 +50,8 @@ Downloads
   <https://www.python.org/>`_ (graphical user interface).
 
 Previous downloadable versions of Prest are available in :ref:`the archive <history>`.
+
+|
 
 Documentation
 -------------
@@ -73,6 +80,7 @@ define the terms used in the graphical user interface, and explain relevant back
    copyright/index
    privacy/index
 
+|
 
 Prest Developers
 ----------------

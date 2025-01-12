@@ -1,10 +1,13 @@
 .. note::
 
-     **We provide an** `example general dataset without default/status quo alternatives </_static/examples/general-no-defaults.csv>`_  
-     **and an** `example general dataset with such alternatives </_static/examples/general-defaults.csv>`_ 
-     **that can be analysed for consistency as described below**.
+     **Links to two example general datasets that can be analysed for choice consistency as described later on this page:**
+     
+     `1. Without default/status quo alternatives </_static/examples/general-no-defaults.csv>`_
+     
+     `2. With default/status quo alternatives </_static/examples/general-defaults.csv>`_ 
 
 
+|
 
 Deterministic Consistency Criteria for General Datasets
 =======================================================
@@ -15,9 +18,8 @@ export the total number of violations of each of the axioms/criteria
 of deterministic choice consistency listed below, 
 for every subject in the dataset.
 
-.. note::
-     Much of the terminology and notation that follows is introduced and explained in the 
-     :ref:`Datasets <general-datasets>` and :ref:`Revealed Preference Relations <revealed>` sections.
+Much of the terminology and notation that follows is introduced and explained in the 
+:ref:`Datasets <general-datasets>` and :ref:`Revealed Preference Relations <revealed>` sections.
 
 Contraction Consistency
 -----------------------

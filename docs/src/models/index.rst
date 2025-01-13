@@ -124,9 +124,9 @@ whose asymmetric part is `\succ` such that the above holds for every menu `A` in
 
 |
 
-------------------------------------------------------------
-Status-Quo-Biased Undominated Choice (Bewley model) [#bew]_
-------------------------------------------------------------
+----------------------------------------------------------------------------------------
+Status-Quo-Biased Undominated Choice with Incomplete Preferences (Bewley model) [#bew]_
+----------------------------------------------------------------------------------------
 
 A general dataset with default/status quo alternatives `\mathcal{D}` is explained by **status-quo-biased undominated choice (Bewley model)** if 
 there exists a strict partial order `\succ` on `X` such that for every decision problem `(A,s)` in `\mathcal{D}`

@@ -96,9 +96,9 @@ SPECIAL_NAMES = {
     UndominatedChoice(strict=False):
         'Undominated Choice (Non-strict)',
     PartiallyDominantChoice(fc=True):
-        'Partially Dominant Choice (Forced)',
+        'Partially Dominant Choice (Forced-Choice)',
     PartiallyDominantChoice(fc=False):
-        'Partially Dominant Choice (Non-forced)',
+        'Partially Dominant Choice (Free-Choice)',
     StatusQuoUndominatedChoice():
         'Status-Quo-Biased Undominated Choice',
     Overload(PreorderParams(strict=True, total=True)):
@@ -177,18 +177,18 @@ MODELS = [
                 ('Strict', TopTwo()),
                 None,
             ),
-            mgroup('Incomplete-Preference Maximization: Undominated Choice',
+            mgroup('Undominated Choice with Incomplete Preferences',
                 'models/fc.html#incomplete-preference-maximization-undominated-choice',
                 ('Strict', UndominatedChoice(strict=True)),
                 ('Non-strict', UndominatedChoice(strict=False)),
             ),
-            mgroup('Incomplete-Preference Maximization: Partially Dominant Choice (forced)',
+            mgroup('Partially Dominant Choice with Incomplete Preferences (forced)',
                 'models/fc.html#incomplete-preference-maximization-partially-dominant-choice-forced',
                 ('Strict', PartiallyDominantChoice(fc=True)),
                 None,
             ),
             mgroup(sublabel(
-                    'Sequentially Rationalizable Choice',
+                    'Rational Shortlisting',
                     '(experimental/partial functionality)',
                 ),
                 'models/fc.html#sequentially-rationalizable-choice',
@@ -208,12 +208,12 @@ MODELS = [
                 ('Strict', Overload(PreorderParams(strict=True, total=True))),
                 ('Non-Strict', Overload(PreorderParams(strict=False, total=True))),
             ),
-            mgroup('Incomplete-Preference Maximization: Maximally Dominant Choice',
+            mgroup('Dominant Choice with Incomplete Preferences',
                 'models/nfc.html#incomplete-preference-maximization-maximally-dominant-choice',
                 ('Strict', preorder(strict=True, total=False)),
                 ('Non-strict', preorder(strict=False, total=False)),
             ),
-            mgroup('Incomplete-Preference Maximization: Partially Dominant Choice (non-forced)',
+            mgroup('Partially Dominant Choice with Incomplete Preferences (free-choice)',
                 'models/nfc.html#incomplete-preference-maximization-partially-dominant-choice-non-forced',
                 ('Strict', PartiallyDominantChoice(fc=False)),
                 None,

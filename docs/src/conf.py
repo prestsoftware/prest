@@ -36,14 +36,15 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinxcontrib.bibtex',
     'sphinx.ext.autosectionlabel',
-    'google_analytics',
-    'sphinx-mathjax-offline'
+    'sphinx-mathjax-offline',
+    'sphinxcontrib.googleanalytics'
 ]
+
+googleanalytics_id = 'G-6Q5ER87GKE'
 
 #bibtex_bibliography_header = ".. rubric:: References"
 #bibtex_footbibliography_header = ""
 bibtex_bibfiles = ['references_theory.bib','references_psych.bib','references_comp.bib']
-googleanalytics_id = ''
 
 bibtex_encoding = 'utf-8-sig'
 # bibtex_default_style = 'plain'
@@ -126,7 +127,7 @@ html_theme_options = {
     'nav_title': 'Prest',
 
     # Set you GA account ID to enable tracking
-    'google_analytics_account': ' ',
+    'google_analytics_account': '125271613',
 
     # Specify a base_url used to generate sitemap.xml. If not
     # specified, then no sitemap will be built.

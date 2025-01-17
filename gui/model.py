@@ -88,19 +88,19 @@ SPECIAL_NAMES = {
     Unattractiveness(PreorderParams(total=True, strict=False)):
         'Utility Maximization with an Outside Option (Non-strict)',
     PreorderMaximization(PreorderParams(total=False, strict=True)):
-        'Maximally Dominant Choice (Strict)',
+        'Dominant Choice with Incomplete Preferences (Strict)',
     PreorderMaximization(PreorderParams(total=False, strict=False)):
-        'Maximally Dominant Choice (Non-strict)',
+        'Dominant Choice with Incomplete Preferences (Non-strict)',
     UndominatedChoice(strict=True):
-        'Undominated Choice (Strict)',
+        'Undominated Choice with Incomplete Preferences (Strict)',
     UndominatedChoice(strict=False):
-        'Undominated Choice (Non-strict)',
+        'Undominated Choice with Incomplete Preferences (Non-strict)',
     PartiallyDominantChoice(fc=True):
-        'Partially Dominant Choice (Forced-Choice)',
+        'Partially Dominant Choice with Incomplete Preferences (forced-choice)',
     PartiallyDominantChoice(fc=False):
-        'Partially Dominant Choice (Free-Choice)',
+        'Partially Dominant Choice with Incomplete Preferences (free-choice)',
     StatusQuoUndominatedChoice():
-        'Status-Quo-Biased Undominated Choice',
+        'Status-Quo-Biased Undominated Choice with Incomplete Preferences (Bewley)',
     Overload(PreorderParams(strict=True, total=True)):
         'Overload-Constrained Utility Maximization (Strict)',
     Overload(PreorderParams(strict=False, total=True)):
@@ -108,7 +108,7 @@ SPECIAL_NAMES = {
     TopTwo():
         'Top-Two Choice',
     SequentiallyRationalizableChoice():
-        'Sequentially Rationalizable Choice',
+        'Rational Shortlisting',
     Swaps():
         'Utility Maximization - Swaps',
 }
@@ -160,8 +160,6 @@ def sublabel(main : str, detail : str) -> str:
     return '{0}<br/><small>{1}</small>'.format(main, detail)
 
 MODELS = [
-    Category('Choice without a Default Alternative', (
-        Category('Forced Choice', (
             mgroup('Utility Maximization',
                 'models/fc.html#utility-maximization',
                 ('Strict', preorder(strict=True, total=True)),
@@ -172,61 +170,49 @@ MODELS = [
                 ('Strict', Swaps()),
                 None,
             ),
-            mgroup('Top-Two Choice',
-                'models/fc.html#top-two-choice',
-                ('Strict', TopTwo()),
-                None,
+            mgroup('Utility Maximization with an Outside Option',
+                'models/nfc.html#utility-maximization-with-an-outside-option',
+                ('Strict', unattractive(strict=True, total=True)),
+                ('Non-strict', unattractive(strict=False, total=True)),
             ),
             mgroup('Undominated Choice with Incomplete Preferences',
                 'models/fc.html#incomplete-preference-maximization-undominated-choice',
                 ('Strict', UndominatedChoice(strict=True)),
                 ('Non-strict', UndominatedChoice(strict=False)),
             ),
-            mgroup('Partially Dominant Choice with Incomplete Preferences (forced)',
-                'models/fc.html#incomplete-preference-maximization-partially-dominant-choice-forced',
-                ('Strict', PartiallyDominantChoice(fc=True)),
-                None,
+            mgroup('Status-Quo-Biased Undominated Choice with Incomplete Preferences (Bewley)',
+                'models/default.html#status-quo-biased-undominated-choice-bewley-model',
+                ('Strict', StatusQuoUndominatedChoice()),
+            None,
             ),
             mgroup(sublabel(
-                    'Rational Shortlisting',
-                    '(experimental/partial functionality)',
+                 'Rational Shortlisting',
+                 '(experimental/partial functionality)',
                 ),
                 'models/fc.html#sequentially-rationalizable-choice',
                 ('Strict', SequentiallyRationalizableChoice()),
                 None,
-            ),
-            # mgroup('Choice with limited attention'),
-        )),
-        Category('Non-Forced Choice', (
-            mgroup('Utility Maximization with an Outside Option',
-                'models/nfc.html#utility-maximization-with-an-outside-option',
-                ('Strict', unattractive(strict=True, total=True)),
-                ('Non-strict', unattractive(strict=False, total=True)),
-            ),
-            mgroup('Overload-Constrained Utility Maximization',
-                'models/nfc.html#overload-constrained-utility-maximization',
-                ('Strict', Overload(PreorderParams(strict=True, total=True))),
-                ('Non-Strict', Overload(PreorderParams(strict=False, total=True))),
             ),
             mgroup('Dominant Choice with Incomplete Preferences',
                 'models/nfc.html#incomplete-preference-maximization-maximally-dominant-choice',
                 ('Strict', preorder(strict=True, total=False)),
                 ('Non-strict', preorder(strict=False, total=False)),
             ),
+            mgroup('Partially Dominant Choice with Incomplete Preferences (forced-choice)',
+                'models/fc.html#incomplete-preference-maximization-partially-dominant-choice-forced',
+                ('Strict', PartiallyDominantChoice(fc=True)),
+                None,
+            ),
             mgroup('Partially Dominant Choice with Incomplete Preferences (free-choice)',
                 'models/nfc.html#incomplete-preference-maximization-partially-dominant-choice-non-forced',
                 ('Strict', PartiallyDominantChoice(fc=False)),
                 None,
             ),
-        )),
-    )),
-    Category('Choice with a Default Alternative', (
-        mgroup('Incomplete-Preference Maximization: Status-Quo-Biased Undominated Choice (Bewley)',
-            'models/default.html#status-quo-biased-undominated-choice-bewley-model',
-            ('Strict', StatusQuoUndominatedChoice()),
-            None,
-        ),
-    )),
+            mgroup('Overload-Constrained Utility Maximization',
+                'models/nfc.html#overload-constrained-utility-maximization',
+                ('Strict', Overload(PreorderParams(strict=True, total=True))),
+                ('Non-Strict', Overload(PreorderParams(strict=False, total=True))),
+            ),
 ]
 
 def names_in_order() -> Iterator[str]:

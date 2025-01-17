@@ -10,6 +10,6 @@ PyQt5-stubs
 sphinx
 sphinxcontrib-bibtex
 sphinxcontrib-websupport
-sphinxjp-themes-basicstrap
+sphinx-material
 sphinx-mathjax-offline
 pyinstaller

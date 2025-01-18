@@ -43,7 +43,7 @@
    <item>
     <widget class="QLabel" name="lblLicense">
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copyright ⓒ 2018—2022, Georgios Gerasimou, Matúš Tejiščák.&lt;/p&gt;&lt;p&gt;Prest is open-source software.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;Click here to view the license information.&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copyright ⓒ 2018—2025, Georgios Gerasimou, Matúš Tejiščák.&lt;/p&gt;&lt;p&gt;Prest is open-source software.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;Click here to view the license information.&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

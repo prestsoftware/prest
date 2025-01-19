@@ -83,7 +83,7 @@ jobs:
         with:
           name: prest-${{ runner.os }}
           path: dist/prest-*.exe
-
+          
   linux:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -224,4 +224,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: prest-${{ runner.os }}
-          path: dist/prest-*.command
+          path: dist/prest-*

@@ -39,9 +39,9 @@ fastest way to have features included in Prest is submitting pull requests.
 To make contribution easier for everyone involved, please:
 
 1. Discuss your change and the overall approach with us before starting
-   substantial work via e-mail at contact AT prestsoftware DOT com.  We do not
-   want you to waste your time or duplicate somebody's work.  We will be happy
-   to answer questions about Prest's internals.
+   substantial work via e-mail at ziman AT functor DOT sk or gerasimou AT outlook DOT com.
+   We do not want you to waste your time or duplicate somebody's work.
+   We will be happy to answer questions about Prest's internals.
 
 1. Include type annotations in Python code.
 

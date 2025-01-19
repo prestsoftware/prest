@@ -1,8 +1,8 @@
 [package]
 name = "prest_core"
-version = "1.1.0"
+version = "1.2.0"
 authors = [
-	"Georgios Gerasimou <giorgosgerasimou@hotmail.com>",
+	"Georgios Gerasimou <gerasimou@outlook.com>",
 	"Matus Tejiscak <ziman@functor.sk>"
 ]
 description = "Preference estimation from choice data."
@@ -21,3 +21,6 @@ base64 = "*"
 
 [lib]
 path = "src/lib.rs"
+
+[features]
+bench = []

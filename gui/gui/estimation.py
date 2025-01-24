@@ -39,8 +39,11 @@ class Estimation(uic.estimation.Ui_Estimation, gui.ExceptionDialog):
 
         self.fill_table()
         self.twModels.expandAll()
-        self.twModels.header().setStretchLastSection(False)
-        self.twModels.header().setSectionResizeMode(QHeaderView.ResizeToContents)
+
+        header = self.twModels.header()
+        assert header
+        header.setStretchLastSection(False)
+        header.setSectionResizeMode(QHeaderView.ResizeToContents)
 
     def fill_table(self):
         self.checkboxes = []
@@ -66,7 +69,7 @@ class Estimation(uic.estimation.Ui_Estimation, gui.ExceptionDialog):
                 layout.setContentsMargins(4,2,4,2)  # l,t,r,b
 
                 lblName = QLabel(item.name)
-                layout.addWidget(lblName, alignment=Qt.AlignVCenter)
+                layout.addWidget(lblName, alignment=Qt.AlignmentFlag.AlignVCenter)
 
                 self.twModels.setItemWidget(twi, 1, cell)
 
@@ -92,7 +95,7 @@ class Estimation(uic.estimation.Ui_Estimation, gui.ExceptionDialog):
 
                     cb = QCheckBox()
                     label = QLabel(name_html)
-                    label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+                    label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
 
                     cell = QWidget()
                     layout = QHBoxLayout(cell)

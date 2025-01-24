@@ -10,6 +10,7 @@ documentation = "https://prestsoftware.com"
 homepage = "https://prestsoftware.com"
 repository = "https://github.com/prestsoftware/prest"
 license = "BSD-3-Clause"
+edition = "2021"
 
 [dependencies]
 rand = { version = "*", features = ["small_rng"] }
@@ -26,3 +27,6 @@ itertools = "*"
 
 [lib]
 path = "src/lib.rs"
+
+[features]
+bench = []

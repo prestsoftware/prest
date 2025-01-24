@@ -10,6 +10,7 @@ documentation = "https://prestsoftware.com"
 homepage = "https://prestsoftware.com"
 repository = "https://github.com/prestsoftware/prest"
 license = "BSD-3-Clause"
+edition = "2021"
 
 [dependencies]
 prest = { path = "../prest-lib", version = "*" }
@@ -21,6 +22,3 @@ base64 = "*"
 
 [lib]
 path = "src/lib.rs"
-
-[features]
-bench = []

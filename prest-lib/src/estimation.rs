@@ -1,12 +1,12 @@
 use std::collections::HashSet;
-use model::{self,Penalty,Model,Instance,PreorderParams,DistanceScore};
-use precomputed::{self,Precomputed};
+use crate::model::{self,Penalty,Model,Instance,PreorderParams,DistanceScore};
+use crate::precomputed::{self,Precomputed};
 use std::result;
 use std::fmt;
 use std::convert::From;
 use std::io::{Read,Write};
-use common::{Subject,ChoiceRow};
-use codec::{self,Encode,Decode,Packed};
+use crate::common::{Subject,ChoiceRow};
+use crate::codec::{self,Encode,Decode,Packed};
 use std::iter::FromIterator;
 use rayon::prelude::*;
 use num_rational::Ratio;

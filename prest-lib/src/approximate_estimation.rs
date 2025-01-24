@@ -1,7 +1,7 @@
-use alt::Alt;
-use alt_set::{AltSet,AltSetView};
-use preorder::Preorder;
-use common::ChoiceRow;
+use crate::alt::Alt;
+use crate::alt_set::{AltSet,AltSetView};
+use crate::preorder::Preorder;
+use crate::common::ChoiceRow;
 use std::collections::HashMap;
 use std::iter::{FromIterator,repeat};
 
@@ -98,7 +98,8 @@ pub fn sequentially_rationalizable_choice(
     }
 }
 
-#[cfg(test_DISABLED)]
+/*
+#[cfg(test)]
 mod test {
     use super::*;
 
@@ -194,3 +195,4 @@ mod test {
         assert_eq!(q, Preorder::diagonal(4));
     }
 }
+*/

@@ -2,8 +2,8 @@ use std::result;
 use std::io::{Read,Write};
 
 use void::Void;
-use codec::{Encode,Decode,Packed,self};
-use common::{Subject};
+use crate::codec::{Encode,Decode,Packed,self};
+use crate::common::{Subject};
 
 type Error = Void;
 

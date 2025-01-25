@@ -382,7 +382,7 @@ pub fn run<L : Log>(mut log : L, subject : Subject) -> Result<Response> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use common::LogLevel;
+    use crate::common::LogLevel;
 
     struct DummyLogger;
 

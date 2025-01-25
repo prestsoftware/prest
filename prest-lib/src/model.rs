@@ -757,12 +757,12 @@ pub fn traverse_all<F>(
 
 #[cfg(test)]
 mod test {
-    use precomputed::Precomputed;
+    use crate::precomputed::Precomputed;
     use super::{AltSet,PreorderParams,Instance};
     use std::collections::HashSet;
-    use preorder::Preorder;
-    use fast_preorder::FastPreorder;
-    use alt::Alt;
+    use crate::preorder::Preorder;
+    use crate::fast_preorder::FastPreorder;
+    use crate::alt::Alt;
     use std::iter::FromIterator;
     /* disabled for now
     use common::ChoiceRow;

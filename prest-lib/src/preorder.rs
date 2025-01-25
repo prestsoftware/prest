@@ -483,7 +483,7 @@ impl Preorder {
 #[cfg(test)]
 mod test {
     use super::*;
-    use alt_set::AltSet;
+    use crate::alt_set::AltSet;
     use std::iter::FromIterator;
 
     #[test]

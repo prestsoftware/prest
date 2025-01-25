@@ -915,7 +915,7 @@ pub mod tuple_intrans {
     #[cfg(test)]
     mod test {
         use super::*;
-        use common::{Subject,ChoiceRow};
+        use crate::common::{Subject,ChoiceRow};
 
         fn testreq(alt_count : u32, choices : Vec<ChoiceRow>) -> Request {
             Request{subject: codec::Packed(Subject{
@@ -962,7 +962,7 @@ pub mod tuple_intrans {
 mod test {
     use super::*;
     use num::Zero;
-    use alt_set::AltSet;
+    use crate::alt_set::AltSet;
     use std::iter::FromIterator;
 
     fn testreq(alt_count : u32, choices : Vec<ChoiceRow>) -> Request {

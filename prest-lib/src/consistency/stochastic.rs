@@ -187,10 +187,9 @@ pub fn run(request : &Request) -> Result<Response> {
 
 #[cfg(test)]
 mod test {
-    use alt::Alt;
-    use alt_set::AltSet;
-    use common::ChoiceRow;
-    use std::iter::FromIterator;
+    use crate::alt::Alt;
+    use crate::alt_set::AltSet;
+    use crate::common::ChoiceRow;
 
     #[test]
     fn transitivity_1() {

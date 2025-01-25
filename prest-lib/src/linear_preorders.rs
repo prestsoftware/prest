@@ -1,4 +1,4 @@
-use preorder::Preorder;
+use crate::preorder::Preorder;
 
 // https://en.wikipedia.org/wiki/Steinhaus-Johnson-Trotter_algorithm
 pub struct LinearPreorders {

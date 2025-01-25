@@ -3,7 +3,7 @@ use std::io::{Read,Write};
 use std::iter::{Map,repeat};
 use std::ops::Range;
 use std::vec::IntoIter;
-use codec::{Encode,Decode,Result};
+use crate::codec::{Encode,Decode,Result};
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct Alt(pub u32);

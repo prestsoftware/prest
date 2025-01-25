@@ -1,7 +1,7 @@
 use std::result;
 use std::io::{Read,Write};
 
-use void::Void;
+use crate::void::Void;
 use crate::codec::{Encode,Decode,Packed,self};
 use crate::common::{Subject};
 

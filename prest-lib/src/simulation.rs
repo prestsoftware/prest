@@ -5,11 +5,11 @@ use std::iter::FromIterator;
 use rand::Rng;
 use rand::seq::SliceRandom;
 
-use model;
-use common::{ChoiceRow,Subject};
-use codec::{Encode,Decode,Packed,self};
-use alt_set::{AltSet,AltSetView};
-use alt::Alt;
+use crate::model;
+use crate::common::{ChoiceRow,Subject};
+use crate::codec::{Encode,Decode,Packed,self};
+use crate::alt_set::{AltSet,AltSetView};
+use crate::alt::Alt;
 
 pub type Menu = AltSet;
 

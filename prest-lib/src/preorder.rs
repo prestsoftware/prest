@@ -1,13 +1,14 @@
-use fast_preorder::FastPreorder;
-use alt_set::{Block,AltSetView,AltSet};
-use graph::Graph;
+use crate::fast_preorder::FastPreorder;
+use crate::alt_set::{Block,AltSetView,AltSet};
+use crate::graph::Graph;
+use crate::codec::{self,Encode,Decode};
+use crate::alt::Alt;
+
 use std::mem;
 use std::iter;
 use std::fmt;
 use std::io::{Read,Write};
-use codec::{self,Encode,Decode};
 use std::collections::{HashMap,HashSet};
-use alt::Alt;
 use base64::prelude::BASE64_STANDARD;
 use base64::engine::Engine;
 

@@ -1,12 +1,12 @@
 use std::collections::HashSet;
-use model::{self,Penalty,Model,Instance,PreorderParams,DistanceScore};
-use precomputed::{self,Precomputed};
+use crate::model::{self,Penalty,Model,Instance,PreorderParams,DistanceScore};
+use crate::precomputed::{self,Precomputed};
 use std::result;
 use std::fmt;
 use std::convert::From;
 use std::io::{Read,Write};
-use common::{Subject,ChoiceRow};
-use codec::{self,Encode,Decode,Packed};
+use crate::common::{Subject,ChoiceRow};
+use crate::codec::{self,Encode,Decode,Packed};
 use std::iter::FromIterator;
 use rayon::prelude::*;
 use num_rational::Ratio;
@@ -355,17 +355,17 @@ pub fn run(precomputed : &mut Precomputed, request : &Request) -> Result<Vec<Pac
 
 #[cfg(test)]
 mod test {
-    use precomputed::Precomputed;
-    use model;
-    use preorder;
-    use fast_preorder;
+    use crate::precomputed::Precomputed;
+    use crate::model;
+    use crate::preorder;
+    use crate::fast_preorder;
     use base64::Engine;
     use base64::prelude::BASE64_STANDARD;
-    use model::{Instance,Penalty,DistanceScore};
-    use codec;
-    use alt_set::AltSet;
-    use alt::Alt;
-    use common::{ChoiceRow,Subject};
+    use crate::model::{Instance,Penalty,DistanceScore};
+    use crate::codec;
+    use crate::alt_set::AltSet;
+    use crate::alt::Alt;
+    use crate::common::{ChoiceRow,Subject};
     use std::iter::FromIterator;
 
     fn testsubj(alt_count : u32, choices : Vec<ChoiceRow>) -> Subject {
@@ -549,9 +549,9 @@ mod test {
 
     #[test]
     fn indecisive() {
-        use model::PreorderParams as PP;
-        use model::Model::PreorderMaximization as PM;
-        use alt_set::AltSet;
+        use crate::model::PreorderParams as PP;
+        use crate::model::Model::PreorderMaximization as PM;
+        use crate::alt_set::AltSet;
 
         let mut precomputed = Precomputed::new(None);
         precomputed.precompute(5).unwrap();

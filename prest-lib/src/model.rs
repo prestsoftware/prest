@@ -1,16 +1,16 @@
-use alt::Alt;
-use preorder::Preorder;
-use alt_set::{AltSet,AltSetView};
+use crate::alt::Alt;
+use crate::preorder::Preorder;
+use crate::alt_set::{AltSet,AltSetView};
 use std::result::Result;
-use linear_preorders;
-use precomputed::Precomputed;
-use precomputed::Error as PreorderError;
+use crate::linear_preorders;
+use crate::precomputed::Precomputed;
+use crate::precomputed::Error as PreorderError;
 use std::fmt;
 use std::cmp;
 use std::io::{Read,Write};
 use std::iter::FromIterator;
-use codec::{self,Encode,Decode};
-use common::{ChoiceRow};
+use crate::codec::{self,Encode,Decode};
+use crate::common::{ChoiceRow};
 use num_rational::Ratio;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -757,12 +757,12 @@ pub fn traverse_all<F>(
 
 #[cfg(test)]
 mod test {
-    use precomputed::Precomputed;
+    use crate::precomputed::Precomputed;
     use super::{AltSet,PreorderParams,Instance};
     use std::collections::HashSet;
-    use preorder::Preorder;
-    use fast_preorder::FastPreorder;
-    use alt::Alt;
+    use crate::preorder::Preorder;
+    use crate::fast_preorder::FastPreorder;
+    use crate::alt::Alt;
     use std::iter::FromIterator;
     /* disabled for now
     use common::ChoiceRow;

@@ -1,9 +1,9 @@
 use std::result;
 use std::io::{Read,Write};
 
-use void::Void;
-use codec::{Encode,Decode,Packed,self};
-use common::{Subject};
+use crate::void::Void;
+use crate::codec::{Encode,Decode,Packed,self};
+use crate::common::{Subject};
 
 type Error = Void;
 
@@ -56,11 +56,10 @@ pub fn run(request : Request) -> Result<Response> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use alt_set::AltSet;
-    use alt::Alt;
-    use common::{Subject,ChoiceRow};
-    use codec;
-    use std::iter::FromIterator;
+    use crate::alt_set::AltSet;
+    use crate::alt::Alt;
+    use crate::common::{Subject,ChoiceRow};
+    use crate::codec;
 
     fn testreq(alt_count : u32, choices : Vec<ChoiceRow>) -> Request {
         Request{subject: codec::Packed(Subject{

@@ -1,7 +1,7 @@
-use alt::Alt;
-use alt_set::AltSet;
+use crate::alt::Alt;
+use crate::alt_set::AltSet;
 use std::io::{Read,Write};
-use codec::{self,Decode,Encode};
+use crate::codec::{self,Decode,Encode};
 
 #[derive(Clone, Debug)]
 pub struct ChoiceRow {

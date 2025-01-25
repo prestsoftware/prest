@@ -1,14 +1,14 @@
 use std::io::{Read,Write};
-use codec;
-use codec::{Decode,Encode};
 use std::fmt;
 use std::result::Result;
 use base64::prelude::BASE64_STANDARD;
 use base64::engine::Engine;
 
-use alt_set::AltSet;
-use model::Instance;
-use preorder::Preorder;
+use crate::codec;
+use crate::codec::{Decode,Encode};
+use crate::alt_set::AltSet;
+use crate::model::Instance;
+use crate::preorder::Preorder;
 
 #[derive(Debug)]
 pub struct Request {

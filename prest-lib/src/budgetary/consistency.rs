@@ -2,12 +2,13 @@ use std::result;
 use std::fmt;
 use std::io::Write;
 use std::iter::FromIterator;
-use budgetary::Subject;
-use matrix::{Matrix,dot_product};
-use codec::{self,Encode};
 use std::collections::{HashSet,BTreeMap};
-use common::Log;
-use set_cover;
+
+use crate::budgetary::Subject;
+use crate::matrix::{Matrix,dot_product};
+use crate::codec::{self,Encode};
+use crate::common::Log;
+use crate::set_cover;
 
 #[derive(Debug, Clone)]
 pub enum Error {
@@ -381,7 +382,7 @@ pub fn run<L : Log>(mut log : L, subject : Subject) -> Result<Response> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use common::LogLevel;
+    use crate::common::LogLevel;
 
     struct DummyLogger;
 

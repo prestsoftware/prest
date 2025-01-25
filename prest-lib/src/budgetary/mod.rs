@@ -1,8 +1,8 @@
 pub mod consistency;
 
 use std::io::Read;
-use codec::{self,Decode};
-use matrix::Matrix;
+use crate::codec::{self,Decode};
+use crate::matrix::Matrix;
 
 /* For each matrix:
  * - columns ~ goods

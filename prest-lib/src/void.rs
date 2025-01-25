@@ -1,6 +1,6 @@
 use std::fmt;
 use std::io::Write;
-use codec::{Encode,Result};
+use crate::codec::{Encode,Result};
 
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Void {}

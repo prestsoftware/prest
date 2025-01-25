@@ -4,14 +4,13 @@ use std::collections::{BTreeMap,HashSet,HashMap};
 use std::collections::btree_map::Entry;
 use num::{zero, one};
 use std::io::{Read,Write};
-use std::iter::FromIterator;
 
-use alt::Alt;
-use alt_set::AltSet;
+use crate::alt::Alt;
+use crate::alt_set::AltSet;
 use num_traits::identities::Zero;
 use num_bigint::BigUint;
-use common::{ChoiceRow,Subject};
-use codec::{self,Encode,Decode,Packed};
+use crate::common::{ChoiceRow,Subject};
+use crate::codec::{self,Encode,Decode,Packed};
 
 #[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Hash, Copy)]
 struct Edge(pub u32);  // choice row index
@@ -688,12 +687,11 @@ pub mod tuple_intrans {
     use super::{Request,Result,Error,Cycle,Multigraph,Edge,HasSize,MakeEmpty};
     use super::{build_graphs,find_cycles,summarise};
     use std::collections::{BTreeSet,HashSet,BTreeMap};
-    use alt_set::AltSet;
-    use alt::Alt;
+    use crate::alt_set::AltSet;
+    use crate::alt::Alt;
     use std::hash::Hash;
-    use simulation::Menu;
-    use std::iter::FromIterator;
-    use codec::{self,Encode};
+    use crate::simulation::Menu;
+    use crate::codec::{self,Encode};
     use std::io::Write;
     use std::fmt::Debug;
 
@@ -917,7 +915,7 @@ pub mod tuple_intrans {
     #[cfg(test)]
     mod test {
         use super::*;
-        use common::{Subject,ChoiceRow};
+        use crate::common::{Subject,ChoiceRow};
 
         fn testreq(alt_count : u32, choices : Vec<ChoiceRow>) -> Request {
             Request{subject: codec::Packed(Subject{
@@ -964,7 +962,7 @@ pub mod tuple_intrans {
 mod test {
     use super::*;
     use num::Zero;
-    use alt_set::AltSet;
+    use crate::alt_set::AltSet;
     use std::iter::FromIterator;
 
     fn testreq(alt_count : u32, choices : Vec<ChoiceRow>) -> Request {

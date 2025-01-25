@@ -1,8 +1,8 @@
 use std::mem;
 use std::slice;
 use std::io::{Read,Write};
-use codec::{self,Encode,Decode};
 use byteorder::{NativeEndian,ReadBytesExt};
+use crate::codec::{self,Encode,Decode};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Matrix<T> {

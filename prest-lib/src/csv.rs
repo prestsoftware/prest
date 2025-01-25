@@ -2,8 +2,8 @@ use std::io::{Read,Write};
 use std::marker::PhantomData;
 use std::collections::HashSet;
 
-use alt::Alt;
-use alt_set::AltSet;
+use crate::alt::Alt;
+use crate::alt_set::AltSet;
 
 pub trait FromRow {
     type ParseError;

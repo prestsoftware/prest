@@ -1,6 +1,5 @@
 import re
-from util.codec import Codec
-from typing import Sequence, List, Any, NamedTuple, Optional, Generic, TypeVar, Callable, cast
+from typing import Sequence, List, Any, Optional, Callable, cast
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, QModelIndex, QAbstractItemModel
 
@@ -8,10 +7,10 @@ REGEX_NUM = re.compile(r'^(?:[0-9]+|[0-9]*\.[0-9]+)$')
 
 class Field:
     def __init__(self,
-        text  : Optional[str]=None,
-        icon  : Optional[QIcon]=None,
-        user_data : Any=None,
-        align : Optional[Qt.Alignment]=None,
+        text  : Optional[str] = None,
+        icon  : Optional[QIcon] = None,
+        user_data : Any = None,
+        align : Optional[Qt.Alignment] = None,
     ) -> None:
         self.text = text
         self.icon = icon
@@ -53,7 +52,7 @@ def parse_fields(fields : Sequence[Any]) -> List[Field]:
     return result
 
 class Node:
-    def __init__(self, parent_node: Optional['Node'], row: Optional[int], fields: Sequence[Any], child_count:int=0) -> None:
+    def __init__(self, parent_node: Optional['Node'], row: Optional[int], fields: Sequence[Any], child_count : int = 0) -> None:
         self.parent_node = parent_node
         self.row = row  # relative to parent
         self.child_count = child_count
@@ -99,7 +98,7 @@ class TreeModel(QAbstractItemModel):
         self.root = root
         self.headers : List[Field] = parse_fields(headers)
 
-    def headerData(self, nr: int, orientation: Qt.Orientation, role : int = Qt.DisplayRole) -> Optional[str]:
+    def headerData(self, nr: int, orientation: Qt.Orientation, role : int = Qt.DisplayRole) -> Optional[str]:  # type: ignore
         if orientation == Qt.Horizontal:
             try:
                 return cast(
@@ -134,7 +133,7 @@ class TreeModel(QAbstractItemModel):
     def columnCount(self, idx: QModelIndex = QModelIndex()) -> int:
         return len(self.headers)
 
-    def data(self, idx: QModelIndex = QModelIndex(), role : int = Qt.DisplayRole) -> Optional[str]:
+    def data(self, idx: QModelIndex = QModelIndex(), role : int = Qt.DisplayRole) -> Optional[str]:  # type: ignore
         try:
             return cast(Optional[str], self.get_node(idx).field(idx.column()).data(cast(Qt.ItemDataRole, role)))
         except IndexError:
@@ -173,7 +172,7 @@ class PackedRootNode(RootNode):
         subj_cls : type,
         subj_decode : Callable[[bytes], Any],
         subj_desc : str,
-        subjects: List, # linear list of packed subjects!
+        subjects: List,  # linear list of packed subjects!
     ) -> None:
         # distribute the subjects about evenly:
         # the number of groups should be roughly
@@ -191,11 +190,11 @@ class PackedRootNode(RootNode):
         # let's be biased towards many groups rather than many subjects per group
         # if the above loop falls through, group_size will stay at the greatest value
 
-        self.group_size  = group_size
-        self.subj_cls    = subj_cls
+        self.group_size = group_size
+        self.subj_cls = subj_cls
         self.subj_decode = subj_decode
-        self.subj_desc   = subj_desc
-        self.subjects    = subjects
+        self.subj_desc = subj_desc
+        self.subjects = subjects
 
         group_count = (len(subjects) + group_size - 1) // group_size  # round up
         RootNode.__init__(self, group_count)

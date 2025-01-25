@@ -10,6 +10,7 @@ PyQt5-stubs
 sphinx
 sphinxcontrib-bibtex
 sphinxcontrib-websupport
+sphinxcontrib-googleanalytics
 sphinx-material
 sphinx-mathjax-offline
 pyinstaller

@@ -13,24 +13,16 @@ their choices at different menus of feasible options.
 
 |
 
-Declarations
-------------
-
-*Prest is open-source software and its latest version will always be available online for free.*
-
-
-*Prest does not collect any data entered by its users.*
-
-|
-
 Recently Added Features
 -----------------------
 
-* Since v1.2.0: new suite of stochastic-consistency tests for datasets with menu repetitions. 
-
-* Since v1.2.0: new measure of model proximity for datasets with multiple choices per menu.
-
-* Since v1.1.0: visualization of preference-estimation output using `GraphViz <https://graphviz.org>`_ .
+* | Since v1.2.0: new suite of stochastic-consistency tests for datasets with menu repetitions.
+  | (support for *stochastic choice functions*)
+  
+* | Since v1.2.0: new measure of model proximity for datasets with multiple choices per menu. 
+  | (support for *choice correspondences*)
+  
+* | Since v1.1.0: visualization of preference-estimation output using `GraphViz <https://graphviz.org>`_ .
 
 |
 
@@ -52,6 +44,16 @@ Downloads
   <https://www.python.org/>`_ (graphical user interface).
 
 Previous downloadable versions of Prest are available in :ref:`the archive <history>`.
+
+|
+
+Declarations
+------------
+
+*Prest is open-source software and its latest version will always be available online for free.*
+
+
+*Prest does not collect any data entered by its users.*
 
 |
 

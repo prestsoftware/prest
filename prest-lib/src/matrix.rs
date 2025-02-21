@@ -64,12 +64,12 @@ pub fn dot_product(xs : &[f32], ys : &[f32]) -> f32 {
 }
 
 // (Adapted from `byteorder`.)
-unsafe fn mem_bytes<'a, T : Copy>(slice : &'a [T]) -> &'a [u8] {
+unsafe fn mem_bytes<'a, T : Copy>(slice : &'a [T]) -> &'a [u8] { unsafe {
     slice::from_raw_parts(
         slice.as_ptr() as *const u8,
         mem::size_of::<T>() * slice.len(),
     )
-}
+}}
 
 // decode as numpy array
 impl Decode for Matrix<f32> {

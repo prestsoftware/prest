@@ -165,7 +165,7 @@ impl BestInstances {
     }
 
     fn finish(self) -> Option<(Vec<InstanceInfo>, Penalty)> {  
-        if let Some(lowest_penalty) = self.lowest_penalty {
+        match self.lowest_penalty { Some(lowest_penalty) => {
             Some((
                 Vec::from_iter(
                     self.instances.into_iter().filter(
@@ -175,10 +175,10 @@ impl BestInstances {
                 ),
                 lowest_penalty,
             ))
-        } else {
+        } _ => {
             // no instances
             None
-        }
+        }}
     }
 
     fn combine(self, other : BestInstances) -> BestInstances {

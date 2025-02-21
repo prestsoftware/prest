@@ -146,7 +146,7 @@ impl<'a> AltSetView<'a> {
         self.blocks.iter().map(|b| b.count_ones()).sum()
     }
 
-    pub fn combinations(&self, k : u32) -> impl Iterator<Item=AltSet> + 'a {
+    pub fn combinations(&self, k : u32) -> impl Iterator<Item=AltSet> + 'a + use<'a> {
         self.iter().combinations(k as usize).map(
             FromIterator::from_iter
         )
@@ -290,7 +290,7 @@ impl AltSet {
         let nblocks = (alt_count + block_size - 1) / block_size;  // round up
 
         // generate random blocks
-        let mut blocks : Vec<_> = (0..nblocks).map(|_| rng.gen()).collect();
+        let mut blocks : Vec<_> = (0..nblocks).map(|_| rng.random()).collect();
 
         // zero out the appropriate number of bits in the last block
         let last_block_bits = alt_count % block_size;
@@ -458,7 +458,7 @@ impl FromIterator<Alt> for AltSet {
 
 #[macro_export]
 macro_rules! alts {
-    ($($arg:expr),*) => {
+    ($($arg:expr_2021),*) => {
         AltSet::from_iter(&vec![$(Alt($arg)),*])
     }
 }

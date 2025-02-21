@@ -36,7 +36,7 @@ impl Decode for MenuGenerator {
 }
 
 impl MenuGenerator {
-    pub fn r#gen<R : Rng>(&self, rng : &mut R, alt_count : u32) -> Vec<(AltSet, Option<Alt>)> {
+    pub fn generate<R : Rng>(&self, rng : &mut R, alt_count : u32) -> Vec<(AltSet, Option<Alt>)> {
         use self::MenuGenerator::*;
         match *self {
             Exhaustive => {
@@ -73,8 +73,8 @@ pub struct GenMenus {
 }
 
 impl GenMenus {
-    fn r#gen<R : Rng>(&self, rng : &mut R, alt_count : u32) -> Vec<(AltSet, Option<Alt>)> {
-        let menus = self.generator.r#gen(rng, alt_count);
+    fn generate<R : Rng>(&self, rng : &mut R, alt_count : u32) -> Vec<(AltSet, Option<Alt>)> {
+        let menus = self.generator.generate(rng, alt_count);
 
         if self.defaults {
             menus.into_iter().map(
@@ -125,7 +125,7 @@ impl Decode for GenChoices {
 }
 
 impl GenChoices {
-    fn r#gen<R : Rng>(&self, rng : &mut R, alt_count : u32, menu : AltSetView, default : Option<Alt>) -> AltSet {
+    fn generate<R : Rng>(&self, rng : &mut R, alt_count : u32, menu : AltSetView, default : Option<Alt>) -> AltSet {
         assert!(menu.is_nonempty());
         use self::GenChoices::*;
 
@@ -228,19 +228,19 @@ pub fn run<R : Rng>(rng : &mut R, request : Request) -> Result<Response> {
                     && cr.choice.view().is_empty() {
                         AltSet::empty()
                     } else {
-                        request.gen_choices.r#gen(
+                        request.gen_choices.generate(
                             rng, alt_count, cr.menu.view(), cr.default
                         )
                     }
             }
         ).collect(),
 
-        _ => request.gen_menus.r#gen(rng, alt_count).into_iter().map(
+        _ => request.gen_menus.generate(rng, alt_count).into_iter().map(
             // we use this order of ChoiceRow fields
             // because we first need to generate the choice
             // and only then pass the ownership of the menu
             |(menu, default)| ChoiceRow {
-                choice: request.gen_choices.r#gen(rng, alt_count, menu.view(), default),
+                choice: request.gen_choices.generate(rng, alt_count, menu.view(), default),
                 menu,
                 default,
             }

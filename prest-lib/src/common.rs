@@ -28,7 +28,7 @@ impl Decode for ChoiceRow {
 
 #[macro_export]
 macro_rules! choices {
-    ($([$($x:expr),*] -> [$($y:expr),*]),*) => {vec![
+    ($([$($x:expr_2021),*] -> [$($y:expr_2021),*]),*) => {vec![
         $(ChoiceRow{
             menu: alts![$($x),*],
             default: None,

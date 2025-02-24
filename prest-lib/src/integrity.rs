@@ -30,10 +30,10 @@ impl Encode for Issue {
     fn encode<W : Write>(&self, f : &mut W) -> codec::Result<()> {
         use self::Issue::*;
         match self {
-            RepeatedMenu(ref menu) => {
+            RepeatedMenu(menu) => {
                 (0u8, menu).encode(f)
             }
-            ChoiceNotInMenu(ref menu, ref alt) => {
+            ChoiceNotInMenu(menu, alt) => {
                 (1u8, menu, alt).encode(f)
             }
         }

@@ -13,7 +13,7 @@ license = "BSD-3-Clause"
 edition = "2024"
 
 [dependencies]
-rand = { version = "*", features = ["small_rng"] }
+rand = { version = ">=0.9.0", features = ["small_rng"] }
 base64 = "*"
 byteorder = "*"
 num = "*"

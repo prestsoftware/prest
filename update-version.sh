@@ -2,6 +2,9 @@
 
 current_version="$(git describe --always)"
 
+# HACK:
+current_version="v1.2.0"
+
 if [ -f version.txt ] ; then
 	cached_version="$(cat version.txt)"
 

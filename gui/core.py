@@ -172,15 +172,15 @@ class Core:
                     raise MalformedResponse('invalid response: %s' % msg)
         except EOF:
             death_note = self.stderr_reader.get_content().decode('utf8')
-            log.warn('core died with message: {0}'.format(death_note))
+            log.warning('core died with message: {0}'.format(death_note))
             raise CoreDeath(death_note)
         except CodecError as e:
             stderr = self.stderr_reader.get_content().decode('utf8')
-            log.warn('core stderr: {0}'.format(stderr))
+            log.warning('core stderr: {0}'.format(stderr))
             raise MalformedResponse('malformed response from core') from e
         except Exception:
             stderr = self.stderr_reader.get_content().decode('utf8')
-            log.warn('core stderr: {0}'.format(stderr))
+            log.warning('core stderr: {0}'.format(stderr))
             raise
 
     def crash(self) -> None:
@@ -201,7 +201,7 @@ class Core:
         try:
             self.core.wait(2)  # seconds
         except subprocess.TimeoutExpired:
-            log.warn("core won't quit, killing")
+            log.warning("core won't quit, killing")
             self.core.terminate()
 
             try:
@@ -214,6 +214,6 @@ class Core:
         self.stderr_reader.join(1)  # join the stderr reader
 
         if self.stderr_reader.is_alive():
-            log.warn("stderr reader won't quit, leaking it")
+            log.warning("stderr reader won't quit, leaking it")
         else:
             log.debug('stderr reader joined')

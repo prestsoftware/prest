@@ -23,7 +23,7 @@ jobs:
     steps:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Unshallow the repository
         run: git fetch --prune --unshallow
@@ -39,7 +39,7 @@ jobs:
           pip install -r gui/requirements.txt
 
       - name: Install Rust
-        uses: actions-rs/toolchain@v1
+        uses: ./.github/composite/rust
         with:
           toolchain: stable
 
@@ -92,7 +92,7 @@ jobs:
     steps:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Unshallow the repository
         run: git fetch --prune --unshallow
@@ -108,7 +108,7 @@ jobs:
           pip install -r gui/requirements.txt
 
       - name: Install Rust
-        uses: actions-rs/toolchain@v1
+        uses: ./.github/composite/rust
         with:
           toolchain: stable
 
@@ -159,7 +159,7 @@ jobs:
     steps:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Unshallow the repository
         run: git fetch --prune --unshallow
@@ -175,7 +175,7 @@ jobs:
           pip install -r gui/requirements.txt
 
       - name: Install Rust
-        uses: actions-rs/toolchain@v1
+        uses: ./.github/composite/rust
         with:
           toolchain: stable
 

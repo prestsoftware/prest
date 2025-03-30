@@ -40,8 +40,6 @@ jobs:
 
       - name: Install Rust
         uses: ./.github/composite/rust
-        with:
-          toolchain: stable
 
       - name: Build
         shell: bash
@@ -109,8 +107,6 @@ jobs:
 
       - name: Install Rust
         uses: ./.github/composite/rust
-        with:
-          toolchain: stable
 
       - name: Build
         run: |
@@ -176,8 +172,6 @@ jobs:
 
       - name: Install Rust
         uses: ./.github/composite/rust
-        with:
-          toolchain: stable
 
       - name: Build
         run: |

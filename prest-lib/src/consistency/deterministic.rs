@@ -325,7 +325,7 @@ impl Decode for Request {
     fn decode<R : Read>(f : &mut R) -> codec::Result<Request> {
         Ok(Request {
             subject: Decode::decode(f)?,
-            allow_repeated_menus: false,
+            allow_repeated_menus: Decode::decode(f)?,
         })
     }
 }

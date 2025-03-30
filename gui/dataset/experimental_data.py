@@ -30,7 +30,7 @@ import dataset.estimation_result as estimation_result
 import uic.view_dataset
 import util.tree_model
 from util.codec import FileIn, FileOut, namedtupleC, strC, intC, \
-    frozensetC, maybe
+    frozensetC, maybe, boolC, dataclassC
 from util.codec_progress import CodecProgress, listCP, oneCP
 
 log = logging.getLogger(__name__)
@@ -322,7 +322,14 @@ class ExperimentalData(Dataset):
 
         return ds
 
-    def analysis_consistency_deterministic(self, worker : Worker, _config : None) -> DeterministicConsistencyResult:
+    def analysis_consistency_deterministic(self, worker : Worker, allow_repeated_menus : Optional[bool] = None) -> DeterministicConsistencyResult:
+        @dataclass
+        class DeterministicConsistencyRequest:
+            subject : PackedSubject
+            allow_repeated_menus : bool
+
+        DeterministicConsistencyRequestC = dataclassC(DeterministicConsistencyRequest, PackedSubjectC, boolC)
+
         with Core() as core:
             worker.interrupt = lambda: core.shutdown()  # interrupt hook
 
@@ -332,9 +339,12 @@ class ExperimentalData(Dataset):
             for i, subject in enumerate(self.subjects):
                 response = core.call(
                     'consistency-deterministic',
-                    PackedSubjectC,
+                    DeterministicConsistencyRequestC,
                     dataset.deterministic_consistency_result.SubjectRawC,
-                    subject
+                    DeterministicConsistencyRequest(
+                        subject,
+                        allow_repeated_menus=bool(allow_repeated_menus),
+                    )
                 )
                 rows.append(response)
 

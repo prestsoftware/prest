@@ -39,7 +39,7 @@ run: build
 test: build
 	(cd prest-lib; cargo test --release)
 	(cd prest-core; cargo test --release)
-	pytest -v -m "not long" gui
+	pytest -v -m "not long" gui --full-trace
 
 bench: build
 	pytest -v -m benchmark gui

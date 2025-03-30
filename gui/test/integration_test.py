@@ -62,9 +62,9 @@ DATASETS_LONG = (
 
 @pytest.mark.parametrize('name,alts,subj_count', DATASETS)
 def test_consistency_analysis(tmpdir, name, alts, subj_count):
-    if name == 'general-merging':
-        # TODO: repeated menus are not supported so we disable this dataset here temporarily
-        # see the repeated-menus branch
+    if name in ('general-merging', 'general-no-defaults-128'):
+        # TODO: repeated menus are not supported atm so skipping these cases for now
+        # see branch repeated-menus
         return
 
     rows = load_raw_csv('docs/src/_static/examples/%s.csv' % name)

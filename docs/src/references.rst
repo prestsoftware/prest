@@ -2,16 +2,16 @@
 References
 ==========
 
-Revealed Preference Theory & Methods
-====================================
+Rational & Behavioural Revealed Preference Theory & Methods
+===========================================================
 
 .. bibliography:: references_theory.bib
    :all:
    :style: plain
    :labelprefix: Th
 
-Experimental/Empirical Studies
-==============================
+Some Relevant Empirical/Experimental Studies
+============================================
 
 .. bibliography:: references_psych.bib
    :all:

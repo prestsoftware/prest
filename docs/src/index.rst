@@ -3,26 +3,26 @@
 Introduction
 ------------
 
-Prest is an open-source desktop application for behavioural revealed-preference analysis.
+Prest is an open-source desktop application for rational and, especially, behavioural revealed-preference analysis.
 
 It can be used to analyze choice datasets created by experiments or surveys in economics or psychology. 
 
-Prest's functions enable the analyst to understand the surveyed decision makers' 
-possible behavioural heuristics and preferences using only information about
-their choices at different menus of feasible options.
+| Prest helps the analyst understand the surveyed decision makers' possible choice heuristics and preferences. 
+| It does so using information about their observable decisions only.  
 
 |
 
 Recently Added Features
 -----------------------
 
-* | Since v1.2.0: new suite of stochastic-consistency tests for datasets with menu repetitions.
+* | Since v2.0.0: new suite of stochastic-consistency tests for datasets with menu repetitions.
   | (support for *stochastic choice functions*)
   
-* | Since v1.2.0: new measure of model proximity for datasets with multiple choices per menu. 
+* | Since v2.0.0: new measure of model proximity for datasets with multiple choices per menu. 
   | (support for *choice correspondences*)
   
 * | Since v1.1.0: visualization of preference-estimation output using `GraphViz <https://graphviz.org>`_ .
+  | (the GraphViz binary file must be copied to the same directory as Prest)
 
 |
 
@@ -79,10 +79,9 @@ define the terms used in the graphical user interface, and explain relevant back
    models/index
    simulations/index
    references
-   history/index   
-   acknowledgements/index
+   history/index
    copyright/index
-   privacy/index
+   acknowledgements/index   
 
 |
 

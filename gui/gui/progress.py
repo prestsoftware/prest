@@ -1,19 +1,14 @@
-# mypy can't see that exceptions may be set from other threads
+# mypy can't see that exceptions may be sent from other threads
 # mypy: no-warn-unreachable
 
 import logging
-import collections
 from typing import Any, List, Callable, Optional
 
-from PyQt5.QtGui import QIcon, QCursor
-from PyQt5.QtCore import Qt, QObject, QCoreApplication, QSize, QThread, pyqtSignal, pyqtSlot
-from PyQt5.QtWidgets import QHeaderView, QDialog, QMessageBox, QTreeWidgetItem, QProgressDialog, QToolTip
+from PyQt5.QtCore import QObject, QThread, pyqtSignal, pyqtSlot
+from PyQt5.QtWidgets import QDialog
 
 import gui
-import model
 import uic.progress
-import platform_specific
-from core import Core
 
 log = logging.getLogger(__name__)
 

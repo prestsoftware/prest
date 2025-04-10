@@ -540,6 +540,7 @@ fn binary_intransitivities(alt_count : u32, g : &Multigraph, choices : &[ChoiceR
     };
 
     let mut paths = Vec::new();
+    let mut seen = HashSet::new();
 
     let mut avail = AltSet::from_iter(
         Alt::all(alt_count)
@@ -547,6 +548,12 @@ fn binary_intransitivities(alt_count : u32, g : &Multigraph, choices : &[ChoiceR
     for path in paths_from(&[], &mut avail) {
         // we're interested only in paths of 1+ edges
         if path.len() < 2 {
+            continue;
+        }
+
+        // we've already seen this cycle or its rotation
+        // and we want only unique cycles
+        if seen.contains(&path) {
             continue;
         }
 
@@ -578,6 +585,13 @@ fn binary_intransitivities(alt_count : u32, g : &Multigraph, choices : &[ChoiceR
             length: path.len() as u32,  // #vertices to match GARP cycles, etc.
             multiplicity,
         });
+
+        // mark all rotations of this cycle as seen
+        let mut path = path;
+        for _ in 0..path.len() {
+            seen.insert(path.clone());
+            path.rotate_left(1);
+        }
     }
 
     paths

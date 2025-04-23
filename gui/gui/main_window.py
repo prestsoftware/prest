@@ -7,7 +7,7 @@ from PyQt5.QtCore import Qt, pyqtSlot
 from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtWidgets import QHeaderView, QMainWindow, QDialog, QMessageBox, \
     QTableWidgetItem, QFileDialog, QTreeWidgetItem, QProgressDialog, QMenu, QAction, \
-    QStyle, QShortcut
+    QStyle, QShortcut, QInputDialog
 
 import uic.main_window
 
@@ -135,7 +135,6 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
             self.tblDataSets.row(item)
         ]
 
-
         menu = QMenu(self)
         icon_hidden = QIcon(platform_specific.get_embedded_file_path(
             'images/experimental.png',      # deployment
@@ -146,6 +145,21 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
         a_view.triggered.connect(self.catch_exc(ds.dlg_view))
         a_view.setStatusTip('Display the dataset in a separate window. Also available via double click.')
         menu.addAction(a_view)
+
+        def rename(_flag : bool) -> None:
+            new_name, ok = QInputDialog.getText(
+                self, "Rename dataset",
+                "Input new name for the dataset:",
+                text=ds.name,
+            )
+            if ok and new_name:
+                ds.name = new_name
+                self.refresh_datasets()
+
+        a_rename = QAction("Rename...", menu)
+        a_rename.triggered.connect(self.catch_exc(rename))
+        a_rename.setStatusTip('Change the name of the dataset')
+        menu.addAction(a_rename)
 
         analyses = ds.get_analyses()
         if analyses:
@@ -453,7 +467,7 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
     def dlg_soft_core_failure(self, _flag):
         with Core() as core:
             core.soft_failure()
-        
+
     def dlg_dataset_import(self, _flag):
         dlg = gui.import_csv.ImportCsv(self)
         dlg.run()

@@ -14,3 +14,4 @@ sphinxcontrib-googleanalytics
 sphinx-material
 sphinx-mathjax-offline
 pyinstaller
+traitlets

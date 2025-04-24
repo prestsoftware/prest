@@ -358,13 +358,13 @@ class EstimationResult(Dataset):
         return (
             ExportVariant(
                 name='Compact (human-friendly)',
-                column_names=('subject', 'dist_score', 'model', 'instances'),
+                column_names=('subject', 'distance_score', 'model', 'instances'),
                 get_rows=self.export_compact,
                 size=len(self.subjects),
             ),
             ExportVariant(
                 name='Detailed (machine-friendly)',
-                column_names=('subject', 'dist_score', 'dist_score_upper_bound', 'model', 'instance'),
+                column_names=('subject', 'distance_score', 'model', 'instance'),
                 get_rows=self.export_detailed,
                 size=len(self.subjects),
             ),

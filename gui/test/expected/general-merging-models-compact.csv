@@ -1,3 +1,3 @@
-"subject","dist_score","model","instances"
+"subject","distance_score","model","instances"
 "random1","10","Partially Dominant Choice with Incomplete Preferences (free-choice)","1"
 "","10","Partially Dominant Choice with Incomplete Preferences (forced-choice)","1"

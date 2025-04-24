@@ -1,4 +1,4 @@
-"subject","dist_score","model","instances"
+"subject","distance_score","model","instances"
 "Subject-1","3","Utility Maximization (Strict)","1"
 "","3","Utility Maximization with an Outside Option (Strict)","1"
 "","3","Overload-Constrained Utility Maximization (Strict)","1"

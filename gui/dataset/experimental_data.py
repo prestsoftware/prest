@@ -435,7 +435,7 @@ class ExperimentalData(Dataset):
                 )
                 worker.set_progress(i+1)
 
-        ds = TupleIntransMenus(self.name + ' (inconsistent menu tuples)', self.alternatives)
+        ds = TupleIntransMenus(self.name + ' (cyclic menu tuples)', self.alternatives)
         ds.subjects = subjects
         return ds
 
@@ -457,7 +457,7 @@ class ExperimentalData(Dataset):
                 )
                 worker.set_progress(i+1)
 
-        ds = TupleIntransAlts(self.name + ' (inconsistent alternative tuples)', self.alternatives)
+        ds = TupleIntransAlts(self.name + ' (cyclic alternative tuples)', self.alternatives)
         ds.subjects = subjects
         return ds
 
@@ -516,12 +516,12 @@ class ExperimentalData(Dataset):
                 run=self.analysis_consistency_stochastic,
             ),
             Analysis(
-                name='Inconsistent tuples of menus',
+                name='Cyclic tuples of menus',
                 config=None,
                 run=self.analysis_tuple_intrans_menus,
             ),
             Analysis(
-                name='Inconsistent tuples of alternatives',
+                name='Cyclic tuples of alternatives',
                 config=None,
                 run=self.analysis_tuple_intrans_alts,
             ),

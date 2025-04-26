@@ -21,6 +21,9 @@ for every subject in the dataset.
 Much of the terminology and notation that follows is introduced and explained in the 
 :ref:`Datasets <general-datasets>` and :ref:`Revealed Preference Relations <revealed>` sections.
 
+.. _contraction-consistency:
+
+
 Contraction Consistency
 -----------------------
 
@@ -44,6 +47,9 @@ For any alternative `x` in `X` and menu `A` in `\mathcal{D}`
      Contraction Consistency (all) count of 2, the latter involving alternatives `x` and `y`.
 
 
+.. _weak-axiom-of-revealed-preference-warp:
+
+
 Weak Axiom of Revealed Preference - WARP
 ----------------------------------------
 
@@ -65,6 +71,8 @@ For any two distinct alternatives `x,y` in `X`
      the latter involving alternatives `x,z` and `y,z`, respectively.
 
 
+.. _congruence:
+
 Congruence / Strong Axiom of Revealed Preference
 ------------------------------------------------
 
@@ -75,8 +83,10 @@ For any two distinct alternatives `x,y` in `X`
 
 .. note::
      In Prest, Congruence violations of length 2 coincide with the WARP (all) count.
+
 	
-	
+.. _strict-choice-consistency:
+
 Strict Choice Consistency
 -------------------------
 
@@ -86,25 +96,7 @@ For any two distinct alternatives `x,y` in `X`
 	x \succ^{\widehat{R}} y\;\; \Longrightarrow\;\; y\not\succsim^R x
 
 
-Strict Binary Choice Consistency
---------------------------------
-
-For any two distinct alternatives `x,y` in `X`
-
-.. math::
-    x\succ^{\widehat{B}} y\;\; \Longrightarrow\;\; y\not\succsim^B x
-
-	
-	
-Binary Choice Consistency
--------------------------
-
-For any two distinct alternatives `x,y` in `X`
-
-.. math::
-    x\succsim^{\widehat{B}} y\;\; \Longrightarrow\;\; y\not\succ^B x
-
-
+.. _binary-choice-transitivity:
 
 Binary Choice Transitivity
 --------------------------
@@ -116,11 +108,33 @@ For any sequence of distinct alternatives `x_1,\ldots,x_k` in `X`
     (x_1,x_k)\in\mathcal{D}\;\; \Longrightarrow\;\; x_1\succsim^B x_k
 
 
+.. _binary-choice-consistency:
+
+Binary Choice Consistency
+-------------------------
+
+For any two distinct alternatives `x,y` in `X`
+
+.. math::
+    x\succsim^{\widehat{B}} y\;\; \Longrightarrow\;\; y\not\succ^B x
+
+
+.. _stric-binary-choice-consistency:
+
+Strict Binary Choice Consistency
+--------------------------------
+
+For any two distinct alternatives `x,y` in `X`
+
+.. math::
+    x\succ^{\widehat{B}} y\;\; \Longrightarrow\;\; y\not\succsim^B x
+
+
 .. _general-consistency-note:
 
 .. note::
-     The difference between *(Strict) Binary Choice Consistency* and *Binary Choice Transitivity* is that, under the same premise, 
-     the latter will also count `C(\{x_1,x_k\})` as a violation whereas the former will not.  
+     The difference between *(Strict) Binary Choice Consistency* and *Binary Choice Transitivity* is that, under the same antecedent, 
+     the latter will also count `C(\{x_1,x_k\})=\emptyset` as a violation whereas the former will not.  
 
 .. _general-consistency-tip:
 

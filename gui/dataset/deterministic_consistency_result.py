@@ -165,21 +165,24 @@ class DeterministicConsistencyResult(Dataset):
                 headers=(
                     'Subject',
                     'Cycle length',
-                    'Contraction consistency (pairs)',
-                    'Contraction consistency (all)',
+                    F('Contraction consistency (pairs)', help_icon,
+                        'consistency/cons_general_det.html#contraction-consistency'),
+                    F('Contraction consistency (all)', help_icon,
+                        'consistency/cons_general_det.html#contraction-consistency'),
                     F('WARP (pairs)', help_icon,
-                        'consistency/cons_general.html#weak-axiom-of-revealed-preference-warp'),
+                        'consistency/cons_general_det.html#weak-axiom-of-revealed-preference-warp'),
                     F('WARP (all)', help_icon,
-                        'consistency/cons_general.html#weak-axiom-of-revealed-preference-warp'),
+                        'consistency/cons_general_det.html#weak-axiom-of-revealed-preference-warp'),
                     F('Congruence', help_icon,
-                        'consistency/cons_general.html#congruence'),
+                        'consistency/cons_general_det.html#congruence'),
                     F('Strict general cycles', help_icon,
-                        'consistency/cons_general.html#strict-choice-consistency'),  # SARP
+                        'consistency/cons_general_det.html#strict-choice-consistency'),  # SARP
+                    F('Binary intransitivities', help_icon,
+                        'consistency/cons_general_det.html#binary-choice-transitivity'),
                     F('Binary cycles', help_icon,
-                        'consistency/cons_general.html#binary-choice-consistency'),
+                        'consistency/cons_general_det.html#binary-choice-consistency'),
                     F('Strict binary cycles', help_icon,
-                        'consistency/cons_general.html#strict-binary-choice-consistency'),  # SARP-binary
-                    'Binary intransitivities',
+                        'consistency/cons_general_det.html#strict-binary-choice-consistency'),  # SARP-binary
                 ),
             )
             self.twRows.setModel(self.model)

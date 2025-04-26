@@ -196,7 +196,7 @@ class EstimationResult(Dataset):
         def __init__(self, parent_node: 'EstimationResult.Model', row: int, instance: InstanceRepr) -> None:
             code = base64.b64encode(instance).decode('ascii')
             # subject = parent_node.subject
-            help_icon = QIcon(platform_specific.get_embedded_file_path('images/qm-16.png'))
+            help_icon = QIcon(platform_specific.get_embedded_file_path('images/qm-17.png'))
             Node.__init__(
                 self, parent_node, row,
                 fields=(code, Field(icon=help_icon, user_data=code), ''),

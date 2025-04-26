@@ -142,29 +142,29 @@ For any sequence of distinct alternatives `x_1,\ldots,x_k` in `X`
      * **Binary intransitivities (wide)**: lists the number of Binary Choice Transitivity violations, decomposed by length of the violating sequence.     
      
 
-Additional Features: Inconsistent Tuples
+Additional Features: Cyclic Tuples
 ----------------------------------------
 
 .. _menu-tuples:
 
-Inconsistent tuples of menus
+Cyclic tuples of menus
 ............................
 
-By right-clicking on the dataset and then selecting *"Analysis -> Inconsistent tuples of menus"*, Prest computes and enumerates 
+By right-clicking on the dataset and then selecting *"Analysis -> Cyclic tuples of menus"*, Prest computes and enumerates 
 all distinct pairs, triples, quadruples, ..., `n`-tuples of menus that have led to a Congruence violation, and groups them according to the size of `n`.
 
 .. note::
-     The number of inconsistent *pairs* of menus coincides with the **WARP (pairs)** count.
+     The number of cyclic *pairs* of menus coincides with the **WARP (pairs)** count.
 
 Following the same steps as above, this output can be viewed within Prest or exported to a .csv or .xslx file.
 
 
 .. _alternative-tuples:
 
-Inconsistent tuples of alternatives
+Cyclic tuples of alternatives
 ...................................
 
-By right-clicking on the dataset and then selecting *"Analysis -> Inconsistent tuples of alternatives"*, Prest computes and enumerates 
+By right-clicking on the dataset and then selecting *"Analysis -> Cyclic tuples of alternatives"*, Prest computes and enumerates 
 all distinct pairs, triples, quadruples, ..., `n`-tuples of alternatives that have led to a Congruence violation, and groups them according to the size of `n`.
 
 Following the same steps as above, this output can be viewed within Prest or exported to a .csv or .xslx file.

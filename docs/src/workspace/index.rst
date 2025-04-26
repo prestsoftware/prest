@@ -106,9 +106,9 @@ the selected dataset is :ref:`general <general-datasets>` or :ref:`budgetary <bu
 
 | 4. *"Stochastic consistency analysis"*. Details: :ref:`here <stochastic-consistency-tip>`.
 
-| 5. *"Inconsistent tuples of menus"*. Details :ref:`here <menu-tuples>`. 
+| 5. *"Cyclic tuples of menus"*. Details :ref:`here <menu-tuples>`. 
 		
-| 6. *"Inconsistent tuples of alternatives"*. Details :ref:`here <alternative-tuples>`.
+| 6. *"Cyclic tuples of alternatives"*. Details :ref:`here <alternative-tuples>`.
 
 | 7. *"Model estimation"*. Details :ref:`here <estimation>`.
 

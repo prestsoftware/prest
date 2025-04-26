@@ -151,9 +151,9 @@ For any two distinct alternatives `x,y` in `X`
      * **WARP violations**: lists the number of WARP (pairs) (all) violations.     
      * **Congruence violations (wide)**: lists the number of Congruence violations, decomposed by cycle length.
      * **Strict general cycles (wide)**: lists the number of Strict Choice Consistency violations, decomposed by cycle length.
-     * **Strict binary cycles (wide)**: lists the number of Strict Binary Choice Consistency violations, decomposed by cycle length.
+     * **Binary intransitivities (wide)**: lists the number of Binary Choice Transitivity violations, decomposed by length of the violating sequence.
      * **Binary cycles (wide)**: lists the number of Binary Choice Consistency violations, decomposed by cycle length.
-     * **Binary intransitivities (wide)**: lists the number of Binary Choice Transitivity violations, decomposed by length of the violating sequence.     
+     * **Strict binary cycles (wide)**: lists the number of Strict Binary Choice Consistency violations, decomposed by cycle length.     
      
 
 Additional Features: Cyclic Tuples

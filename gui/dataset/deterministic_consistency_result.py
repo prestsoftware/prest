@@ -261,15 +261,15 @@ class DeterministicConsistencyResult(Dataset):
                 size=len(self.subjects),
             ),
             ExportVariant(
-                name='Strict binary cycles (wide)',
-                column_names=['subject'] + ['cycles_%d' % l for l in range(3,self.max_cycle_length+1)] + ['total'],
-                get_rows=lambda: self.export_wide('sarp_binary_menus'),
-                size=len(self.subjects),
-            ),
-            ExportVariant(
                 name='Binary cycles (wide)',
                 column_names=['subject'] + ['cycles_%d' % l for l in range(3,self.max_cycle_length+1)] + ['total'],
                 get_rows=lambda: self.export_wide('garp_binary_menus'),
+                size=len(self.subjects),
+            ),
+            ExportVariant(
+                name='Strict binary cycles (wide)',
+                column_names=['subject'] + ['cycles_%d' % l for l in range(3,self.max_cycle_length+1)] + ['total'],
+                get_rows=lambda: self.export_wide('sarp_binary_menus'),
                 size=len(self.subjects),
             ),
         )

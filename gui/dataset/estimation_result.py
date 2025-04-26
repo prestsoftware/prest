@@ -370,16 +370,13 @@ class EstimationResult(Dataset):
             ),
         )
 
-    def export_detailed(self) -> Iterator[Optional[tuple[str,Optional[int|float],int|float,str,str]]]:
+    def export_detailed(self) -> Iterator[Optional[tuple[str,Optional[int|float],str,str]]]:
         for subject in map(subject_from_response_bytes, self.subjects):
             for model, penalty, instances in subject.best_models:
                 for instance in sorted(instances):
                     yield (
                         subject.name,
-                        from_fraction(penalty.lower_bound)
-                            if penalty.lower_bound == penalty.upper_bound
-                            else None,
-                        from_fraction(penalty.upper_bound),
+                        from_fraction(penalty.upper_bound), 
                         model_get_name(model),
                         base64.b64encode(instance).decode('ascii')
                     )

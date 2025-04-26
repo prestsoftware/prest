@@ -2,9 +2,11 @@
 Models & Heuristics
 ===================
 
-----------------------------
+.. _um2:
+
+---------------------------
 Utility Maximization [#um]_
-----------------------------
+---------------------------
 
 A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained by
 **strict utility maximization** if there is a strict linear
@@ -40,6 +42,8 @@ It is explained by
      *Note:* this is only possible for datasets with nonempty and single choices at every menu.
 
 |
+
+.. _umoo2:
 
 -----------------------------------------------------
 Utility Maximization with an Outside Option [#umoo]_
@@ -94,6 +98,8 @@ is the set of weakly most preferred alternatives in `A` according to `\succsim`.
 
 |
 
+.. _uc2:
+
 ------------------------------------------------------
 Undominated Choice with Incomplete Preferences [#uc]_
 ------------------------------------------------------
@@ -120,9 +126,9 @@ whose asymmetric part is `\succ` such that the above holds for every menu `A` in
      *strict* undominated choice under strict partial order `\succ` where `x\nsucc y\nsucc x`
      for all such `x` and `y`. The converse is not true in general. 
      
-
-
 |
+
+.. _bew2:
 
 ----------------------------------------------------------------------------------------
 Status-Quo-Biased Undominated Choice with Incomplete Preferences (Bewley model) [#bew]_
@@ -147,12 +153,14 @@ there exists a strict partial order `\succ` on `X` such that for every decision 
 
 |
 
+.. _rsm2:
+
 ------------------------------
 Rational Shortlisting [#rsm]_ 
 ------------------------------
-
 (experimental implementation)
------------------------------
+
+|
 
 A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained by   
 **rational shortlisting** if there exist 
@@ -172,6 +180,8 @@ where, for any `A\subseteq X`,
      Prest currently supports only a **Pass/Fail** test for this model, with distance score output "0" and ">0", respectively.
 
 |
+
+.. _dom2:
 
 ----------------------------------------------------
 Dominant Choice with Incomplete Preferences [#dom]_
@@ -225,6 +235,8 @@ is the (possibly empty) set of the weakly most preferred alternatives in `A` acc
 
 |
 
+.. _pdcfc2:
+
 --------------------------------------------------------------------------------
 Partially Dominant Choice with Incomplete Preferences (forced-choice) [#pdcfc]_
 --------------------------------------------------------------------------------
@@ -251,6 +263,8 @@ such that for every menu `A` in `\mathcal{D}`
     \end{array}
 
 |
+
+.. _pdca2:
 
 -----------------------------------------------------------------------------
 Partially Dominant Choice with Incomplete Preferences (free-choice) [#pdca]_
@@ -282,6 +296,8 @@ such that for every menu `A` in `\mathcal{D}` with at least two alternatives
      and hence that active choices be made at all singletons.
 
 |
+
+.. _over2:
 
 ---------------------------------------------------
 Overload-Constrained Utility Maximization [#over]_
@@ -337,7 +353,7 @@ is the set of weakly most preferred alternatives in `A` according to `\succsim`.
 
 .. rubric::   Footnotes
 
-.. [#um]  The revealed-preference implications of this model have been studied extensively. Some important references include 
+.. [#um]  This is the textbook model of choice in economics and its revealed-preference implicationshave been studied extensively. Some important references include 
           :cite:authors:`samuelson38` (:cite:year:`samuelson38`), :cite:authors:`houthakker50` (:cite:year:`houthakker50`),  
           :cite:authors:`uzawa56` (:cite:year:`uzawa56`), :cite:authors:`arrow59` (:cite:year:`arrow59`),  
           :cite:authors:`richter66` (:cite:year:`richter66`) and the monograph by :cite:authors:`chambers-echenique16` (:cite:year:`chambers-echenique16`).

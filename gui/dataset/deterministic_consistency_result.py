@@ -23,9 +23,9 @@ class Row(NamedTuple):
     cycle_length: int
     garp: int
     sarp: int
+    binary_intransitivities : int
     garp_binary_menus: int
     sarp_binary_menus: int
-    binary_intransitivities : int
 
 RowC = namedtupleC(Row, intC, intC, intC, intC, intC, intC)
 
@@ -44,9 +44,9 @@ class Subject(NamedTuple):
 
     total_garp: int
     total_sarp: int
+    total_binary_intransitivities: int
     total_garp_binary_menus: int
     total_sarp_binary_menus: int
-    total_binary_intransitivities: int
 
     @staticmethod
     def from_raw(raw : SubjectRaw) -> 'Subject':
@@ -54,9 +54,9 @@ class Subject(NamedTuple):
             raw,
             total_garp=sum(r.garp for r in raw.rows),
             total_sarp=sum(r.sarp for r in raw.rows),
+            total_binary_intransitivities=sum(r.binary_intransitivities for r in raw.rows),
             total_garp_binary_menus=sum(r.garp_binary_menus for r in raw.rows),
             total_sarp_binary_menus=sum(r.sarp_binary_menus for r in raw.rows),
-            total_binary_intransitivities=sum(r.binary_intransitivities for r in raw.rows),
         )
 
 SubjectC = namedtupleC(Subject, SubjectRawC, intC, intC, intC, intC, intC)
@@ -98,9 +98,9 @@ class SubjectNode(util.tree_model.Node):
 
                     subject.total_garp,
                     subject.total_sarp,
+                    subject.total_binary_intransitivities,
                     subject.total_garp_binary_menus,
                     subject.total_sarp_binary_menus,
-                    subject.total_binary_intransitivities,
                 )
             )
         else:
@@ -116,9 +116,9 @@ class SubjectNode(util.tree_model.Node):
 
                     subject.total_garp,
                     subject.total_sarp,
+                    subject.total_binary_intransitivities,
                     subject.total_garp_binary_menus,
                     subject.total_sarp_binary_menus,
-                    subject.total_binary_intransitivities,
                 ),
                 child_count = len(subject.raw.rows),
             )
@@ -139,9 +139,9 @@ class RowNode(util.tree_model.Node):
                 '-',
                 row.garp,
                 row.sarp,
+                row.binary_intransitivities,                
                 row.garp_binary_menus,
                 row.sarp_binary_menus,
-                row.binary_intransitivities,
             )
         )
 
@@ -226,9 +226,9 @@ class DeterministicConsistencyResult(Dataset):
                     'warp_all',
                     'congruence',
                     'strict_general_cycles',
+                    'binary_intransitivities',
                     'binary_cycles',
                     'strict_binary_cycles',
-                    'binary_intransitivities',
                 ),
                 get_rows=self.export_summary,
                 size=len(self.subjects),
@@ -252,6 +252,12 @@ class DeterministicConsistencyResult(Dataset):
                 size=len(self.subjects),
             ),
             ExportVariant(
+                name='Binary intransitivities (wide)',
+                column_names=['subject'] + ['cycles_%d' % l for l in range(3,self.max_cycle_length+1)] + ['total'],
+                get_rows=lambda: self.export_wide('binary_intransitivities'),
+                size=len(self.subjects),
+            ),
+            ExportVariant(
                 name='Strict binary cycles (wide)',
                 column_names=['subject'] + ['cycles_%d' % l for l in range(3,self.max_cycle_length+1)] + ['total'],
                 get_rows=lambda: self.export_wide('sarp_binary_menus'),
@@ -261,12 +267,6 @@ class DeterministicConsistencyResult(Dataset):
                 name='Binary cycles (wide)',
                 column_names=['subject'] + ['cycles_%d' % l for l in range(3,self.max_cycle_length+1)] + ['total'],
                 get_rows=lambda: self.export_wide('garp_binary_menus'),
-                size=len(self.subjects),
-            ),
-            ExportVariant(
-                name='Binary intransitivities (wide)',
-                column_names=['subject'] + ['cycles_%d' % l for l in range(3,self.max_cycle_length+1)] + ['total'],
-                get_rows=lambda: self.export_wide('binary_intransitivities'),
                 size=len(self.subjects),
             ),
         )
@@ -302,9 +302,9 @@ class DeterministicConsistencyResult(Dataset):
                 subject.raw.warp_all,
                 sum(row.garp for row in subject.raw.rows),
                 sum(row.sarp for row in subject.raw.rows),
+                subject.total_binary_intransitivities,                
                 sum(row.garp_binary_menus for row in subject.raw.rows),
                 sum(row.sarp_binary_menus for row in subject.raw.rows),
-                subject.total_binary_intransitivities,
             )
 
             yield None

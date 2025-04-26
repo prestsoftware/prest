@@ -136,13 +136,13 @@ class Estimation(uic.estimation.Ui_Estimation, gui.ExceptionDialog):
                 'Please select at least one model for estimation',
             )
 
-        elif models == [model.SequentiallyRationalizableChoice()]:
-            QMessageBox.warning(
-                self,
-                'Please select additional models',
-                'Sequentially Rationalizable Choice is an experimental model '
-                'and cannot be selected alone. Please select at least one another model.'
-            )
+        # elif models == [model.SequentiallyRationalizableChoice()]:
+        #     QMessageBox.warning(
+        #         self,
+        #         'Please select additional models',
+        #         'Sequentially Rationalizable Choice is an experimental model '
+        #         'and cannot be selected alone. Please select at least one another model.'
+        #     )
 
         else:
             QDialog.accept(self)

@@ -3,9 +3,9 @@
 Introduction
 ------------
 
-Prest is an open-source desktop application for rational and, especially, behavioural revealed-preference analysis.
+Prest is an open-source desktop application for preference estimation and revealed-preference analysis.
 
-It can be used to analyze choice datasets created by experiments or surveys in economics or psychology. 
+It can be used to analyze choice datasets created with experiments or surveys. 
 
 | Prest helps the analyst understand the surveyed decision makers' possible choice heuristics and preferences. 
 | It does so using information about their observable decisions only.  

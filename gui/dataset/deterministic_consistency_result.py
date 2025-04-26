@@ -154,8 +154,8 @@ class DeterministicConsistencyResult(Dataset):
             self.setupUi(self)
 
             help_icon = QIcon(platform_specific.get_embedded_file_path(
-                'images/qm-16.png',      # deploy
-                'gui/images/qm-16.png',  # devel
+                'images/qm-17.png',      # deploy
+                'gui/images/qm-17.png',  # devel
             ))
 
             # we assign model to self to prevent GC

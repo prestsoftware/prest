@@ -8,6 +8,7 @@ total number of violations (resp. score) for each of the axioms/criteria (resp. 
      Much of the terminology and notation that follows is introduced and explained in the 
      :ref:`Datasets <general-datasets>` and :ref:`Revealed Preference Relations <revealed>` sections.
 
+.. _weak-axiom-of-revealed-preference-warp-budgetary:
 
 Weak Axiom of Revealed Preference - WARP
 ----------------------------------------
@@ -21,13 +22,16 @@ Weak Axiom of Revealed Preference - WARP
 
 .. math::
     x^i\succsim^R x^j\;\; \Longrightarrow\;\; x^j\not\succ^R x^i
-	
+
+.. _strong-axiom-of-revealed-preference-sarp-budgetary:
+
 Strong Axiom of Revealed Preference - SARP
 ------------------------------------------
 
 .. math::
     x^i\succsim^{\widehat{R}}x^j\;\; \Longrightarrow\;\; x^j\not\succsim^R x^i
-	
+
+.. _generalized-axiom-of-revealed-preference-garp-budgetary:
 	
 Generalized Axiom of Revealed Preference - GARP
 -----------------------------------------------
@@ -39,7 +43,9 @@ Generalized Axiom of Revealed Preference - GARP
 	*SARP* implies *WARP strict*.
 	
 	*GARP* implies *WARP non-strict*.
-	
+
+.. _houtman-maks-index-hm:
+
 Houtman-Maks index - HM
 -----------------------
 

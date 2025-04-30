@@ -3,7 +3,6 @@
 Preference Estimation
 =====================
 
-
 In **general datasets** Prest estimates which deterministic model/heuristic in its 
 toolkit is the best match for each agent. 
 
@@ -32,7 +31,6 @@ not only with the textbook model of rational choice/utility maximization but als
 models/heuristics that explain well-documented behavioural phenomena 
 such as **context-dependent choices**, **cyclic choices**, **status-quo biased choices**, **choice deferral** and **choice overload**.
 
-
 .. note::  
      By default, Prest's core program is designed to utilise all available computing power by simultaneously engaging all CPU cores.
      To change that, check the *"Disable parallelism"* box at the bottom of the *"Model estimation"* window.
@@ -43,20 +41,20 @@ such as **context-dependent choices**, **cyclic choices**, **status-quo biased c
 
 .. note::  
      If your dataset includes observations where multiple items were chosen by some agent(s) in some menu(s), you can do model estimation 
-     either by selecting either the *"Houtman-Maks"* (default) or the *"Houtman-Maks-Jaccard*" method from the *"Distance score"* scroll-down 
+     either by selecting either the *"Houtman-Maks"* (default) or the *"Jaccard-Houtman-Maks*" method from the *"Distance score"* scroll-down 
      menu on the bottom left of the *"Model estimation"* window. The two methods coincide when at most one alternative is chosen at 
      every menu in the dataset. When this is not the case, the second method is less punitive in its computation of the distance score 
-     by accounting for the (Jaccard [#jaccard]_) (dis)similarity between the agent's actual choices at a menu and what would have been the model-optimal choices
+     by accounting for the Jaccard [#jaccard]_ (dis)similarity between the agent's actual choices at a menu and what would have been the model-optimal choices
      at that menu.
 
 .. rubric::   Footnotes
 
-.. [#score]   The idea of a model's *distance score* as described above was introduced by 
-              :cite:authors:`houtman-maks85` (:cite:year:`houtman-maks85`), who 
-              applied it to the model of rational choice / utility maximization using budgetary datasets.
-              The extension of this idea to other models using general datasets was made in 
-              :cite:authors:`CCGT22` (:cite:year:`CCGT22`).
+.. [#score]   The concept of a *distance score* as described above was introduced by 
+              :cite:authors:`houtman-maks85` (:cite:year:`houtman-maks85`) for 
+              the model of rational choice / utility maximization with budgetary choice datasets.
+              It was extended in :cite:authors:`CCGT22` (:cite:year:`CCGT22`) to other models, 
+              on general choice datasets.
 
-.. [#jaccard] The Jaccard metric identifies the dissimilarity between two finite sets
-              by the elements they have in common relative to their total number of 
-              unique elements (see :cite:author:`levandowsky-winter71`, :cite:year:`levandowsky-winter71`).  
+.. [#jaccard] The Jaccard metric (see, for example, :cite:author:`levandowsky-winter71`, :cite:year:`levandowsky-winter71`) 
+              identifies the dissimilarity between two finite sets by the elements they have in common relative 
+              to their total number of unique elements: `J(A,B) = 1 - \dfrac{|A \cap B|}{|A \cup B|}`.

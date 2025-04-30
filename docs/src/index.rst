@@ -37,7 +37,7 @@ Downloads
   Select "Open anyway" if prompted. If the "Open anyway" button is not available,
   close the dialog window and double-click the :code:`.command` file again.
   
-* Prest VERSION for Linux — Follow these `instructions <https://github.com/prestsoftware/prest?tab=readme-ov-file#building-and-running-prest>`_ to build Prest from source code & run it on any Linux distro.
+* Prest VERSION for GNU/Linux — Follow these `instructions <https://github.com/prestsoftware/prest?tab=readme-ov-file#building-and-running-prest>`_ to build Prest from source code & run it on any GNU/Linux distro.
 
 * The `Prest source code <https://github.com/prestsoftware/prest>`_, written
   in `Rust <https://www.rust-lang.org/>`_ (core) and `Python
@@ -60,8 +60,8 @@ Declarations
 Documentation
 -------------
 
-The pages linked below (and also in the navigation menu on the left) contain information about Prest's features, 
-define the terms used in the graphical user interface, and explain relevant background concepts.
+The pages linked below (also in the navigation menu on the left) contain information about Prest's features, 
+define the terms used in its graphical user interface, and explain relevant background concepts.
 
 .. tip:: 
      Text boxes with the  **Tip** label provide essential information about Prest's features.

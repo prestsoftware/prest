@@ -61,7 +61,7 @@ extlinks = {
 }
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+# templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -194,6 +194,7 @@ latex_elements = {
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
+    #'sphinxsetup': "verbatimwrapslines='false'",
 }
 
 # Grouping the document tree into LaTeX files. List of tuples

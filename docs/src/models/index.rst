@@ -12,8 +12,8 @@ A general choice dataset `\mathcal{D}` on a set of alternatives `X` is explained
 **strict utility maximization** if there is a strict linear
 order `\succ` on `X` such that for every menu `A` in `\mathcal{D}`
 
-.. math::
-	C(A) = \Big\{x\in A: x\succ y\;\; \text{for all $y\in A\setminus\{x\}$}\Big\} 
+.. math:: C(A) = \Big\{x\in A: x\succ y\;\; \text{for all $y\in A\setminus\{x\}$}\Big\} 
+   :label: um_strict
 
 It is explained by
 **non-strict utility maximization** if there is a weak order

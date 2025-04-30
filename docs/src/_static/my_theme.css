@@ -20,3 +20,23 @@ div.docutils {
 a[title="General Index"] {
 	display: none !important;
 }
+
+/* Ensure footnote list and individual footnotes are displayed inline */
+aside.footnote-list {
+ display: inline-block;
+}
+	
+aside.footnote-list aside.footnote {
+ display: inline;
+ vertical-align: top;
+}
+	
+aside.footnote-list aside.footnote .label {
+ display: inline;
+}
+	
+aside.footnote-list aside.footnote p {
+ display: inline;
+ margin: 0;
+}
+	

@@ -155,6 +155,8 @@ Special remarks about this option:
 
 3. *"Delete"*. Removes the selected dataset from the workspace area.
 
+|
+
 Drop-down menu options
 ----------------------
 
@@ -180,4 +182,4 @@ Drop-down menu options
 
 (1) *"Prest manual"*. Opens the embedded Prest documentation pages on your web browser.
 
-(2) *"About"*. Opens a dialog with information about Prest's version, contributors, copyright and license. 	  
+(2) *"About"*. Opens a dialog with information about Prest's version, contributors, copyright and license.

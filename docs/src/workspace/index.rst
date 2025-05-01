@@ -155,8 +155,6 @@ Special remarks about this option:
 
 3. *"Delete"*. Removes the selected dataset from the workspace area.
 
-|
-
 Drop-down menu options
 ----------------------
 

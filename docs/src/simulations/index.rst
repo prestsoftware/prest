@@ -2,15 +2,15 @@ Simulations
 ===========
 .. _direct-simulations:
 
-Prest offers two ways in which you can obtain information about the probability distribution of various variables 
+Prest offers two ways in which one can obtain information about the probability distribution of various variables 
 of interest (e.g. axiom violations; model distance scores) when a large number of artificial subjects 
 are assumed to make **uniform-random choices** from menus that are derived
 from a finite set of general choice alternatives. 
 
-From these probability distributions you can then identify human subjects whose choice behaviour cannot 
+From these probability distributions one can then identify human subjects whose choice behaviour cannot 
 be distinguished from random behaviour for a given level of statistical significance.
 
-This procedure therefore allows you to perform a *power test* for your model-estimation 
+This procedure therefore allows one to perform a *power test* for their model-estimation 
 and consistency-analysis computations on general datasets, as was first suggested 
 in :cite:author:`bronars87` :cite:yearpar:`bronars87` for budgetary datasets.
 
@@ -55,14 +55,14 @@ Under *"Menu distribution options"* select one of the following:
 
 |
 
-If you selected *"Default alternative -> None"* above, then you can also select one of the following under *"Choice mode"/"Observations without default alternatives"*:
+If *"Default alternative -> None"* was selected above, then one can also select one of the following under *"Choice mode"/"Observations without default alternatives"*:
 
 * *"Forced choice"*: some alternative is chosen from every menu (deferral/outside option not feasible).
 
 * *"Non-forced choice"*: choices can be empty-valued (deferral/outside option feasible).
 
 .. note::
-     In both these cases you can allow multiple alternatives to be chosen by checking the *"Multi-valued choice"* box.
+     In both these cases one can allow multiple alternatives to be chosen by checking the *"Multi-valued choice"* box.
 
 The corresponding simulated choice probabilities are as follows:
 
@@ -93,14 +93,14 @@ The corresponding simulated choice probabilities are as follows:
 
 |
 
-If you selected *"Default alternative -> Uniform"* above, then you can also select one of the following under *"Choice mode"/"Observations with default alternatives"*:
+If *"Default alternative -> Uniform"* was selected above, then one can also select one of the following under *"Choice mode"/"Observations with default alternatives"*:
 
 * *"Unbiased"*: all alternatives (including the default) are equally likely to be chosen.
 
 * *"Default-biased"*: this adapts the structure of "Non-forced choice" simulations to an environment where a default/status quo option is present and replaces the deferral/outside option; however, because the default/status quo option is one of the `k` alternatives in the menu now, this adaptation generates a choice probability distribution that is biased towards that option.
 
 .. note::
-     In both these cases you can again allow multiple alternatives to be chosen by checking the *"Multi-valued choice"* box.
+     In both these cases one can again allow multiple alternatives to be chosen by checking the *"Multi-valued choice"* box.
 
 In this case the corresponding simulated choice probabilities are as follows:
 
@@ -138,9 +138,9 @@ In this case the corresponding simulated choice probabilities are as follows:
 .. note::
      The probability of an alternative being chosen under the "Multi-valued choice" mode is interpreted as the probability that this belongs to the chosen submenu of the relevant menu. Assuming "Forced choice" and considering an arbitrary menu `A` with `k` alternatives, every nonempty weak submenu of `A` is chosen with probability `\frac{1}{2^k-1}`. Since each of the `k` alternatives belongs to exactly `\frac{2^k}{2}` of these submenus, it follows that each of them is chosen with probability `\frac{2^k}{2(2^k-1)}`. If "Non-forced choice" is selected instead, then since some nonempty submenu of `A` is chosen with probability `\frac{k}{k+1}` (because the deferral/outside option is chosen with probability `\frac{1}{k+1}`), the corresponding choice probability for each of the `k` alternatives is adjusted accordingly.
 
-| In all cases the resulting random dataset will appear in the workspace and you can apply any Prest operation on it. 
+| In all cases the resulting random dataset will appear in the workspace and one can apply any Prest operation on it. 
 | The simulated subjects are named *"Random1, Random2, ..."*. 
-| You can inspect individual entries by double-clicking on the dataset.
+| Individual entries can be inspected by double-clicking on the dataset.
 |
 
 .. image:: ../_static/images/simulations3.png
@@ -161,7 +161,7 @@ In this case the corresponding simulated choice probabilities are as follows:
 Generating random choices based on an *existing* dataset
 --------------------------------------------------------
 
-| You can use this feature to generate choices of random-behaving subjects who faced *exactly* the same menus that subjects
+| One can use this feature to generate choices of random-behaving subjects who faced *exactly* the same menus that subjects
 | in an existing dataset were presented with.
 |
 | In this case, Prest reproduces subject-by-subject the menu structure of the original dataset.
@@ -178,7 +178,7 @@ Generating random choices based on an *existing* dataset
 | In the pop-up window, the "*Random subjects per subject*" option specifies how many simulated subjects will be generated 
 | in the way described above for each subject in the original dataset. 
 |
-| The *"Subjects"* and *"Observations"* entries below that option enable you to fine-tune the size dimensions 
+| The *"Subjects"* and *"Observations"* entries below that option enable one to fine-tune the size dimensions 
 | of the simulated dataset that will be produced.
 
 |
@@ -194,18 +194,18 @@ Generating random choices based on an *existing* dataset
 | In addition:
 |
 |       If the existing dataset contains some observations with default alternatives and others without 
-|       (see, for example, :ref:`the hybrid dataset  <dataset-examples>`),  then you can configure the simulation for each mode of analysis.
+|       (see, for example, :ref:`the hybrid dataset  <dataset-examples>`),  then one can configure the simulation for each mode of analysis.
 |
 |       If the existing dataset contains some observations where the deferral/outside option was chosen, 
-|       then you can check the *"Preserve deferrals"* box to ensure that the simulated datasets 
+|       then one can check the *"Preserve deferrals"* box to ensure that the simulated datasets 
 |       also feature choice of the deferral/outside option at all relevant menus.
 |
-| The resulting random dataset will again appear in the workspace and you can apply any Prest operation on it.
+| The resulting random dataset will again appear in the workspace and one can apply any Prest operation on it.
 |
 | The simulated subjects here are named 
 |                  *"Subject1Random1, ..., Subject1RandomN, SubjectKRandom1, ..., SubjectKRandomN"*, 
 | where *"Subject1, ..., SubjectK"* are the subjects' names in the original dataset
-| and `N` is the number of simulated subjects selected by you.
+| and `N` is the number of simulated subjects selected by the user.
 |
 
 .. image:: ../_static/images/simulations9.png

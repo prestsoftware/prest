@@ -8,58 +8,65 @@ Datasets
 General Datasets
 ----------------
 
-Such datasets consist of a finite collection of **menus** and the **choices observed** at these menus. 
+Suppose that the set of all choice alternatives is discrete and denoted by `X=\{x_1,\ldots,x_m\}`. 
 
-They can be further distinguished between datasets with or without default/status quo options.
+A **general dataset** in this case consists of a finite collection of **menus** from `X` and the **choices** observed at these menus. 
+
+Datasets of this kind can be further distinguished between datasets with or without default/status quo options.
 
 General datasets without default/status quo options
 ===================================================
 
-Given a choice set of interest that is denoted `X=\{x_1,\ldots,x_m\}`, a menu is a set `A\subseteq X`, 
-and the observed choice(s) at this menu is captured by the set `C(A)`, where `\emptyset\subseteq C(A)\subseteq A`. 
-
-A **general dataset without default/status quo options** 
+Such a dataset is a collection of `k` observations,
 
 .. math::
-	\mathcal{D}=\left\{\big(A_i,C(A_i)\bigr)\right\}_{i=1}^k
+	\mathcal{D}=\left\{\big(A_i,C(A_i)\bigr)\right\}_{i=1}^k,
 
-is a collection of `k` observations, each of them a pair that comprises a menu and the alternative(s) chosen from it, if any. 
+each of them a pair that comprises a menu `A\subseteq X` and the alternative(s) observed to be chosen from `A`, if any. 
 
-If `C(A)` contains more than one alternative, it is understood that the subject has chosen (or may be thought of as having chosen)
-any or all these alternatives at `A`, possibly over different instances where `A` was presented in `\mathcal{D}` 
+The choice(s) that were observed at menu `A` is (are) denoted by the set `C(A)`, where `\emptyset\subseteq C(A)\subseteq A`. 
+
+
+If `C(A)` contains more than one alternative, it is understood that the decision maker has chosen (or may be thought of as having chosen)
+*any or all* of these alternatives at `A`, possibly over different instances where `A` was presented in `\mathcal{D}` 
 (see also :ref:`merging <merging-tip>`). 
 
-If `C(A)=\emptyset`, it is understood that the agent has opted for the **deferral outside option**, i.e.
-to **avoid** or **delay** making an active choice at menu `A`.
+| If `C(A)=\emptyset`, it is understood that the agent has opted for the **deferral outside option**, 
+| i.e. to **avoid** or **delay** making an active choice at menu `A`.
 
 General datasets with default/status quo options
 ================================================
 
-Such datasets reflect situations where the agent under study was known to be initially endowed 
-with some alternative `s\in A` before being observed to choose from menu `A`.
+Such a dataset reflects situations where the decision makers under study are known to have been endowed 
+with some alternative `s` in `A` before being observed to choose from menu `A`.
 
-Formally, a **general dataset with default/status quo alternatives** 
+Formally, a dataset of this kind is a collection of `k` observations,
 
 .. math::
-	\mathcal{D}=\left\{\big((A_i,s_i),C(A_i,s_i)\bigr)\right\}_{i=1}^k
+     	\mathcal{D}=\left\{\big((A_i,s_i),C(A_i,s_i)\bigr)\right\}_{i=1}^k,
 
-is a collection of `k` observations, with each of them a pair comprising a **decision problem** and the alternative(s) 
-that was/were observed to be chosen at this decision problem. 
-In each decision problem `(A_i,s_i)`, `A_i` is a menu and `s_i\in A_i` the default/status quo alternative at that menu, 
-while `\emptyset\neq C(A_i,s_i)\subseteq A_i` is required to hold for all `i\leq k` in such datasets.
+| each of them a pair that comprises a **decision problem** and the alternative(s)  observed to be chosen at this decision problem. 
+| At each decision problem `(A_i,s_i)`, `A_i` is a menu and `s_i\in A_i` the **default/status quo option** at that menu. 
+| Furthermore, `\emptyset\neq C(A_i,s_i)\subseteq A_i` is required to hold for all `i\leq k` in such datasets.
+
+The interpretation of the case where `C(A,s)` contains more than one alternative is the same as in the case of general datasets without default/status quo options.
+
+The reason why `C(A,s)` is required to be non-empty is that, at this decision problem, the individual under study is 
+assumed to have been endowed with `s` at `A` before being observed to choose from `A`.
+Hence, unlike the case of general datasets without default/status quo options, not making an active choice at `(A,s)` means choosing the alternative `s` in `A`. 
 
 .. _dataset-examples:
 
 .. tip::
      To be analyzable by Prest, a general dataset must be a .csv file.
 
-     An  `example general dataset </_static/examples/general-no-defaults.csv>`_.
+     An  `example general dataset without default/status quo alternatives </_static/examples/general-no-defaults.csv>`_.
 
      An `example general dataset with default/status quo alternatives </_static/examples/general-defaults.csv>`_.
 	 
      An `example hybrid general dataset containing both types of observations </_static/examples/general-hybrid.csv>`_.
     
-     To import such a dataset into Prest, select *"Workspace -> Import general dataset"* and select the target file from the relevant directory.
+     To import such a dataset into Prest, select *"Workspace -> Import general dataset"* and browse to the target file.
      
      The new pop-up window features four column headers under *"Columns"*: **Subject**, **Menu**, **Default** and **Choice**. 
      Select the appropriate column name in your .csv file from the drop-down menu to match the corresponding column header. 
@@ -78,7 +85,7 @@ Budgetary Datasets
 In such datasets the analyst has observed consumer choices over bundles of `n` commodities and   
 the prices of these commodities. 
 
-**Prices** are captured by a vector `p\in\mathbb{R}^n_{+}`. 
+**Prices** are captured by a vector `p=(p_1,p_2,\ldots,p_n)\in\mathbb{R}^n_{+}`, where `p_i\geq 0` is the price of good `i\in\{1,\ldots,n\}`.
 
 A consumer's **demand** at these prices is captured by the **consumption bundle** `x(p)\in\mathbb{R}^n_+`.
  

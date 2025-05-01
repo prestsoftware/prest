@@ -1,8 +1,11 @@
 Preference Relations
 ====================
 
-Let the set of choice alternatives being analysed be denoted by `X`.  
+| Suppose that the set of choice alternatives under study is denoted by `X`. 
+| For example: 
 
+* | `X=\{apple,banana,orange\}` 
+* | `X=\{\!` all consumption bundles of `n` goods that can be bought at positive or non-negative amounts `\!\}` 
 
 Weak Preferences
 ----------------

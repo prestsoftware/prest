@@ -1,6 +1,6 @@
-==========
-References
-==========
+===============
+Some References
+===============
 
 Rational & Behavioural Revealed Preference Theory & Methods
 ===========================================================
@@ -10,8 +10,8 @@ Rational & Behavioural Revealed Preference Theory & Methods
    :style: plain
    :labelprefix: Th
 
-Some Relevant Empirical/Experimental Studies
-============================================
+Empirical/Experimental Studies
+==============================
 
 .. bibliography:: references_psych.bib
    :all:

@@ -1,4 +1,10 @@
 .. image:: _static/images/prest-logo.png
+  :align: center  
+  :width: 80%
+  :target: ../build/html/index.html
+
+|
+|
 
 Introduction
 ------------
@@ -34,13 +40,13 @@ Recently Added Features
 -----------------------
 
 * | Since VERSION: new suite of tests for datasets where the same menu is presented more than once.
-  | (support for *random choice functions*)
+  | (support for possibly *random choice data*)
   
 * | Since VERSION: new measure of model proximity for datasets with multiple choices per menu. 
-  | (support for *choice correspondences*)
+  | (support for possibly *multi-valued choice functions/correspondences*)
   
 * | Since v1.1.0: visualization of preference-estimation output using `GraphViz <https://graphviz.org>`_ .
-  | (the GraphViz binary file must be copied to the same directory as Prest)
+  | (the GraphViz binary file must be placed in the same directory as Prest)
 
 |
 

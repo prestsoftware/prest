@@ -34,6 +34,16 @@ If `C(A)` contains more than one alternative, it is understood that the decision
 | If `C(A)=\emptyset`, it is understood that the agent has opted for the **deferral outside option**, 
 | i.e. to **avoid** or **delay** making an active choice at menu `A`.
 
+|
+
+| A spreadsheet screenshot showing the structure of a general dataset without default/status quo alternatives is shown below.
+| The 1st column contains the subject ID; the 2nd contains the menu; and the 3rd contains the choice(s) observed at that menu.
+| Empty cells in the third column indicate that the subject opted for the deferral outside option at that menu.
+ 
+ .. image:: /_static/images/dataset-general-without-defaults.png
+  :width: 45%
+  :target: ../build/html/notation/datasets.html
+
 General datasets with default/status quo options
 ================================================
 
@@ -54,6 +64,15 @@ The interpretation of the case where `C(A,s)` contains more than one alternative
 The reason why `C(A,s)` is required to be non-empty is that, at this decision problem, the individual under study is 
 assumed to have been endowed with `s` at `A` before being observed to choose from `A`.
 Hence, unlike the case of general datasets without default/status quo options, not making an active choice at `(A,s)` means choosing the alternative `s` in `A`. 
+
+| A spreadsheet screenshot showing the structure of a general dataset with default/status quo alternatives is shown below.
+| The 1st column contains the subject ID; the 2nd contains the menu; the 3rd contains the default/status quo alternative at that menu; and the 4th contains the choice(s) observed at that menu.
+
+ 
+ .. image:: /_static/images/dataset-general-with-defaults.png
+  :width: 45%
+  :target: ../build/html/notation/datasets.html
+
 
 .. _dataset-examples:
 
@@ -95,6 +114,13 @@ A **budgetary dataset**
 	\mathcal{D}=\left\{(p^i,x^i)\right\}_{i=1}^k
 
 is a collection of `k` observations, each of them a pair `(p^i,x^i)` comprising the consumption bundle `x^i` that was observed to be chosen when prices were `p^i`.
+
+| A spreadsheet screenshot showing the structure of a budgetary dataset is shown below.
+| The 1st column contains the subject ID; columns 2 to 7 contain the prices of the goods; and columns 8 to 13 contain the quantities of the goods chosen by the subject at these prices.
+ 
+ .. image:: /_static/images/dataset-budgetary.png
+  :width: 100%
+  :target: ../build/html/notation/datasets.html
 
 .. tip::
      To be analyzable by Prest, a budgetary dataset must be a .csv file.

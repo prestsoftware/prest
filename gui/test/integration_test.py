@@ -63,6 +63,7 @@ DATASETS_LONG = (
 
 @pytest.mark.parametrize('name,alts,subj_count', DATASETS)
 def test_consistency_analysis(tmpdir, name, alts, subj_count):
+    # should probably be specified in DATASETS but I guess it's good enough for now
     has_repeated_menus = (
         name in ('general-merging', 'general-no-defaults-128', 'general-stochastic-consistency')
     )
@@ -73,7 +74,8 @@ def test_consistency_analysis(tmpdir, name, alts, subj_count):
     assert ds.alternatives == alts.split()
     assert len(ds.subjects) == subj_count
 
-    # TODO: repeated menus are not supported atm so skipping these cases for now
+    # repeated menus are not supported for deterministic consistency atm
+    # so skipping these cases for now
     # see branch repeated-menus
     if not has_repeated_menus:
         dsc = ds.analysis_consistency_deterministic(MockWorker(), None)

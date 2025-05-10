@@ -12,7 +12,7 @@ from dataset.experimental_data import ExperimentalData
 import dataset.budgetary
 
 OVERWRITE_EXPECTED_FILES = False
-#OVERWRITE_EXPECTED_FILES = True
+# OVERWRITE_EXPECTED_FILES = True
 
 def csv_columns(headers, rows):
     columns = zip(*rows)
@@ -53,6 +53,7 @@ DATASETS = (
     ('estimation-models-no-defaults', 'w x y z', 11),
     ('general-hybrid', 'a b c d', 2),
     ('general-merging', 'A B C D E', 1),
+    ('general-stochastic-consistency', 'a b c', 6),
 )
 
 DATASETS_LONG = (
@@ -62,7 +63,7 @@ DATASETS_LONG = (
 
 @pytest.mark.parametrize('name,alts,subj_count', DATASETS)
 def test_consistency_analysis(tmpdir, name, alts, subj_count):
-    if name in ('general-merging', 'general-no-defaults-128'):
+    if name in ('general-merging', 'general-no-defaults-128', 'general-stochastic-consistency'):
         # TODO: repeated menus are not supported atm so skipping these cases for now
         # see branch repeated-menus
         return

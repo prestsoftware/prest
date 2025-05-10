@@ -63,10 +63,9 @@ DATASETS_LONG = (
 
 @pytest.mark.parametrize('name,alts,subj_count', DATASETS)
 def test_consistency_analysis(tmpdir, name, alts, subj_count):
-    if name in ('general-merging', 'general-no-defaults-128', 'general-stochastic-consistency'):
-        # TODO: repeated menus are not supported atm so skipping these cases for now
-        # see branch repeated-menus
-        return
+    has_repeated_menus = (
+        name in ('general-merging', 'general-no-defaults-128', 'general-stochastic-consistency')
+    )
 
     rows = load_raw_csv('docs/src/_static/examples/%s.csv' % name)
     ds = ExperimentalData.from_csv('dataset', rows[1:], (0, 1, None, 2))
@@ -74,14 +73,20 @@ def test_consistency_analysis(tmpdir, name, alts, subj_count):
     assert ds.alternatives == alts.split()
     assert len(ds.subjects) == subj_count
 
-    dsc = ds.analysis_consistency_deterministic(MockWorker(), None)
-    assert len(dsc.subjects) == len(ds.subjects)
+    # TODO: repeated menus are not supported atm so skipping these cases for now
+    # see branch repeated-menus
+    if not has_repeated_menus:
+        dsc = ds.analysis_consistency_deterministic(MockWorker(), None)
+        assert len(dsc.subjects) == len(ds.subjects)
 
-    check_export(tmpdir, dsc, 'summary', 'gui/test/expected/%s-cons-summary.csv' % name)
-    check_export(tmpdir, dsc, 'congruence violations (wide)', 'gui/test/expected/%s-cons-garp.csv' % name)
-    check_export(tmpdir, dsc, 'strict general cycles (wide)', 'gui/test/expected/%s-cons-sarp.csv' % name)
-    check_export(tmpdir, dsc, 'strict binary cycles (wide)', 'gui/test/expected/%s-cons-sarp-bin.csv' % name)
-    check_export(tmpdir, dsc, 'binary cycles (wide)', 'gui/test/expected/%s-cons-garp-bin.csv' % name)
+        check_export(tmpdir, dsc, 'summary', 'gui/test/expected/%s-cons-summary.csv' % name)
+        check_export(tmpdir, dsc, 'congruence violations (wide)', 'gui/test/expected/%s-cons-garp.csv' % name)
+        check_export(tmpdir, dsc, 'strict general cycles (wide)', 'gui/test/expected/%s-cons-sarp.csv' % name)
+        check_export(tmpdir, dsc, 'strict binary cycles (wide)', 'gui/test/expected/%s-cons-sarp-bin.csv' % name)
+        check_export(tmpdir, dsc, 'binary cycles (wide)', 'gui/test/expected/%s-cons-garp-bin.csv' % name)
+
+    dss = ds.analysis_consistency_stochastic(MockWorker(), None)
+    check_export(tmpdir, dss, 'summary', f'gui/test/expected/{name}-stochastic.csv')
 
     dst_menus = ds.analysis_tuple_intrans_menus(MockWorker(), None)
     dst_alts = ds.analysis_tuple_intrans_alts(MockWorker(), None)

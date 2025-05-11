@@ -46,12 +46,6 @@ Regularity
 *For all menus* `A`, `B` in `\mathcal{D}` such that `A\supset B`, and for all `x` in `A`, 
 `Pr(x,A)\leq Pr(x,B\}`.
 
-.. _stochastic-decisiveness:
-
-Stochastic Decisiveness
------------------------
-*For every menu* `A` in `\mathcal{D}`, 
-`\displaystyle\sum_{x\in A}Pr(x,A)=1`.
 
 .. _stochastic-consistency-tip:
 

@@ -96,9 +96,9 @@ SPECIAL_NAMES = {
     UndominatedChoice(strict=False):
         'Undominated Choice with Incomplete Preferences (Non-strict)',
     PartiallyDominantChoice(fc=True):
-        'Partially Dominant Choice with Incomplete Preferences (forced-choice)',
+        'Partially Dominant Choice with Incomplete Preferences (Forced-choice)',
     PartiallyDominantChoice(fc=False):
-        'Partially Dominant Choice with Incomplete Preferences (free-choice)',
+        'Partially Dominant Choice with Incomplete Preferences (Free-choice)',
     StatusQuoUndominatedChoice():
         'Status-Quo-Biased Undominated Choice with Incomplete Preferences (Bewley)',
     Overload(PreorderParams(strict=True, total=True)):
@@ -198,15 +198,10 @@ MODELS = [
                 ('Strict', preorder(strict=True, total=False)),
                 ('Non-strict', preorder(strict=False, total=False)),
             ),
-            mgroup('Partially Dominant Choice with Incomplete Preferences (forced-choice)',
+            mgroup('Partially Dominant Choice with Incomplete Preferences',
                 'models/fc.html#incomplete-preference-maximization-partially-dominant-choice-forced',
-                ('Strict', PartiallyDominantChoice(fc=True)),
-                None,
-            ),
-            mgroup('Partially Dominant Choice with Incomplete Preferences (free-choice)',
-                'models/nfc.html#incomplete-preference-maximization-partially-dominant-choice-non-forced',
-                ('Strict', PartiallyDominantChoice(fc=False)),
-                None,
+                ('Forced-choice', PartiallyDominantChoice(fc=True)),
+                ('Free-choice', PartiallyDominantChoice(fc=False)),
             ),
             mgroup('Overload-Constrained Utility Maximization',
                 'models/nfc.html#overload-constrained-utility-maximization',

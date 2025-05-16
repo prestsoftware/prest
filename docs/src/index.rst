@@ -25,7 +25,7 @@ Downloads
   Select "Open anyway" if prompted. If the "Open anyway" button is not available,
   close the dialog window and double-click the :code:`.command` file again.
   
-* Prest VERSION for GNU/Linux — Follow these `instructions <https://github.com/prestsoftware/prest?tab=readme-ov-file#building-and-running-prest>`_ 
+* Prest VERSION for `GNU/Linux <https://www.gnu.org/>`_: Follow these `instructions <https://github.com/prestsoftware/prest?tab=readme-ov-file#building-and-running-prest>`_ 
   to build Prest from source code & run it on any distro.
 
 * The `Prest source code <https://github.com/prestsoftware/prest>`_, written

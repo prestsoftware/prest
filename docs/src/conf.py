@@ -167,7 +167,7 @@ suppress_warnings = ["config.cache"]
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 html_favicon = '_static/favicon.png'
-# html_css_files = ['my_theme.css']
+html_css_files = ['my_theme.css']
 
 
 # -- Options for HTMLHelp output ------------------------------------------

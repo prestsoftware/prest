@@ -1,42 +1,9 @@
-/* hide the bottom navbar */
-div#navbar-related {
-	display: none;
-}
-
-/* replace the subTOC heading */
-div#sidebar-wrapper > div.sidebar > div > h3::before {
-	content: 'On this Page';
-	color: #2fa4e7;
-}
-div#sidebar-wrapper > div.sidebar > div > h3 > a {
-	display: none;
-}
-
-/* make bibliography respect body width */
-div.docutils {
-	width: auto !important;
-}
-
-a[title="General Index"] {
-	display: none !important;
-}
-
-/* Ensure footnote list and individual footnotes are displayed inline */
-aside.footnote-list {
- display: inline-block;
+aside.footnote {
+	clear: both;
+	display: block;
 }
 	
-aside.footnote-list aside.footnote {
- display: inline;
- vertical-align: top;
+aside.footnote span.label {
+	float: left;
+	margin-right: 1em;
 }
-	
-aside.footnote-list aside.footnote .label {
- display: inline;
-}
-	
-aside.footnote-list aside.footnote p {
- display: inline;
- margin: 0;
-}
-	

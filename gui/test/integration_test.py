@@ -82,7 +82,7 @@ def test_consistency_analysis(tmpdir, name, alts, subj_count):
         check_export(tmpdir, dsc, 'summary', 'gui/test/expected/%s-cons-summary.csv' % name)
         check_export(tmpdir, dsc, 'congruence violations (wide)', 'gui/test/expected/%s-cons-garp.csv' % name)
         check_export(tmpdir, dsc, 'strict general cycles (wide)', 'gui/test/expected/%s-cons-sarp.csv' % name)
-        # TODO 'binary intransitivities' test to be added here
+        check_export(tmpdir, dsc, 'binary intransitivities (wide)', 'gui/test/expected/%s-cons-binint.csv' % name)
         check_export(tmpdir, dsc, 'strict binary cycles (wide)', 'gui/test/expected/%s-cons-sarp-bin.csv' % name)
         check_export(tmpdir, dsc, 'binary cycles (wide)', 'gui/test/expected/%s-cons-garp-bin.csv' % name)
 

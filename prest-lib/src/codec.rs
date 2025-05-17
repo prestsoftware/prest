@@ -201,7 +201,7 @@ impl<T : Encode> Encode for Option<T> {
         match self {
             &None => 0u8.encode(f),
             &Some(ref x) => {
-                1u8.encode(f)?;                
+                1u8.encode(f)?;
                 x.encode(f)
             }
         }
@@ -342,7 +342,7 @@ impl<K : Encode + Eq + Hash, V : Encode> Encode for HashMap<K, V> {
     fn encode<W : Write>(&self, f : &mut W) -> Result<()> {
         self.len().encode(f)?;
         for kv in self {
-            kv.encode(f)?;            
+            kv.encode(f)?;
         }
         Ok(())
     }
@@ -359,7 +359,7 @@ impl<K : Encode, V : Encode> Encode for BTreeMap<K, V> {
     fn encode<W : Write>(&self, f : &mut W) -> Result<()> {
         self.len().encode(f)?;
         for kv in self {
-            kv.encode(f)?;            
+            kv.encode(f)?;
         }
         Ok(())
     }

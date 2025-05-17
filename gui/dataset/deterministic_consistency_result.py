@@ -139,7 +139,7 @@ class RowNode(util.tree_model.Node):
                 '-',
                 row.garp,
                 row.sarp,
-                row.binary_intransitivities,                
+                row.binary_intransitivities,
                 row.garp_binary_menus,
                 row.sarp_binary_menus,
             )
@@ -305,7 +305,7 @@ class DeterministicConsistencyResult(Dataset):
                 subject.raw.warp_all,
                 sum(row.garp for row in subject.raw.rows),
                 sum(row.sarp for row in subject.raw.rows),
-                subject.total_binary_intransitivities,                
+                subject.total_binary_intransitivities,
                 sum(row.garp_binary_menus for row in subject.raw.rows),
                 sum(row.sarp_binary_menus for row in subject.raw.rows),
             )

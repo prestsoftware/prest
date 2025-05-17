@@ -1,3 +1,10 @@
+.. note::
+     
+     `Link </_static/examples/general-stochastic-consistency.csv>`_
+     **to an example general dataset that can be analysed for stochastic choice consistency as described later on this page.**
+
+|
+
 Stochastic Consistency Criteria for General Datasets
 ====================================================
 
@@ -11,30 +18,34 @@ and any alternative `a` in that menu,
 `Pr(a,A)`  denotes the **choice frequency** or **choice probability** of 
 `a` at the different presentations of menu `A` for some agent in `\mathcal{D}`.   
 
+.. _weak-stochastic-transitivity:
+
 Weak Stochastic Transitivity
 ----------------------------
 *For all* `x,y,z\in X`, `Pr(x,\{x,y\})\geq \frac{1}{2}` and
 `Pr(y,\{y,z\})\geq \frac{1}{2}` *implies* `Pr(x,\{x,z\})\geq \frac{1}{2}`.
+
+.. _moderate-stochastic-transitivity:
 
 Moderate Stochastic Transitivity
 --------------------------------
 *For all* `x,y,z\in X`, `Pr(x,\{x,y\})\geq \frac{1}{2}` and
 `Pr(y,\{y,z\})\geq \frac{1}{2}` *implies* `Pr(x,\{x,z\})\geq \min\{Pr(x,\{x,y\}),Pr(y,\{y,z\})\}`.
 
+.. _strong-stochastic-transitivity:
+
 Strong Stochastic Transitivity
 ------------------------------
 *For all* `x,y,z\in X`, `Pr(x,\{x,y\})\geq \frac{1}{2}` and
 `Pr(y,\{y,z\})\geq \frac{1}{2}` *implies* `Pr(x,\{x,z\})\geq \max\{Pr(x,\{x,y\}),Pr(y,\{y,z\})\}`.
+
+.. _regularity-def:
 
 Regularity
 ----------
 *For all menus* `A`, `B` in `\mathcal{D}` such that `A\supset B`, and for all `x` in `A`, 
 `Pr(x,A)\leq Pr(x,B\}`.
 
-Stochastic Decisiveness
------------------------
-*For every menu* `A` in `\mathcal{D}`, 
-`\displaystyle\sum_{x\in A}Pr(x,A)=1`.
 
 .. _stochastic-consistency-tip:
 

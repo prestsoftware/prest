@@ -1,4 +1,4 @@
-"subject","dist_score","model","instances"
+"subject","distance_score","model","instances"
 "random1","9","Utility Maximization (Strict)","1"
 "","9","Overload-Constrained Utility Maximization (Strict)","1"
 "random2","9","Utility Maximization (Strict)","2"

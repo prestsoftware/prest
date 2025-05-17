@@ -336,9 +336,9 @@ pub struct Row {
     cycle_length : u32,
     garp : BigUint,
     sarp : BigUint,
+    binary_intransitivities : BigUint,
     garp_binary_menus : BigUint,
     sarp_binary_menus : BigUint,
-    binary_intransitivities : BigUint,
 }
 
 impl Row {
@@ -347,9 +347,9 @@ impl Row {
             cycle_length,
             garp: zero(),
             sarp: zero(),
+            binary_intransitivities: zero(),
             garp_binary_menus: zero(),
             sarp_binary_menus: zero(),
-            binary_intransitivities: zero(),
         }
     }
 }
@@ -360,9 +360,9 @@ impl Encode for Row {
             &self.cycle_length,
             &self.garp,
             &self.sarp,
+            &self.binary_intransitivities,
             &self.garp_binary_menus,
             &self.sarp_binary_menus,
-            &self.binary_intransitivities,
         ).encode(f)
     }
 }
@@ -644,6 +644,13 @@ pub fn run(request : &Request) -> Result<Response> {
     let cycles_strict_binary = find_cycles(&g_strict_binary);
     let cycles_non_strict_binary = find_cycles(&g_non_strict_binary);
 
+    // binary intransitivities
+    summarise(
+        &mut rows,
+        binary_intransitivities(alt_count, &g_non_strict_binary, choices),
+        |r, bi| r.binary_intransitivities += bi.multiplicity,
+    );
+
     // garp_binary
     summarise(
         &mut rows,
@@ -656,13 +663,6 @@ pub fn run(request : &Request) -> Result<Response> {
         &mut rows,
         cycles_strict_binary,
         |r, c| r.sarp_binary_menus += c.multiplicity_in(&g_strict_binary)
-    );
-
-    // binary intransitivities
-    summarise(
-        &mut rows,
-        binary_intransitivities(alt_count, &g_non_strict_binary, choices),
-        |r, bi| r.binary_intransitivities += bi.multiplicity,
     );
 
     Ok(Response {
@@ -989,17 +989,17 @@ mod test {
                 cycle_length: 2,
                 garp: BigUint::from(0u32),
                 sarp: BigUint::from(0u32),
+                binary_intransitivities: BigUint::from(0u32),
                 garp_binary_menus: BigUint::from(0u32),
                 sarp_binary_menus: BigUint::from(0u32),
-                binary_intransitivities: BigUint::from(0u32),
             },
             Row{
                 cycle_length: 3,
                 garp: BigUint::from(1u32),
                 sarp: BigUint::from(0u32),
+                binary_intransitivities: BigUint::from(2u32),
                 garp_binary_menus: BigUint::from(1u32),
                 sarp_binary_menus: BigUint::from(0u32),
-                binary_intransitivities: BigUint::from(2u32),
             }
         ]);
     }

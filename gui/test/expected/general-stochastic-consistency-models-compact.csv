@@ -1,4 +1,4 @@
-"subject","dist_score","model","instances"
+"subject","distance_score","model","instances"
 "random00","7","Utility Maximization (Strict)","1"
 "","7","Utility Maximization with an Outside Option (Strict)","1"
 "random01","6","Utility Maximization (Strict)","1"

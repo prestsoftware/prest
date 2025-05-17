@@ -1,4 +1,4 @@
-"subject","dist_score","model","instances"
+"subject","distance_score","model","instances"
 "Subject-1","0","Utility Maximization (Strict)","1"
 "Subject-2","0","Undominated Choice with Incomplete Preferences (Strict)","1"
 "","0","Undominated Choice with Incomplete Preferences (Non-strict)","1"

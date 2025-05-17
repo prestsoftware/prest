@@ -1,4 +1,4 @@
-"subject","contraction_consistency_pairs","contraction_consistency_all","warp_pairs","warp_all","congruence","strict_general_cycles","binary_cycles","strict_binary_cycles","binary_intransitivities"
+"subject","contraction_consistency_pairs","contraction_consistency_all","warp_pairs","warp_all","congruence","strict_general_cycles","binary_intransitivities","binary_cycles","strict_binary_cycles"
 "random1","33","33","45","45","2471","2471","7","7","26"
 "random2","36","36","49","49","2213","2213","7","7","26"
 "random3","31","31","46","46","2041","2041","1","1","3"

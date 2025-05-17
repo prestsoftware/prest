@@ -102,8 +102,8 @@ class BudgetaryConsistency(Dataset):
             self.setupUi(self)
 
             help_icon = QIcon(platform_specific.get_embedded_file_path(
-                'images/qm-16.png',      # deploy
-                'gui/images/qm-16.png',  # devel
+                'images/qm-17.png',      # deploy
+                'gui/images/qm-17.png',  # devel
             ))
             F = util.tree_model.Field
 
@@ -114,13 +114,13 @@ class BudgetaryConsistency(Dataset):
                     'Subject',
                     'Cycle length',
                     F('GARP', help_icon,
-                        'consistency/cons_budgetary.html#generalized-axiom-of-revealed-preference-garp'),
+                        'consistency/cons_budgetary.html#generalized-axiom-of-revealed-preference-garp-budgetary'),
                     F('SARP', help_icon,
-                        'consistency/cons_budgetary.html#strong-axiom-of-revealed-preference-sarp'),
+                        'consistency/cons_budgetary.html#strong-axiom-of-revealed-preference-sarp-budgetary'),
                     F('WARP (strict)', help_icon,
-                        'consistency/cons_budgetary.html#weak-axiom-of-revealed-preference-warp'),
+                        'consistency/cons_budgetary.html#weak-axiom-of-revealed-preference-warp-budgetary'),
                     F('WARP (non-strict)', help_icon,
-                        'consistency/cons_budgetary.html#weak-axiom-of-revealed-preference-warp'),
+                        'consistency/cons_budgetary.html#weak-axiom-of-revealed-preference-warp-budgetary'),
                     F('HM (GARP)', help_icon,
                         'consistency/cons_budgetary.html#houtman-maks-index-hm'),
                     F('HM (SARP)', help_icon,

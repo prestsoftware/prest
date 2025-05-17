@@ -1,4 +1,4 @@
-"subject","contraction_consistency_pairs","contraction_consistency_all","warp_pairs","warp_all","congruence","strict_general_cycles","binary_cycles","strict_binary_cycles","binary_intransitivities"
+"subject","contraction_consistency_pairs","contraction_consistency_all","warp_pairs","warp_all","congruence","strict_general_cycles","binary_intransitivities","binary_cycles","strict_binary_cycles"
 "Subject-1","0","0","0","0","0","0","0","0","0"
 "Subject-2","0","0","7","8","488","0","4","0","4"
 "Subject-3","3","3","4","4","20","20","1","1","3"

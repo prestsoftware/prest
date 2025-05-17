@@ -61,7 +61,7 @@ extlinks = {
 }
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+# templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -127,7 +127,7 @@ html_theme_options = {
     'nav_title': 'Prest',
 
     # Set you GA account ID to enable tracking
-    'google_analytics_account': '125271613',
+    'google_analytics_account': 'G-6Q5ER87GKE',
 
     # Specify a base_url used to generate sitemap.xml. If not
     # specified, then no sitemap will be built.
@@ -194,6 +194,7 @@ latex_elements = {
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
+    #'sphinxsetup': "verbatimwrapslines='false'",
 }
 
 # Grouping the document tree into LaTeX files. List of tuples

@@ -23,9 +23,9 @@ class Row(NamedTuple):
     cycle_length: int
     garp: int
     sarp: int
+    binary_intransitivities : int
     garp_binary_menus: int
     sarp_binary_menus: int
-    binary_intransitivities : int
 
 RowC = namedtupleC(Row, intC, intC, intC, intC, intC, intC)
 
@@ -44,9 +44,9 @@ class Subject(NamedTuple):
 
     total_garp: int
     total_sarp: int
+    total_binary_intransitivities: int
     total_garp_binary_menus: int
     total_sarp_binary_menus: int
-    total_binary_intransitivities: int
 
     @staticmethod
     def from_raw(raw : SubjectRaw) -> 'Subject':
@@ -54,9 +54,9 @@ class Subject(NamedTuple):
             raw,
             total_garp=sum(r.garp for r in raw.rows),
             total_sarp=sum(r.sarp for r in raw.rows),
+            total_binary_intransitivities=sum(r.binary_intransitivities for r in raw.rows),
             total_garp_binary_menus=sum(r.garp_binary_menus for r in raw.rows),
             total_sarp_binary_menus=sum(r.sarp_binary_menus for r in raw.rows),
-            total_binary_intransitivities=sum(r.binary_intransitivities for r in raw.rows),
         )
 
 SubjectC = namedtupleC(Subject, SubjectRawC, intC, intC, intC, intC, intC)
@@ -98,9 +98,9 @@ class SubjectNode(util.tree_model.Node):
 
                     subject.total_garp,
                     subject.total_sarp,
+                    subject.total_binary_intransitivities,
                     subject.total_garp_binary_menus,
                     subject.total_sarp_binary_menus,
-                    subject.total_binary_intransitivities,
                 )
             )
         else:
@@ -116,9 +116,9 @@ class SubjectNode(util.tree_model.Node):
 
                     subject.total_garp,
                     subject.total_sarp,
+                    subject.total_binary_intransitivities,
                     subject.total_garp_binary_menus,
                     subject.total_sarp_binary_menus,
-                    subject.total_binary_intransitivities,
                 ),
                 child_count = len(subject.raw.rows),
             )
@@ -139,9 +139,9 @@ class RowNode(util.tree_model.Node):
                 '-',
                 row.garp,
                 row.sarp,
+                row.binary_intransitivities,                
                 row.garp_binary_menus,
                 row.sarp_binary_menus,
-                row.binary_intransitivities,
             )
         )
 
@@ -154,8 +154,8 @@ class DeterministicConsistencyResult(Dataset):
             self.setupUi(self)
 
             help_icon = QIcon(platform_specific.get_embedded_file_path(
-                'images/qm-16.png',      # deploy
-                'gui/images/qm-16.png',  # devel
+                'images/qm-17.png',      # deploy
+                'gui/images/qm-17.png',  # devel
             ))
 
             # we assign model to self to prevent GC
@@ -165,21 +165,24 @@ class DeterministicConsistencyResult(Dataset):
                 headers=(
                     'Subject',
                     'Cycle length',
-                    'Contraction consistency (pairs)',
-                    'Contraction consistency (all)',
+                    F('Contraction consistency (pairs)', help_icon,
+                        'consistency/cons_general_det.html#contraction-consistency'),
+                    F('Contraction consistency (all)', help_icon,
+                        'consistency/cons_general_det.html#contraction-consistency'),
                     F('WARP (pairs)', help_icon,
-                        'consistency/cons_general.html#weak-axiom-of-revealed-preference-warp'),
+                        'consistency/cons_general_det.html#weak-axiom-of-revealed-preference-warp'),
                     F('WARP (all)', help_icon,
-                        'consistency/cons_general.html#weak-axiom-of-revealed-preference-warp'),
+                        'consistency/cons_general_det.html#weak-axiom-of-revealed-preference-warp'),
                     F('Congruence', help_icon,
-                        'consistency/cons_general.html#congruence'),
+                        'consistency/cons_general_det.html#congruence'),
                     F('Strict general cycles', help_icon,
-                        'consistency/cons_general.html#strict-choice-consistency'),  # SARP
+                        'consistency/cons_general_det.html#strict-choice-consistency'),  # SARP
+                    F('Binary intransitivities', help_icon,
+                        'consistency/cons_general_det.html#binary-choice-transitivity'),
                     F('Binary cycles', help_icon,
-                        'consistency/cons_general.html#binary-choice-consistency'),
+                        'consistency/cons_general_det.html#binary-choice-consistency'),
                     F('Strict binary cycles', help_icon,
-                        'consistency/cons_general.html#strict-binary-choice-consistency'),  # SARP-binary
-                    'Binary intransitivities',
+                        'consistency/cons_general_det.html#strict-binary-choice-consistency'),  # SARP-binary
                 ),
             )
             self.twRows.setModel(self.model)
@@ -226,9 +229,9 @@ class DeterministicConsistencyResult(Dataset):
                     'warp_all',
                     'congruence',
                     'strict_general_cycles',
+                    'binary_intransitivities',
                     'binary_cycles',
                     'strict_binary_cycles',
-                    'binary_intransitivities',
                 ),
                 get_rows=self.export_summary,
                 size=len(self.subjects),
@@ -252,9 +255,9 @@ class DeterministicConsistencyResult(Dataset):
                 size=len(self.subjects),
             ),
             ExportVariant(
-                name='Strict binary cycles (wide)',
+                name='Binary intransitivities (wide)',
                 column_names=['subject'] + ['cycles_%d' % l for l in range(3,self.max_cycle_length+1)] + ['total'],
-                get_rows=lambda: self.export_wide('sarp_binary_menus'),
+                get_rows=lambda: self.export_wide('binary_intransitivities'),
                 size=len(self.subjects),
             ),
             ExportVariant(
@@ -264,9 +267,9 @@ class DeterministicConsistencyResult(Dataset):
                 size=len(self.subjects),
             ),
             ExportVariant(
-                name='Binary intransitivities (wide)',
+                name='Strict binary cycles (wide)',
                 column_names=['subject'] + ['cycles_%d' % l for l in range(3,self.max_cycle_length+1)] + ['total'],
-                get_rows=lambda: self.export_wide('binary_intransitivities'),
+                get_rows=lambda: self.export_wide('sarp_binary_menus'),
                 size=len(self.subjects),
             ),
         )
@@ -302,9 +305,9 @@ class DeterministicConsistencyResult(Dataset):
                 subject.raw.warp_all,
                 sum(row.garp for row in subject.raw.rows),
                 sum(row.sarp for row in subject.raw.rows),
+                subject.total_binary_intransitivities,                
                 sum(row.garp_binary_menus for row in subject.raw.rows),
                 sum(row.sarp_binary_menus for row in subject.raw.rows),
-                subject.total_binary_intransitivities,
             )
 
             yield None

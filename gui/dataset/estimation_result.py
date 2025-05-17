@@ -196,7 +196,7 @@ class EstimationResult(Dataset):
         def __init__(self, parent_node: 'EstimationResult.Model', row: int, instance: InstanceRepr) -> None:
             code = base64.b64encode(instance).decode('ascii')
             # subject = parent_node.subject
-            help_icon = QIcon(platform_specific.get_embedded_file_path('images/qm-16.png'))
+            help_icon = QIcon(platform_specific.get_embedded_file_path('images/qm-17.png'))
             Node.__init__(
                 self, parent_node, row,
                 fields=(code, Field(icon=help_icon, user_data=code), ''),
@@ -358,28 +358,25 @@ class EstimationResult(Dataset):
         return (
             ExportVariant(
                 name='Compact (human-friendly)',
-                column_names=('subject', 'dist_score', 'model', 'instances'),
+                column_names=('subject', 'distance_score', 'model', 'instances'),
                 get_rows=self.export_compact,
                 size=len(self.subjects),
             ),
             ExportVariant(
                 name='Detailed (machine-friendly)',
-                column_names=('subject', 'dist_score', 'dist_score_upper_bound', 'model', 'instance'),
+                column_names=('subject', 'distance_score', 'model', 'instance'),
                 get_rows=self.export_detailed,
                 size=len(self.subjects),
             ),
         )
 
-    def export_detailed(self) -> Iterator[Optional[tuple[str,Optional[int|float],int|float,str,str]]]:
+    def export_detailed(self) -> Iterator[Optional[tuple[str,Optional[int|float],str,str]]]:
         for subject in map(subject_from_response_bytes, self.subjects):
             for model, penalty, instances in subject.best_models:
                 for instance in sorted(instances):
                     yield (
                         subject.name,
-                        from_fraction(penalty.lower_bound)
-                            if penalty.lower_bound == penalty.upper_bound
-                            else None,
-                        from_fraction(penalty.upper_bound),
+                        from_fraction(penalty.upper_bound), 
                         model_get_name(model),
                         base64.b64encode(instance).decode('ascii')
                     )

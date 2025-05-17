@@ -8,11 +8,13 @@ from PyQt5.QtWidgets import QDialog, QHeaderView
 import doc
 import uic.view_dataset
 import util.tree_model
+import platform_specific
 from gui.progress import Worker
 from dataset import Dataset, DatasetHeaderC, ExportVariant, Analysis
 from util.codec import FileIn, FileOut, dataclassC, strC, intC
 from util.codec_progress import CodecProgress, listCP, oneCP
 from util.tree_model import Node
+from PyQt5.QtGui import QIcon
 
 from dataclasses import dataclass
 
@@ -60,16 +62,23 @@ class StochasticConsistencyResult(Dataset):
             QDialog.__init__(self)
             self.setupUi(self)
 
+            help_icon = QIcon(platform_specific.get_embedded_file_path(
+                'images/qm-17.png',      # deploy
+                'gui/images/qm-17.png',  # devel
+            ))
+            F = util.tree_model.Field
+
+
             # we assign model to prevent GC
             # even though we never read self.model
             self.model = util.tree_model.TreeModel(
                 RootNode(ds.subjects),
                 headers=(
                     'Subject',
-                    'Weak Stochastic Transitivity',
-                    'Moderate Stochastic Transitivity',
-                    'Strong Stochastic Transitivity',
-                    'Regularity',
+                    F('Weak Stochastic Transitivity', help_icon,'consistency/cons_general_stoch.html#weak-stochastic-transitivity'),
+                    F('Moderate Stochastic Transitivity', help_icon,'consistency/cons_general_stoch.html#moderate-stochastic-transitivity'),
+                    F('Strong Stochastic Transitivity', help_icon,'consistency/cons_general_stoch.html#strong-stochastic-transitivity'),
+                    F('Regularity', help_icon,'consistency/cons_general_stoch.html#regularity-def'),
                 ),
             )
             self.twRows.setModel(self.model)

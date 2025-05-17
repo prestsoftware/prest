@@ -73,8 +73,8 @@ def test_consistency_analysis(tmpdir, name, alts, subj_count):
     assert ds.alternatives == alts.split()
     assert len(ds.subjects) == subj_count
 
-    # TODO: repeated menus are not supported atm so skipping these cases for now
-    # see branch repeated-menus
+    # TODO: repeated menus are not supported atm for deterministic analyses
+    # so skipping these cases for now; see branch repeated-menus
     if not has_repeated_menus:
         dsc = ds.analysis_consistency_deterministic(MockWorker(), None)
         assert len(dsc.subjects) == len(ds.subjects)
@@ -82,6 +82,7 @@ def test_consistency_analysis(tmpdir, name, alts, subj_count):
         check_export(tmpdir, dsc, 'summary', 'gui/test/expected/%s-cons-summary.csv' % name)
         check_export(tmpdir, dsc, 'congruence violations (wide)', 'gui/test/expected/%s-cons-garp.csv' % name)
         check_export(tmpdir, dsc, 'strict general cycles (wide)', 'gui/test/expected/%s-cons-sarp.csv' % name)
+        # TODO 'binary intransitivities' test to be added here
         check_export(tmpdir, dsc, 'strict binary cycles (wide)', 'gui/test/expected/%s-cons-sarp-bin.csv' % name)
         check_export(tmpdir, dsc, 'binary cycles (wide)', 'gui/test/expected/%s-cons-garp-bin.csv' % name)
 

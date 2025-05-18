@@ -2,6 +2,7 @@
 
 - Add Jaccard-Houtman-Maks score computations for model/preference estimation with multi-valued choice data.
 - Add support for analysis of stochastic choice data.
+- Allow renaming datasets in the workspace.
 - Update documentation layout & screenshots.
 
 ## 1.1.0

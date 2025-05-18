@@ -24,8 +24,9 @@ Downloads
 * | `Prest VERSION for macOS <_static/prest-osx-VERSION.zip>`_ 
   | No installation required: run by double-clicking the :code:`.command` file. Select *"Open anyway"* if prompted. 
   | If the *"Open anyway"* button is not available, close the dialog window and double-click the :code:`.command` file again.
-  
+
 * | `Prest VERSION for GNU/Linux <_static/prest-linux-VERSION.zip>`_
+  | No installation required: unzip the archive and run the self-contained executable within.
 
 * The `Prest source code <https://github.com/prestsoftware/prest>`_, written
   in `Rust <https://www.rust-lang.org/>`_ (core program) and `Python

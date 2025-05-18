@@ -5,9 +5,14 @@ Models & Heuristics
 .. note::  
      | The list of models and heuristics that are currently implemented in Prest and presented here is far from being exhaustive.
      | Some have been studied in the literature extensively. Others represent more recent developments in the field. 
-     | The inclusion/implentation of the latter has been guided by computational feasibility considerations, 
+     | The inclusion/implementation of the latter has been guided by computational feasibility considerations, 
      | and by the developers' own research interests and expertise.
      | With the exception of Utility Maximization that appears first, the presentation order does not reflect any preference or priority.
+
+
+.. image:: ../_static/images/models.png
+  :width: 100%
+  :target: ../build/html/models/index.html
 
 .. note::  
      Unless otherwise stated, `\mathcal{D}` here is a :ref:`general dataset <general-datasets>`, defined on an underlying set `X`, and without default/status quo options.

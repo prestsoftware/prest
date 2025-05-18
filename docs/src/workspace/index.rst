@@ -75,22 +75,27 @@ are available for analysis and exporting.
 
 Its three columns provide the following information about all datasets listed there:
 
-| *"Name"*. The name of the dataset, as imported from file or specified by you through a Prest operation.
-   
-| *"Alternatives/Goods"*. Depending on whether the dataset in question is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`, the total number of alternatives or goods in that dataset is shown, respectively.
-   
-| *"Size"*. The total number of subjects and observations in the dataset.
+1. *"Name"*. The name of the dataset, as imported from file or specified by you through a Prest operation.
 
-Right-clicking on a dataset in the workspace area leads to the following options:
-
-*"View"*. Displays the contents of the dataset in a separate window (can also be done by double-clicking on the dataset).
+2. *"Alternatives/Goods"*. Depending on whether the dataset in question is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`, the total number of alternatives or goods in that dataset is shown, respectively.
    
-*"Analysis"*. See below for the available options depending on whether 
-the selected dataset is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`.
+3. *"Size"*. The total number of subjects and observations in the dataset.
+
+Right-clicking on an imported or Prest-generated dataset in the workspace area leads to the following options:
+
+1. *"View"*. Displays the contents of the dataset in a separate window (can also be done by double-clicking on the dataset).
+
+2. *"Rename"*. 
+   
+3. *"Analysis"*. See below for the available options depending on whether 
+   the selected dataset is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`.
+
+4. *"Delete"*.
 
 **General datasets**
 
 1. *"Integrity check"*. This option examines whether:
+
    (a) the specified choices in the dataset are indeed elements of the corresponding menus of alternatives;
 
    (b) any menus are repeated more than once for a given subject in the dataset.
@@ -98,6 +103,7 @@ the selected dataset is :ref:`general <general-datasets>` or :ref:`budgetary <bu
 A detailed report/dataset is produced if either of the above is true.
 
 2. *"Summary information"*. This option generates a new dataset that gives the following counts per subject: 
+
    (a) *"Observations"*.
 
    (b) *"Active choices"* (number of times where the outside option -if feasible-  was *not* chosen).

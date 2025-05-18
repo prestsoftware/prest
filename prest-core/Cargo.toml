@@ -1,6 +1,6 @@
 [package]
 name = "prest_core"
-version = "1.2.0"
+version = "2.0.0"
 authors = [
 	"Georgios Gerasimou <gerasimou@outlook.com>",
 	"Matus Tejiscak <ziman@functor.sk>"

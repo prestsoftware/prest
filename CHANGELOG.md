@@ -1,3 +1,9 @@
+## 2.0.0
+
+- Add Jaccard-Houtman-Maks score computations for model/preference estimation with multi-valued choice data.
+- Add support for analysis of stochastic choice data.
+- Update documentation layout & screenshots.
+
 ## 1.1.0
 
 - Add GraphViz-based visualisation of model instances

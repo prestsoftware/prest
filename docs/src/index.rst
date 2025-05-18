@@ -25,8 +25,7 @@ Downloads
   | No installation required: run by double-clicking the :code:`.command` file. Select *"Open anyway"* if prompted. 
   | If the *"Open anyway"* button is not available, close the dialog window and double-click the :code:`.command` file again.
   
-* | Prest VERSION for `GNU/Linux <https://www.gnu.org/>`_ 
-  | Follow these `instructions <https://github.com/prestsoftware/prest?tab=readme-ov-file#building-and-running-prest>`_ to build Prest from source code & run it on any distro.
+* | `Prest VERSION for GNU/Linux <_static/prest-linux-VERSION.zip>`_
 
 * The `Prest source code <https://github.com/prestsoftware/prest>`_, written
   in `Rust <https://www.rust-lang.org/>`_ (core program) and `Python

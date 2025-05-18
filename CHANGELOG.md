@@ -4,7 +4,6 @@
 - Add support for analysis of stochastic choice data.
 - Allow renaming datasets in the workspace.
 - Update documentation layout & screenshots.
-- Add renaming datasets via right click.
 
 ## 1.1.0
 

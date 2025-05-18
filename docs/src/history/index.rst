@@ -3,9 +3,9 @@ Prest Releases
 
 .. _history:
 
-| 2025-May-18: `Prest 2.0 for Windows </_static/prest-win-v2.0.0.exe>`_ (latest version)
-| 2025-May-18: `Prest 2.0 for macOS </_static/prest-osx-v2.0.0.zip>`_ (latest version)
-| *Main release notes*: Add Jaccard-Houtman-Maks score computations for model/preference estimation with multi-valued choice data. Add support for analysis of stochastic choice data. Update documentation layout & screenshots.
+| 2025-May-18: `Prest 2.0 for Windows </_static/prest-win-VERSION.exe>`_ (latest version)
+| 2025-May-18: `Prest 2.0 for macOS </_static/prest-osx-VERSION.zip>`_ (latest version)
+| *Main release notes*: Add Jaccard-Houtman-Maks score computations for model/preference estimation with multi-valued choice data. Add support for analysis of stochastic choice data. Allow renaming datasets in workspace. Update documentation layout & screenshots.
 
 |
 

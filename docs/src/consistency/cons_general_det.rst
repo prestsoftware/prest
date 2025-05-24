@@ -196,8 +196,5 @@ Following the same steps as above, this output can be viewed within Prest or exp
      **To use this feature:** right-click on the dataset of interest [e.g. "DatasetX.csv"]
      in the workspace and select *"Analysis -> Merge options at the same menu"*. The resulting merged dataset appears in the workspace ["DatasetX.csv (merged)"] and can then be analysed separately 
      for consistency analysis or model estimation after the potential "noisiness" of choice data has been accounted for in this way through multi-valued choice.
-     	 
-     **Remark:** *If the merging operation is applied on a non-forced-choice dataset where a subject has chosen an alternative from menu* `A` *in one or more instances and has deferred choice/opted for the outside option
-     in at least another, then the merged dataset will feature menu* `A` *appearing twice: one where* `C(A)` *comprises all alternatives in* `A` *that were chosen at least once; and one where* `C(A)=\emptyset`.
-     
+     	      
      **An example dataset that illustrates these merging features is available** `here </_static/examples/general-merging.csv>`_. 

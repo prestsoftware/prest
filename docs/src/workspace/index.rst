@@ -70,12 +70,12 @@ Workspace area
 
 |
 
-Prest's **workspace** is the area where imported/Prest-generated datasets
+Prest's **workspace** is the area where imported or Prest-generated datasets
 are available for analysis and exporting.
 
 Its three columns provide the following information about all datasets listed there:
 
-1. *"Name"*. The name of the dataset, as imported from file or specified by you through a Prest operation.
+1. *"Name"*. The name of the dataset, as imported from file or specified by the user through a Prest operation.
 
 2. *"Alternatives/Goods"*. Depending on whether the dataset in question is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`, the total number of alternatives or goods in that dataset is shown, respectively.
    
@@ -90,15 +90,15 @@ Right-clicking on an imported or Prest-generated dataset in the workspace area l
 3. *"Analysis"*. See below for the available options depending on whether 
    the selected dataset is :ref:`general <general-datasets>` or :ref:`budgetary <budgetary-datasets>`.
 
-4. *"Delete"*.
+4. *"Delete"*. Removes the selected dataset from the workspace area.
 
 **General datasets**
 
 1. *"Integrity check"*. This option examines whether:
 
-   (a) the specified choices in the dataset are indeed elements of the corresponding menus of alternatives;
+   (a) The specified choices in the dataset are indeed elements of the corresponding menus of alternatives.
 
-   (b) any menus are repeated more than once for a given subject in the dataset.
+   (b) Any menus are repeated more than once for a given subject in the dataset.
    
 A detailed report/dataset is produced if either of the above is true.
 

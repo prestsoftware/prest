@@ -43,7 +43,7 @@ Recently Added Features
   | (support for possibly *random choice data*)
   
 * | Since VERSION: new measure of model proximity for datasets with multiple choices per menu. 
-  | (support for possibly *multi-valued choice functions/correspondences*)
+  | (refined support for possibly *multi-valued choice functions/correspondences*)
   
 * | Since v1.1.0: visualization of preference-estimation output using `GraphViz <https://graphviz.org>`_ .
   | (the GraphViz binary file must be placed in the same directory as Prest)

@@ -37,8 +37,8 @@ Completeness
 
 
 
-Transitivity
-............
+Transitivity (weak preferences)
+...............................
 
 *For all* `x,y,z\in X`, `x\succsim y\succsim z` *implies* `x\succsim z`.
 
@@ -81,8 +81,8 @@ Totality
 *For all distinct* `x,y\in X`, either `x\succ y` or `y\succ x`.
 
 
-Transitivity
-............
+Transitivity (strict preferences)
+.................................
 
 *For all* `x,y,z\in X`, `x\succ y\succ z` *implies* `x\succ z`.
 

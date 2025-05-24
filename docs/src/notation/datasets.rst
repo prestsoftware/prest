@@ -12,7 +12,7 @@ Suppose that the set of all choice alternatives is discrete and denoted by `X=\{
 
 A **general dataset** in this case consists of a finite collection of **menus** from `X` and the **choices** observed at these menus. 
 
-Datasets of this kind can be further distinguished between datasets with or without default/status quo options.
+Datasets of this kind can be further distinguished between those with or without default/status quo options.
 
 General datasets without default/status quo options
 ===================================================
@@ -62,7 +62,7 @@ Formally, a dataset of this kind is a collection of `k` observations,
 The interpretation of the case where `C(A,s)` contains more than one alternative is the same as in the case of general datasets without default/status quo options.
 
 The reason why `C(A,s)` is required to be non-empty is that, at this decision problem, the individual under study is 
-assumed to have been endowed with `s` at `A` before being observed to choose from `A`.
+assumed to have been endowed with an observable `s` at `A` before being observed to choose from `A`.
 Hence, unlike the case of general datasets without default/status quo options, not making an active choice at `(A,s)` means choosing the alternative `s` in `A`. 
 
 | A spreadsheet screenshot showing the structure of a general dataset with default/status quo alternatives is shown below.
@@ -70,28 +70,27 @@ Hence, unlike the case of general datasets without default/status quo options, n
 
  
  .. image:: /_static/images/dataset-general-with-defaults.png
-  :width: 45%
+  :width: 50%
   :target: ../build/html/notation/datasets.html
 
 
 .. _dataset-examples:
 
 .. tip::
-     To be analyzable by Prest, a general dataset must be a .csv file.
-
-     An  `example general dataset without default/status quo alternatives </_static/examples/general-no-defaults.csv>`_.
-
-     An `example general dataset with default/status quo alternatives </_static/examples/general-defaults.csv>`_.
-	 
-     An `example hybrid general dataset containing both types of observations </_static/examples/general-hybrid.csv>`_.
-    
-     To import such a dataset into Prest, select *"Workspace -> Import general dataset"* and browse to the target file.
-     
-     The new pop-up window features four column headers under *"Columns"*: **Subject**, **Menu**, **Default** and **Choice**. 
-     Select the appropriate column name in your .csv file from the drop-down menu to match the corresponding column header. 
-     If your dataset does not feature default alternatives, select *"None"* for the **Default** header.
-	 
-     To view the imported dataset in Prest, double-click on it in the workspace area.
+     | To be analyzable by Prest, a general dataset must be a .csv file.
+     |
+     | An  `example general dataset without default/status quo alternatives </_static/examples/general-no-defaults.csv>`_.
+     |
+     | An `example general dataset with default/status quo alternatives </_static/examples/general-defaults.csv>`_.
+     |
+     | An `example hybrid general dataset containing both types of observations </_static/examples/general-hybrid.csv>`_.
+     |
+     | To import such a dataset into Prest, select *"Workspace -> Import general dataset"* and browse to the target file.
+     | The new pop-up window features four column headers under *"Columns"*: **Subject**, **Menu**, **Default** and **Choice**. 
+     | Select the appropriate column name in your .csv file from the drop-down menu to match the corresponding column header. 
+     | If your dataset does not feature default alternatives, select *"None"* for the **Default** header.
+     |
+     | To view the imported dataset in Prest, double-click on it in the workspace area.
 
 
 

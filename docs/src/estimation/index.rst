@@ -40,8 +40,8 @@ such as **context-dependent choices**, **cyclic choices**, **status-quo biased c
      these observations, you can do so by checking the *"Disregard deferrals"* box at the bottom of the *"Model estimation"* window.
 
 .. note::  
-     If your dataset includes observations where multiple items were chosen by some agent(s) in some menu(s), you can do model estimation 
-     either by selecting either the *"Houtman-Maks"* (default) or the *"Jaccard-Houtman-Maks*" method from the *"Distance score"* scroll-down 
+     If your dataset includes observations where multiple items were chosen by some agent(s) in some menu(s), you can do model and preference estimation 
+     either by selecting the *"Houtman-Maks"* (default selection) or the *"Jaccard-Houtman-Maks*" method from the *"Distance score"* scroll-down 
      menu on the bottom left of the *"Model estimation"* window. The two methods coincide when at most one alternative is chosen at 
      every menu in the dataset. When this is not the case, the second method is less punitive in its computation of the distance score 
      by accounting for the Jaccard [#jaccard]_ (dis)similarity between the agent's actual choices at a menu and what would have been the model-optimal choices

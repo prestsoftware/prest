@@ -98,7 +98,7 @@ class TreeModel(QAbstractItemModel):
         self.root = root
         self.headers : List[Field] = parse_fields(headers)
 
-    def headerData(self, nr: int, orientation: Qt.Orientation, role : int = Qt.DisplayRole) -> Optional[str]:  # type: ignore
+    def headerData(self, nr: int, orientation: Qt.Orientation, role : int = Qt.DisplayRole) -> Optional[str]:
         if orientation == Qt.Horizontal:
             try:
                 return cast(
@@ -133,7 +133,7 @@ class TreeModel(QAbstractItemModel):
     def columnCount(self, idx: QModelIndex = QModelIndex()) -> int:
         return len(self.headers)
 
-    def data(self, idx: QModelIndex = QModelIndex(), role : int = Qt.DisplayRole) -> Optional[str]:  # type: ignore
+    def data(self, idx: QModelIndex = QModelIndex(), role : int = Qt.DisplayRole) -> Optional[str]:
         try:
             return cast(Optional[str], self.get_node(idx).field(idx.column()).data(cast(Qt.ItemDataRole, role)))
         except IndexError:

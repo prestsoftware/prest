@@ -41,7 +41,7 @@ impl<T> Matrix<T> {
         &self.values[i*self.ncols..(i+1)*self.ncols]
     }
 
-    pub fn iter_rows(&self) -> slice::Chunks<T> {
+    pub fn iter_rows(&self) -> slice::Chunks<'_, T> {
         self.values.chunks(self.ncols)
     }
 

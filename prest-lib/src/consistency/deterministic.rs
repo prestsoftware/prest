@@ -107,7 +107,7 @@ impl Cycle {
         }
     }
 
-    fn edges(&self) -> Edges {
+    fn edges(&self) -> Edges<'_> {
         Edges {
             last: self.vertices[self.vertices.len()-1],
             upcoming: &self.vertices[..],

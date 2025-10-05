@@ -325,7 +325,7 @@ impl AltSet {
         AltSet{ blocks }
     }
 
-    pub fn view(&self) -> AltSetView {
+    pub fn view(&self) -> AltSetView<'_> {
         AltSetView{
             blocks: &self.blocks
         }

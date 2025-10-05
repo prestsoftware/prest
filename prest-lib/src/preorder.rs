@@ -254,7 +254,7 @@ impl Preorder {
         Alt::all(self.size).all(|i| self.leq(i, i))
     }
 
-    pub fn upset(&self, Alt(i) : Alt) -> AltSetView {
+    pub fn upset(&self, Alt(i) : Alt) -> AltSetView<'_> {
         const BLOCK_SIZE : u32 = 8 * mem::size_of::<Block>() as u32;  // in bits
         let stride = (self.size + BLOCK_SIZE - 1) / BLOCK_SIZE;  // in blocks, round upwards
         AltSetView {

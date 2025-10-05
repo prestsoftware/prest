@@ -2,13 +2,15 @@
 # mypy: no-warn-unreachable
 
 import logging
-from typing import Any, List, Callable, Optional
+from typing import Any, List, Callable, Optional, Generic, \
+    TypeVar, TypeVarTuple
 
 from PyQt5.QtCore import QObject, QThread, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import QDialog
 
 import gui
 import uic.progress
+from dataclasses import dataclass
 
 log = logging.getLogger(__name__)
 
@@ -37,15 +39,22 @@ class WorkerError(Exception):
 class Cancelled(Exception):
     pass
 
-class Worker(QThread):
+Result = TypeVar('Result')
+Args = TypeVarTuple('Args')
+
+@dataclass
+class NoResult:
+    pass
+
+class Worker(Generic[Result, *Args], QThread):
     work_size = pyqtSignal(int)
     progress = pyqtSignal(int)
 
-    def __init__(self, *args) -> None:
+    def __init__(self, *args : *Args) -> None:
         QObject.__init__(self)
-        self.result : Optional[Any] = None
+        self.result : Result | NoResult = NoResult()
         self.exception : Optional[Exception] = None
-        self.args = args
+        self.args : tuple[*Args] = args
         self.position = 0
 
         # a lambda that can be called from the main thread
@@ -73,20 +82,20 @@ class Worker(QThread):
         self.set_progress(self.position+1)
 
     # called from work thread
-    def work(self, *args : Any) -> Any:
+    def work(self, *args : *Args) -> Result:
         # this is the method that should be overriden
         raise NotImplementedError()
 
     # overridden from QThread
     # called from work thread
-    def run(self):
+    def run(self) -> None:
         try:
             self.result = self.work(*self.args)
         except Exception as e:
             self.exception = e
 
     # called from main application thread
-    def run_with_progress(self, main_win, label_text: str) -> Any:
+    def run_with_progress(self, main_win, label_text: str) -> Result:
         progress: ProgressDialog = ProgressDialog(main_win, label_text)
 
         self.work_size.connect(progress.catch_exc(progress.set_maximum))
@@ -136,6 +145,7 @@ class Worker(QThread):
                 # if it turns out to be a problem
 
         if self.exception is None:
+            assert not isinstance(self.result, NoResult)
             return self.result
         elif isinstance(self.exception, Cancelled):
             raise Cancelled()

@@ -19,6 +19,7 @@ import platform_specific
 import dataset.experimental_data
 import dataset.budgetary
 from core import Core
+from workspace import Workspace
 from gui.progress import Worker, Cancelled
 from typing import Optional, List, Tuple, Any, Set, Dict, Iterator, Iterable, Callable
 
@@ -336,8 +337,8 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
             "Prest Workspace File (*.pwf);;All files (*.*)",
         )
         if fname:
-            class MyWorker(Worker):
-                def work(self, workspace):
+            class MyWorker(Worker[None, Workspace]):
+                def work(self, workspace : Workspace) -> None:
                     workspace.load_from_file(self, fname)
 
             try:
@@ -349,8 +350,8 @@ class MainWindow(QMainWindow, uic.main_window.Ui_MainWindow, gui.ExceptionDialog
                 log.info('PWF load cancelled')
 
     def workspace_save_into(self, fname : str) -> bool:
-        class MyWorker(Worker):
-            def work(self, workspace):
+        class MyWorker(Worker[None, Workspace]):
+            def work(self, workspace : Workspace) -> None:
                 workspace.save_to_file(self, fname)
 
         try:

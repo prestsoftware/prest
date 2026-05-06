@@ -415,10 +415,10 @@ def numpyC(dtype : type) -> Codec[np.ndarray]:
     def decode(f : FileIn) -> np.ndarray:
         shape = tuple(l_dec(f))
         stuff = bytesC_dec(f)
-        return np.reshape(
+        return cast(np.ndarray, np.reshape(
             np.fromstring(stuff, dtype=dtype),  # type:ignore
             newshape=shape,
-        )
+        ))
 
     return Codec(encode, decode)
 

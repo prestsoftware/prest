@@ -6,6 +6,7 @@ use crate::codec::{self,Encode,Decode};
 use crate::alt::Alt;
 use std::fmt;
 use rand::Rng;
+use rand::RngExt;
 use std::string::String;
 use itertools::Itertools;
 
